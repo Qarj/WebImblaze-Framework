@@ -6,14 +6,14 @@
 ## \RunTest.pl
 
 ### MVP
-* read options
+X read options
 * create master temp folder in project with a .gitignore
 * generate a random folder name suffix for test output
 * create random folder under \temp
-* ensure a high level environment name was supplied, e.g. DEV, LIVE, if not, display usage
-* ensure a target sub environment name (e.g. server) was supplied
+* NOT REQUIRED - get from config - ensure a high level environment name was supplied, e.g. DEV, LIVE, if not, display usage
+* target = ensure a target sub environment name (e.g. server) was supplied
 * ensure a target testfile was supplied
-* see if a batch file name was supplied, if not, default to NoBatch
+* see if a batch file name was supplied, if not, default to DefaultBatch
 * determine web publish location, if none default to inetpub\wwwroot if possible, otherwise error
 * default config file to basic config.xml for now
 * determine the run number for today
