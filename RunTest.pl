@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+our $VERSION = 0.01;
+
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 2 of the License, or
@@ -13,7 +15,6 @@ use warnings;
 #    GNU General Public License for more details.
 
 
-my $version="0.01";
 
 my ( $opt_version, $opt_target, $opt_batch, $opt_help );
 
@@ -25,8 +26,10 @@ engine();
 
 #------------------------------------------------------------------
 sub engine {
-      
+
     getoptions();  #get command line options
+
+    return;
 }
 
 #------------------------------------------------------------------
@@ -45,27 +48,36 @@ sub getoptions {  #shell options
         };
     if ($opt_version) {
         print_version();
-        exit();
+        exit;
     }
     
     if ($opt_help) {
         print_version();
         print_usage();
-        exit();
+        exit;
+    }
+
+    if (($#ARGV + 1) < 1) {
+        print STDOUT "\nERROR: No test file name given\n";
+        print_usage();
+        exit;
     }
     
     if (!defined $opt_target) {
         print STDOUT "\nERROR: Target environment handle must be specified\n";
         print_usage();
+        exit;
     }
+    return;
 }
 
 sub print_version {
-    print "\nWebInjectFramework version $version\nFor more info: https://github.com/Qarj/WebInjectFramework\n\n";
+    print "\nWebInjectFramework version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n\n";
+    return;
 }
 
 sub print_usage {
-print <<EOB
+    print <<'EOB'
 
 Usage: RunTest.pl <<options>>
 
@@ -77,5 +89,5 @@ or
 RunTest.pl -v|--version
 RunTest.pl -h|--help
 EOB
-    }
+}
 #------------------------------------------------------------------
