@@ -34,10 +34,10 @@ sub getoptions {  #shell options
         
     Getopt::Long::Configure('bundling');
     GetOptions(
-        'v|V|version'   => \$opt_version,
-        't|target=s'    => \$opt_target,
-        'b|batch=s'    => \$opt_batch,
-        'h|help'   => \$opt_help,
+        't|target=s'  => \$opt_target,
+        'b|batch=s'   => \$opt_batch,
+        'v|V|version' => \$opt_version,
+        'h|help'      => \$opt_help,
         ) 
         or do {
             print_usage();
@@ -47,10 +47,16 @@ sub getoptions {  #shell options
         print_version();
         exit();
     }
+    
     if ($opt_help) {
         print_version();
         print_usage();
         exit();
+    }
+    
+    if (!defined $opt_target) {
+        print STDOUT "\nERROR: Target environment handle must be specified\n";
+        print_usage();
     }
 }
 
@@ -60,10 +66,11 @@ sub print_version {
 
 sub print_usage {
 print <<EOB
+
 Usage: RunTest.pl <<options>>
 
 -t|--target target environment handle                      -t skynet
--o|--batch  batch name for grouping results                -b SmokeTests
+-b|--batch  batch name for grouping results                -b SmokeTests
 
 or
 
