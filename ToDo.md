@@ -7,7 +7,7 @@
 
 ### MVP
 X read options
-* create master temp folder in project with a .gitignore
+X create master temp folder in project with a .gitignore
 * generate a random folder name suffix for test output
 * create random folder under \temp
 * NOT REQUIRED - get from config - ensure a high level environment name was supplied, e.g. DEV, LIVE, if not, display usage
