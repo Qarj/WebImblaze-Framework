@@ -1,8 +1,14 @@
 #!/usr/bin/perl
+
+# $Id$
+# $Revision$
+# $Date$
+
 use strict;
 use warnings;
+use vars qw/ $VERSION /;
 
-our $VERSION = 0.01;
+$VERSION = '0.01';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,7 +26,7 @@ my ( $opt_version, $opt_target, $opt_batch, $opt_help );
 
 use Getopt::Long;
 
-$| = 1; #don't buffer output to STDOUT
+#$| = 1; #don't buffer output to STDOUT
 
 engine();
 
@@ -34,23 +40,23 @@ sub engine {
 
 #------------------------------------------------------------------
 sub getoptions {  #shell options
-        
+
     Getopt::Long::Configure('bundling');
     GetOptions(
         't|target=s'  => \$opt_target,
         'b|batch=s'   => \$opt_batch,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
-        ) 
+        )
         or do {
             print_usage();
-            exit();
+            exit;
         };
     if ($opt_version) {
         print_version();
         exit;
     }
-    
+
     if ($opt_help) {
         print_version();
         print_usage();
@@ -58,13 +64,13 @@ sub getoptions {  #shell options
     }
 
     if (($#ARGV + 1) < 1) {
-        print STDOUT "\nERROR: No test file name given\n";
+        print "\nERROR: No test file name given\n";
         print_usage();
         exit;
     }
-    
+
     if (!defined $opt_target) {
-        print STDOUT "\nERROR: Target environment handle must be specified\n";
+        print "\nERROR: Target environment handle must be specified\n";
         print_usage();
         exit;
     }
@@ -89,5 +95,7 @@ or
 RunTest.pl -v|--version
 RunTest.pl -h|--help
 EOB
+;
+return;
 }
 #------------------------------------------------------------------
