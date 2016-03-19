@@ -20,7 +20,7 @@ X determine web publish location
 X determine if this is the automation controller
 X call subs\get_config_file_name.pl :: wif version will always return config.xml
 X call subs\get_run_number.pl :: wif version will always return 1001
-* call subs\CheckXML.pl :: wif version will always pass
+X call subs\check_testfile_xml_parses_ok.pl :: wif version will always pass
 * check if error after running WebInject.pl
 * run the test cases with WebInject.pl
 * call subs\PrependStylesheet.pl :: wif version will do nothing
@@ -37,7 +37,7 @@ X call subs\get_run_number.pl :: wif version will always return 1001
 * make subs\get_automation_controller_flag.pl
 * make subs\get_config_file_name.pl (convert friendly name to server name)
 * make subs\get_run_number.pl
-* make subs\CheckXML.pl
+* make subs\check_testfile_xml_parses_ok.pl
 * make subs\PrependResults.pl
 * make subs\BatchSummary.pl
 * make subs\UpdateStaticFiles.pl

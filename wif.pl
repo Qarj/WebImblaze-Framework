@@ -34,6 +34,9 @@ get_options();  # get command line options
 # generate a random folder for the temporary files
 my $temp_folder = create_temp_folder();
 
+# check the testfile to ensure the XML parses
+check_testfile_xml_parses_ok($testfile_full);
+
 # find out where to publish the results
 my $web_server = get_web_server_location();
 
@@ -50,12 +53,27 @@ my $run_number = get_run_number($testfile_name);
 remove_temp_folder($temp_folder);
 
 #------------------------------------------------------------------
+sub check_testfile_xml_parses_ok {
+    my ($_testfile_full) = @_;
+
+    my $_cmd = 'subs\check_testfile_xml_parses_ok.pl ' . $_testfile_full;
+    my $_result = `$_cmd`;
+
+    # if we got an exit code, then it failed parsing
+    if ($_result) {
+        die "\n\n$_testfile_full xml did not parse\n";
+    }
+
+    return;
+}
+
+#------------------------------------------------------------------
 sub get_run_number {
     my ($_testfile_name) = @_;
 
     my $_cmd = 'subs\get_run_number.pl ' . $_testfile_name;
     my $_run_number = `$_cmd`;
-    print {*STDOUT} "run_number [$_run_number]\n";
+    #print {*STDOUT} "run_number [$_run_number]\n";
 
     return $_run_number;
 }
