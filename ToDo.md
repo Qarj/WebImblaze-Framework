@@ -15,7 +15,7 @@ X ensure high level environment name supplied e.g. DEV, PAT, LIVE, default to DE
 X target = ensure a target sub environment name (e.g. server) was supplied
 X ensure a target testfile was supplied
 X ensure target testfile exists
-* see if a batch file name was supplied, if not, default to DefaultBatch
+X see if a batch file name was supplied, if not, default to Default_Batch
 * determine web publish location, if none default to inetpub\wwwroot if possible, otherwise error
 * run the test cases with WebInject.pl
 * determine if this is the automation controller

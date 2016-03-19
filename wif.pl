@@ -63,6 +63,7 @@ sub remove_temp_folder {
 sub get_options {  #shell options
 
     $opt_environment = 'DEV'; # default the environment name
+    $opt_batch = 'Default_Batch';
 
     Getopt::Long::Configure('bundling');
     GetOptions(
