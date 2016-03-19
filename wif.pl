@@ -28,7 +28,7 @@ use File::Basename;
 
 local $| = 1; # don't buffer output to STDOUT
 
-my ( $opt_version, $opt_target, $opt_batch, $opt_help, $testfile, $testfile_name, $testfile_path );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile, $testfile_name, $testfile_path );
 get_options();  # get command line options
 
 my $temp_folder = create_temp_folder(); # generate a random folder for the temporary files
@@ -62,10 +62,13 @@ sub remove_temp_folder {
 #------------------------------------------------------------------
 sub get_options {  #shell options
 
+    $opt_environment = 'DEV'; # default the environment name
+
     Getopt::Long::Configure('bundling');
     GetOptions(
         't|target=s'  => \$opt_target,
         'b|batch=s'   => \$opt_batch,
+        'e|env=s'   => \$opt_environment,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
         )
@@ -84,6 +87,7 @@ sub get_options {  #shell options
         exit;
     }
 
+    # read the testfile name, and ensure it exists
     if (($#ARGV + 1) < 1) {
         print "\nERROR: No test file name given\n";
         print_usage();
@@ -93,9 +97,12 @@ sub get_options {  #shell options
     }
     ($testfile_name, $testfile_path) = fileparse($testfile,'.xml');
 
-    if (!defined $opt_target) {
-        print "\nERROR: Target environment handle must be specified\n";
-        print_usage();
+    if (not -e $testfile) {
+        die "\n\nERROR: no such test file found $testfile\n";
+    }
+
+    if (not defined $opt_target) {
+        print "\n\nERROR: Target sub environment name must be specified\n";
         exit;
     }
 

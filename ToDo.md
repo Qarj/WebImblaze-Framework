@@ -8,13 +8,13 @@
 ### MVP
 X read options
 X create master temp folder in project with a .gitignore
-* generate a random folder name suffix for test output
-* ensure there is a temp folder
-* create random folder under \temp
-* ensure high level environment name supplied e.g. DEV, PAT, LIVE, default to DEV
+X generate a random folder name for test output
+X ensure there is a temp folder - it is checked into git
+X create random folder under \temp
+X ensure high level environment name supplied e.g. DEV, PAT, LIVE, default to DEV
 X target = ensure a target sub environment name (e.g. server) was supplied
 X ensure a target testfile was supplied
-* ensure target testfile exists
+X ensure target testfile exists
 * see if a batch file name was supplied, if not, default to DefaultBatch
 * determine web publish location, if none default to inetpub\wwwroot if possible, otherwise error
 * run the test cases with WebInject.pl
@@ -46,6 +46,7 @@ X ensure a target testfile was supplied
 ### Later
 * see if an option was supplied to ignore retry
 * check if target environment needs to be converted from friendly name to server name
+* read environment name from wif.config
 * get target server from wif.config
 * get high level environment from config - e.g. DEV, LIVE, default to DEV
 * check for administrative permissions
