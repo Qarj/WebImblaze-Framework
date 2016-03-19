@@ -28,7 +28,7 @@ use File::Basename;
 
 local $| = 1; # don't buffer output to STDOUT
 
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile, $testfile_name, $testfile_path );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 get_options();  # get command line options
 
 # generate a random folder for the temporary files
@@ -40,15 +40,28 @@ my $web_server = get_web_server_location();
 # find out if this is the automation controller (vs a developer desktop)
 my $automation_controller_flag = get_automation_controller_flag();
 
+my $config_file_full = get_config_file_name($opt_target);
+
 # tear down
 remove_temp_folder($temp_folder);
+
+#------------------------------------------------------------------
+sub get_config_file_name {
+    my ($target) = @_;
+
+    my $cmd = 'subs\get_config_file_name.pl ' . $target;
+    my $file_full = `$cmd`;
+    #print {*STDOUT} "config_file_full [$file_full]\n";
+
+    return $file_full;
+}
 
 #------------------------------------------------------------------
 sub get_automation_controller_flag {
 
     my $cmd = 'subs\get_automation_controller_flag.pl';
     my $auto_flag = `$cmd`;
-    #print {*STDOUT} "$auto_flag [$auto_flag]\n";
+    #print {*STDOUT} "auto_flag [$auto_flag]\n";
 
     return $auto_flag;
 }
@@ -122,12 +135,12 @@ sub get_options {  #shell options
         print_usage();
         exit;
     } else {
-        $testfile = $ARGV[0];
+        $testfile_full = $ARGV[0];
     }
-    ($testfile_name, $testfile_path) = fileparse($testfile,'.xml');
+    ($testfile_name, $testfile_path) = fileparse($testfile_full,'.xml');
 
-    if (not -e $testfile) {
-        die "\n\nERROR: no such test file found $testfile\n";
+    if (not -e $testfile_full) {
+        die "\n\nERROR: no such test file found $testfile_full\n";
     }
 
     if (not defined $opt_target) {
