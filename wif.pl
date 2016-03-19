@@ -25,7 +25,7 @@ $VERSION = '0.01';
 
 use Getopt::Long;
 use File::Basename;
- 
+
 local $| = 1; # don't buffer output to STDOUT
 
 my ( $opt_version, $opt_target, $opt_batch, $opt_help, $testfile, $testfile_name, $testfile_path );
@@ -36,12 +36,12 @@ print {*STDOUT} "temp_folder:$temp_folder";
 
 #------------------------------------------------------------------
 sub create_temp_folder {
-    my $random = int rand 99999;
+    my $random = int rand 99_999;
     $random = sprintf '%05d', $random; # add some leading zeros
     print {*STDOUT} "random:$random\n";
 
     my $random_folder = $opt_target . '_' . $testfile_name . '_' . $random;
-    my $try = mkdir 'temp/' . $random_folder; 
+    mkdir 'temp/' . $random_folder or die "Could not create temporary folder temp/$random_folder\n";
 
     return $random_folder;
 }
@@ -85,7 +85,7 @@ sub get_options {  #shell options
         print_usage();
         exit;
     }
-    
+
     return;
 }
 
