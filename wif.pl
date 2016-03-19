@@ -43,8 +43,22 @@ my $automation_controller_flag = get_automation_controller_flag();
 # generate the config file, and find out where it is
 my $config_file_full = get_config_file_name($opt_target, $temp_folder);
 
+# find out what run number we are up to today for this testcase file
+my $run_number = get_run_number($testfile_name);
+
 # tear down
 remove_temp_folder($temp_folder);
+
+#------------------------------------------------------------------
+sub get_run_number {
+    my ($_testfile_name) = @_;
+
+    my $_cmd = 'subs\get_run_number.pl ' . $_testfile_name;
+    my $_run_number = `$_cmd`;
+    print {*STDOUT} "run_number [$_run_number]\n";
+
+    return $_run_number;
+}
 
 #------------------------------------------------------------------
 sub get_config_file_name {

@@ -18,9 +18,8 @@ X ensure target testfile exists
 X see if a batch file name was supplied, if not, default to Default_Batch
 X determine web publish location
 X determine if this is the automation controller
-X call subs\CreateConfig.pl :: wif version will always return config.xml
-* convert friendly name to server name
-* call subs\NumRuns.pl :: wif version will always return 1001
+X call subs\get_config_file_name.pl :: wif version will always return config.xml
+X call subs\get_run_number.pl :: wif version will always return 1001
 * call subs\CheckXML.pl :: wif version will always pass
 * check if error after running WebInject.pl
 * run the test cases with WebInject.pl
@@ -36,8 +35,8 @@ X call subs\CreateConfig.pl :: wif version will always return config.xml
 
 * make subs\get_web_server_location.pl
 * make subs\get_automation_controller_flag.pl
-* make subs\get_config_file_name.pl
-* make subs\NumRuns.pl
+* make subs\get_config_file_name.pl (convert friendly name to server name)
+* make subs\get_run_number.pl
 * make subs\CheckXML.pl
 * make subs\PrependResults.pl
 * make subs\BatchSummary.pl
