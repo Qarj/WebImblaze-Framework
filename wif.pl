@@ -37,8 +37,21 @@ my $temp_folder = create_temp_folder();
 # find out where to publish the results
 my $web_server = get_web_server_location();
 
+# find out if this is the automation controller (vs a developer desktop)
+my $automation_controller_flag = get_automation_controller_flag();
+
 # tear down
 remove_temp_folder($temp_folder);
+
+#------------------------------------------------------------------
+sub get_automation_controller_flag {
+
+    my $cmd = 'subs\get_automation_controller_flag.pl';
+    my $auto_flag = `$cmd`;
+    #print {*STDOUT} "$auto_flag [$auto_flag]\n";
+
+    return $auto_flag;
+}
 
 #------------------------------------------------------------------
 sub get_web_server_location {
@@ -49,6 +62,7 @@ sub get_web_server_location {
 
     return $server_location;
 }
+
 #------------------------------------------------------------------
 sub create_temp_folder {
     my $random = int rand 99_999;

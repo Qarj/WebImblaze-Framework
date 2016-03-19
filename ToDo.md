@@ -17,7 +17,7 @@ X ensure a target testfile was supplied
 X ensure target testfile exists
 X see if a batch file name was supplied, if not, default to Default_Batch
 X determine web publish location
-* determine if this is the automation controller
+X determine if this is the automation controller
 * convert friendly name to server name
 * call subs\CreateConfig.pl :: wif version will always return config.xml
 * call subs\NumRuns.pl :: wif version will always return 1001
@@ -42,6 +42,7 @@ X determine web publish location
 * make subs\UpdateStaticFiles.pl
 * make subs\CleanupExit.pl
 * make subs\get_web_server_location.pl
+* make subs\get_automation_controller_flag.pl
 
 
 ### Later
