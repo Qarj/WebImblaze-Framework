@@ -16,31 +16,32 @@ X target = ensure a target sub environment name (e.g. server) was supplied
 X ensure a target testfile was supplied
 X ensure target testfile exists
 X see if a batch file name was supplied, if not, default to Default_Batch
-* determine web publish location, if none default to inetpub\wwwroot if possible, otherwise error
-* run the test cases with WebInject.pl
+X determine web publish location
 * determine if this is the automation controller
 * convert friendly name to server name
-* call legacy\CreateConfig.pl :: wif version will always return config.xml
-* call legacy\NumRuns.pl :: wif version will always return 1001
-* call legacy\CheckXML.pl :: wif version will always pass
+* call subs\CreateConfig.pl :: wif version will always return config.xml
+* call subs\NumRuns.pl :: wif version will always return 1001
+* call subs\CheckXML.pl :: wif version will always pass
 * check if error after running WebInject.pl
-* call legacy\PrependStylesheet.pl :: wif version will do nothing
-* call legacy\PublishResults.pl (will also copy png and jpg and js files over) (will copy and split http log) :: wif version will do nothing
-* call legacy\PendingResults.pl :: wif version will do nothing
-* call legacy\BatchSummary.pl :: wif version will do nothing
-* call legacy\UpdateStaticFiles.pl :: wif version will do nothing
-* call legacy\CleanupExit.pl :: wif version will do nothing
+* run the test cases with WebInject.pl
+* call subs\PrependStylesheet.pl :: wif version will do nothing
+* call subs\PublishResults.pl (will also copy png and jpg and js files over) (will copy and split http log) :: wif version will do nothing
+* call subs\PendingResults.pl :: wif version will do nothing
+* call subs\BatchSummary.pl :: wif version will do nothing
+* call subs\UpdateStaticFiles.pl :: wif version will do nothing
+* call subs\CleanupExit.pl :: wif version will do nothing
 * remove temporary folder
 * can supply a flag for keeping temporary files
 * can supply a flag for no close
 
-* make legacy\CreateConfig.pl
-* make legacy\NumRuns.pl
-* make legacy\CheckXML.pl
-* make legacy\PrependResults.pl
-* make legacy\BatchSummary.pl
-* make legacy\UpdateStaticFiles.pl
-* make legacy\CleanupExit.pl
+* make subs\CreateConfig.pl
+* make subs\NumRuns.pl
+* make subs\CheckXML.pl
+* make subs\PrependResults.pl
+* make subs\BatchSummary.pl
+* make subs\UpdateStaticFiles.pl
+* make subs\CleanupExit.pl
+* make subs\get_web_server_location.pl
 
 
 ### Later

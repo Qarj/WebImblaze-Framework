@@ -31,10 +31,24 @@ local $| = 1; # don't buffer output to STDOUT
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile, $testfile_name, $testfile_path );
 get_options();  # get command line options
 
-my $temp_folder = create_temp_folder(); # generate a random folder for the temporary files
+# generate a random folder for the temporary files
+my $temp_folder = create_temp_folder();
 
+# find out where to publish the results
+my $web_server = get_web_server_location();
+
+# tear down
 remove_temp_folder($temp_folder);
 
+#------------------------------------------------------------------
+sub get_web_server_location {
+
+    my $cmd = 'subs\get_web_server_location.pl';
+    my $server_location = `$cmd`;
+    #print {*STDOUT} "$server_location [$server_location]\n";
+
+    return $server_location;
+}
 #------------------------------------------------------------------
 sub create_temp_folder {
     my $random = int rand 99_999;
