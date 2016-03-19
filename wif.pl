@@ -40,7 +40,10 @@ sub create_temp_folder {
     $random = sprintf '%05d', $random; # add some leading zeros
     print {*STDOUT} "random:$random\n";
 
-    return $opt_target . '_' . $testfile_name . '_' . $random;
+    my $random_folder = $opt_target . '_' . $testfile_name . '_' . $random;
+    my $try = mkdir 'temp/' . $random_folder; 
+
+    return $random_folder;
 }
 
 #------------------------------------------------------------------
