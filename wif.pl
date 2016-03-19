@@ -40,20 +40,21 @@ my $web_server = get_web_server_location();
 # find out if this is the automation controller (vs a developer desktop)
 my $automation_controller_flag = get_automation_controller_flag();
 
-my $config_file_full = get_config_file_name($opt_target);
+# generate the config file, and find out where it is
+my $config_file_full = get_config_file_name($opt_target, $temp_folder);
 
 # tear down
 remove_temp_folder($temp_folder);
 
 #------------------------------------------------------------------
 sub get_config_file_name {
-    my ($target) = @_;
+    my ($_target, $_temp_folder) = @_;
 
-    my $cmd = 'subs\get_config_file_name.pl ' . $target;
-    my $file_full = `$cmd`;
-    #print {*STDOUT} "config_file_full [$file_full]\n";
+    my $_cmd = 'subs\get_config_file_name.pl ' . $_target . q{ } . $_temp_folder;
+    my $_config_file_full = `$_cmd`;
+    #print {*STDOUT} "config_file_full [$_config_file_full]\n";
 
-    return $file_full;
+    return $_config_file_full;
 }
 
 #------------------------------------------------------------------
