@@ -85,15 +85,15 @@ sub print_version {
 sub print_usage {
     print <<'EOB'
 
-Usage: RunTest.pl <<options>>
+Usage: wif.pl <<options>>
 
--t|--target target environment handle                      -t skynet
--b|--batch  batch name for grouping results                -b SmokeTests
+-t|--target target environment handle             --target skynet
+-b|--batch  batch name for grouping results       --batch SmokeTests
 
 or
 
-RunTest.pl -v|--version
-RunTest.pl -h|--help
+wif.pl -v|--version
+wif.pl -h|--help
 EOB
 ;
 return;
