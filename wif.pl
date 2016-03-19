@@ -32,18 +32,31 @@ my ( $opt_version, $opt_target, $opt_batch, $opt_help, $testfile, $testfile_name
 get_options();  # get command line options
 
 my $temp_folder = create_temp_folder(); # generate a random folder for the temporary files
-print {*STDOUT} "temp_folder:$temp_folder";
+
+remove_temp_folder($temp_folder);
 
 #------------------------------------------------------------------
 sub create_temp_folder {
     my $random = int rand 99_999;
     $random = sprintf '%05d', $random; # add some leading zeros
-    print {*STDOUT} "random:$random\n";
 
     my $random_folder = $opt_target . '_' . $testfile_name . '_' . $random;
     mkdir 'temp/' . $random_folder or die "Could not create temporary folder temp/$random_folder\n";
 
     return $random_folder;
+}
+
+#------------------------------------------------------------------
+sub remove_temp_folder {
+    my ($random_folder) = @_;
+
+    if (-e "'temp/$random_folder/*'") {
+        unlink glob "'temp/$random_folder/*'" or die "Could not delete temporary files in folder temp/$random_folder\n";
+    }
+
+    rmdir 'temp/' . $random_folder or die "Could not remove temporary folder temp/$random_folder\n";
+
+    return;
 }
 
 #------------------------------------------------------------------
