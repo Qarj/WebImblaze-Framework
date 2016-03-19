@@ -20,26 +20,31 @@ $VERSION = '0.01';
 #    merchantability or fitness for a particular purpose.  See the
 #    GNU General Public License for more details.
 
-
-
-my ( $opt_version, $opt_target, $opt_batch, $opt_help );
+#    Example: 
+#              wif.pl ../WebInject/examples/simple.xml --target myenv
 
 use Getopt::Long;
+use File::Basename;
+ 
+local $| = 1; # don't buffer output to STDOUT
 
-#$| = 1; #don't buffer output to STDOUT
+my ( $opt_version, $opt_target, $opt_batch, $opt_help, $testfile, $testfile_name, $testfile_path );
+get_options();  # get command line options
 
-engine();
+my $temp_folder = create_temp_folder(); # generate a random folder for the temporary files
+print {*STDOUT} "temp_folder:$temp_folder";
 
 #------------------------------------------------------------------
-sub engine {
+sub create_temp_folder {
+    my $random = int rand 99999;
+    $random = sprintf '%05d', $random; # add some leading zeros
+    print {*STDOUT} "random:$random\n";
 
-    getoptions();  #get command line options
-
-    return;
+    return $opt_target . '_' . $testfile_name . '_' . $random;
 }
 
 #------------------------------------------------------------------
-sub getoptions {  #shell options
+sub get_options {  #shell options
 
     Getopt::Long::Configure('bundling');
     GetOptions(
@@ -67,13 +72,17 @@ sub getoptions {  #shell options
         print "\nERROR: No test file name given\n";
         print_usage();
         exit;
+    } else {
+        $testfile = $ARGV[0];
     }
+    ($testfile_name, $testfile_path) = fileparse($testfile,'.xml');
 
     if (!defined $opt_target) {
         print "\nERROR: Target environment handle must be specified\n";
         print_usage();
         exit;
     }
+    
     return;
 }
 
