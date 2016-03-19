@@ -49,8 +49,19 @@ my $config_file_full = get_config_file_name($opt_target, $temp_folder);
 # find out what run number we are up to today for this testcase file
 my $run_number = get_run_number($testfile_name);
 
+write_pending_results();
+
 # tear down
 remove_temp_folder($temp_folder);
+
+#------------------------------------------------------------------
+sub write_pending_results {
+
+    my $_cmd = 'subs\write_pending_results.pl';
+    my $_result = `$_cmd`;
+
+    return;
+}
 
 #------------------------------------------------------------------
 sub check_testfile_xml_parses_ok {
