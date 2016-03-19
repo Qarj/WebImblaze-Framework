@@ -85,7 +85,7 @@ sub print_version {
 sub print_usage {
     print <<'EOB'
 
-Usage: wif.pl <<options>>
+Usage: wif.pl tests\testfilename.xml <<options>>
 
 -t|--target target environment handle             --target skynet
 -b|--batch  batch name for grouping results       --batch SmokeTests

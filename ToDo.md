@@ -3,29 +3,51 @@
 <br />
 
 
-## \RunTest.pl
+## \wif.pl
 
 ### MVP
 X read options
 X create master temp folder in project with a .gitignore
 * generate a random folder name suffix for test output
+* ensure there is a temp folder
 * create random folder under \temp
-* NOT REQUIRED - get from config - ensure a high level environment name was supplied, e.g. DEV, LIVE, if not, display usage
+* ensure high level environment name supplied e.g. DEV, PAT, LIVE, default to DEV
 X target = ensure a target sub environment name (e.g. server) was supplied
 X ensure a target testfile was supplied
+* ensure target testfile exists
 * see if a batch file name was supplied, if not, default to DefaultBatch
 * determine web publish location, if none default to inetpub\wwwroot if possible, otherwise error
-* default config file to basic config.xml for now
-* determine the run number for today
 * run the test cases with WebInject.pl
-* prepend stylesheet to results file
-* Put the results on the webserver
-* call script to split http.log into one html file for each test step
-* create a batch summary record to indicate overall run result (removing the pending records)
+* determine if this is the automation controller
+* convert friendly name to server name
+* call legacy\CreateConfig.pl :: wif version will always return config.xml
+* call legacy\NumRuns.pl :: wif version will always return 1001
+* call legacy\CheckXML.pl :: wif version will always pass
+* check if error after running WebInject.pl
+* call legacy\PrependStylesheet.pl :: wif version will do nothing
+* call legacy\PublishResults.pl (will also copy png and jpg and js files over) (will copy and split http log) :: wif version will do nothing
+* call legacy\PendingResults.pl :: wif version will do nothing
+* call legacy\BatchSummary.pl :: wif version will do nothing
+* call legacy\UpdateStaticFiles.pl :: wif version will do nothing
+* call legacy\CleanupExit.pl :: wif version will do nothing
+* remove temporary folder
+* can supply a flag for keeping temporary files
+* can supply a flag for no close
+
+* make legacy\CreateConfig.pl
+* make legacy\NumRuns.pl
+* make legacy\CheckXML.pl
+* make legacy\PrependResults.pl
+* make legacy\BatchSummary.pl
+* make legacy\UpdateStaticFiles.pl
+* make legacy\CleanupExit.pl
+
 
 ### Later
 * see if an option was supplied to ignore retry
 * check if target environment needs to be converted from friendly name to server name
+* get target server from wif.config
+* get high level environment from config - e.g. DEV, LIVE, default to DEV
 * check for administrative permissions
 * display process id?
 * determine if this is the automation controller
@@ -39,6 +61,11 @@ X ensure a target testfile was supplied
 * check to see if webinject aborted, if so, need dummy result to indicate issue
 * check results file to see if it is valid, if not, need dummy result to indicate issue
 * call script to remmove viewstates (needed?)
+* determine the run number for today
+* prepend stylesheet to results file
+* Put the results on the webserver
+* call script to split http.log into one html file for each test step
+* create a batch summary record to indicate overall run result (removing the pending records)
 
 <br />
 
