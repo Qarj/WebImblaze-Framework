@@ -60,43 +60,43 @@ sub get_config_file_name {
 #------------------------------------------------------------------
 sub get_automation_controller_flag {
 
-    my $cmd = 'subs\get_automation_controller_flag.pl';
-    my $auto_flag = `$cmd`;
-    #print {*STDOUT} "auto_flag [$auto_flag]\n";
+    my $_cmd = 'subs\get_automation_controller_flag.pl';
+    my $_auto_flag = `$_cmd`;
+    #print {*STDOUT} "auto_flag [$_auto_flag]\n";
 
-    return $auto_flag;
+    return $_auto_flag;
 }
 
 #------------------------------------------------------------------
 sub get_web_server_location {
 
-    my $cmd = 'subs\get_web_server_location.pl';
-    my $server_location = `$cmd`;
-    #print {*STDOUT} "$server_location [$server_location]\n";
+    my $_cmd = 'subs\get_web_server_location.pl';
+    my $_server_location = `$_cmd`;
+    #print {*STDOUT} "$server_location [$_server_location]\n";
 
-    return $server_location;
+    return $_server_location;
 }
 
 #------------------------------------------------------------------
 sub create_temp_folder {
-    my $random = int rand 99_999;
-    $random = sprintf '%05d', $random; # add some leading zeros
+    my $_random = int rand 99_999;
+    $_random = sprintf '%05d', $_random; # add some leading zeros
 
-    my $random_folder = $opt_target . '_' . $testfile_name . '_' . $random;
-    mkdir 'temp/' . $random_folder or die "Could not create temporary folder temp/$random_folder\n";
+    my $_random_folder = $opt_target . '_' . $testfile_name . '_' . $_random;
+    mkdir 'temp/' . $_random_folder or die "\n\nCould not create temporary folder temp/$_random_folder\n";
 
-    return $random_folder;
+    return $_random_folder;
 }
 
 #------------------------------------------------------------------
 sub remove_temp_folder {
-    my ($random_folder) = @_;
+    my ($_remove_folder) = @_;
 
-    if (-e "'temp/$random_folder/*'") {
-        unlink glob "'temp/$random_folder/*'" or die "Could not delete temporary files in folder temp/$random_folder\n";
+    if (-e "'temp/$_remove_folder/*'") {
+        unlink glob "'temp/$_remove_folder/*'" or die "Could not delete temporary files in folder temp/$_remove_folder\n";
     }
 
-    rmdir 'temp/' . $random_folder or die "Could not remove temporary folder temp/$random_folder\n";
+    rmdir 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
 
     return;
 }
