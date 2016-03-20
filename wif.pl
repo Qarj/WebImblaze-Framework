@@ -53,9 +53,13 @@ my $config_file_full = get_config_file_name($opt_target, $temp_folder);
 my $run_number = get_run_number($testfile_name);
 
 # indicate that WebInject is running the testfile
-write_pending_results();
+write_pending_result();
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder);
+
+publish_results_on_web_server();
+
+write_final_result();
 
 # tear down
 remove_temp_folder($temp_folder);
@@ -98,9 +102,27 @@ sub call_webinject_with_testfile {
 }
 
 #------------------------------------------------------------------
-sub write_pending_results {
+sub publish_results_on_web_server {
 
-    my $_cmd = 'subs\write_pending_results.pl';
+    my $_cmd = 'subs\publish_results_on_web_server.pl';
+    my $_result = `$_cmd`;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub write_final_result {
+
+    my $_cmd = 'subs\write_final_result.pl';
+    my $_result = `$_cmd`;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub write_pending_result {
+
+    my $_cmd = 'subs\write_pending_result.pl';
     my $_result = `$_cmd`;
 
     return;
