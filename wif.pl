@@ -77,6 +77,8 @@ sub call_webinject_with_testfile {
 
     $_temp_folder = 'temp/' . $_temp_folder;
 
+    #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
+
     my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full ) ;
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full ) ;
     my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder ) . '/';
