@@ -68,8 +68,6 @@ publish_static_files();
 # tear down
 remove_temp_folder($temp_folder, $opt_keep);
 
-hard_exit_if_chosen();
-
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -107,17 +105,6 @@ sub call_webinject_with_testfile {
 
     return;
 }
-
-#------------------------------------------------------------------
-sub hard_exit_if_chosen {
-# may have to achieve this another way
-# http://stackoverflow.com/questions/2049293/how-do-i-exit-the-command-shell-after-it-invokes-a-perl-script
-    my $_cmd = 'subs\hard_exit_if_chosen.pl';
-    my $_result = `$_cmd`;
-
-    return;
-}
-
 
 #------------------------------------------------------------------
 sub publish_static_files {
@@ -325,6 +312,7 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 
 -t|--target target environment handle             --target skynet
 -b|--batch  batch name for grouping results       --batch SmokeTests
+-e|--env    high level environment DEV, LIVE      --env UAT
 -k|--keep   keep temporary files                  --keep
 
 wif.pl -v|--version
