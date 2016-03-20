@@ -29,9 +29,6 @@ X call subs\publish_static_files.pl :: wif version will do nothing
 X call subs\hard_exit_if_chosen.pl - not required - this problem does not exist
 X remove temporary folder
 X can supply a flag for keeping temporary files
-* can supply a flag for to close command session
-* review all the variables needed by subs
-* can locate where webinject.pl is and be in same folder
 
 * make subs\get_web_server_location.pl
 * make subs\get_automation_controller_flag.pl
@@ -68,6 +65,7 @@ X can supply a flag for keeping temporary files
 * prepend stylesheet to results file
 * Put the results on the webserver
 * call script to split http.log into one html file for each test step
+* can locate where webinject.pl is and be in same folder
 * create a batch summary record to indicate overall run result (removing the pending records)
 
 <br />
