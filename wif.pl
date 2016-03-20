@@ -56,7 +56,9 @@ my $run_number = get_run_number($testfile_name);
 # indicate that WebInject is running the testfile
 write_pending_result();
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder);
+my $webinject_path = get_webinject_location();
+
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder, $webinject_path);
 
 publish_results_on_web_server();
 
@@ -71,7 +73,7 @@ remove_temp_folder($temp_folder, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder) = @_;
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder, $_webinject_path) = @_;
 
     $_temp_folder = 'temp/' . $_temp_folder;
 
@@ -96,7 +98,7 @@ sub call_webinject_with_testfile {
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
-    chdir '..\WebInject';
+    chdir $_webinject_path;
 
     # we run it like this so you can see test case execution progress "as it happens"
     system('webinject.pl', @_args);
@@ -104,6 +106,15 @@ sub call_webinject_with_testfile {
     chdir $_orig_cwd;
 
     return;
+}
+
+#------------------------------------------------------------------
+sub get_webinject_location {
+
+    my $_cmd = 'subs\get_webinject_location.pl';
+    my $_result = `$_cmd`;
+
+    return $_result;
 }
 
 #------------------------------------------------------------------

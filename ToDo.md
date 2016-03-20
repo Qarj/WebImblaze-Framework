@@ -29,7 +29,11 @@ X call subs\publish_static_files.pl :: wif version will do nothing
 X call subs\hard_exit_if_chosen.pl - not required - this problem does not exist
 X remove temporary folder
 X can supply a flag for keeping temporary files
+X call subs_get_webinject_location.pl
 
+wif.pl testcases\research\test.xml --target enzo
+
+* make subs\get_webinject_location.pl
 * make subs\get_web_server_location.pl
 * make subs\get_automation_controller_flag.pl
 * make subs\get_config_file_name.pl (convert friendly name to server name)
