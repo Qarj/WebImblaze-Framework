@@ -21,12 +21,13 @@ $VERSION = '0.01';
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebInject/examples/simple.xml --target myenv
+#              wif.pl ../WebInject/examples/command.xml --target myenv
 
 use Getopt::Long;
 use File::Basename;
 use File::Spec;
 use Cwd;
+use Time::HiRes 'time','sleep';
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -177,11 +178,31 @@ sub create_temp_folder {
 sub remove_temp_folder {
     my ($_remove_folder) = @_;
 
-    if (-e "'temp/$_remove_folder/*'") {
-        unlink glob "'temp/$_remove_folder/*'" or die "Could not delete temporary files in folder temp/$_remove_folder\n";
+    if (-e 'temp/' . $_remove_folder) {
+        unlink glob 'temp/' . $_remove_folder . '/*' or die "Could not delete temporary files in folder temp/$_remove_folder\n";
     }
 
-    rmdir 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
+    my $_max = 30;
+    my $_try = 0;
+
+    ATTEMPT:
+    {
+        eval
+        {
+            rmdir 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
+        };
+
+        if ( $@ and $_try++ < $_max )
+        {
+            print "\nError: $@ Failed to remove folder, trying again...\n";
+            sleep 0.1;
+            redo ATTEMPT;
+        }
+    }
+
+    if ($@) {
+        print "\nError: $@ Failed to remove folder temp/$_remove_folder after $_max tries\n\n";
+    }
 
     return;
 }
