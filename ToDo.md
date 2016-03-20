@@ -21,9 +21,8 @@ X determine if this is the automation controller
 X call subs\get_config_file_name.pl :: wif version will always return config.xml
 X call subs\get_run_number.pl :: wif version will always return 1001
 X call subs\check_testfile_xml_parses_ok.pl :: wif version will always pass
-* call subs\PendingResults.pl :: wif version will do nothing
-* run the test cases with WebInject.pl
-* check if error after running WebInject.pl
+X call subs\write_pending_results.pl :: wif version will do nothing
+X run the test cases with WebInject.pl
 * call subs\PrependStylesheet.pl :: wif version will do nothing
 * call subs\PublishResults.pl (will also copy png and jpg and js files over) (will copy and split http log) :: wif version will do nothing
 * call subs\BatchSummary.pl :: wif version will do nothing
@@ -32,19 +31,22 @@ X call subs\check_testfile_xml_parses_ok.pl :: wif version will always pass
 X remove temporary folder
 * can supply a flag for keeping temporary files
 * can supply a flag for no close
+* review all the variables needed by subs
+* can locate where webinject.pl is and be in same folder
 
 * make subs\get_web_server_location.pl
 * make subs\get_automation_controller_flag.pl
 * make subs\get_config_file_name.pl (convert friendly name to server name)
 * make subs\get_run_number.pl
 * make subs\check_testfile_xml_parses_ok.pl
-* make subs\PrependResults.pl
+* make subs\write_pending_results.pl
 * make subs\BatchSummary.pl
 * make subs\UpdateStaticFiles.pl
 * make subs\CleanupExit.pl
 
 
 ### Later
+* check if error after running WebInject.pl
 * see if an option was supplied to ignore retry
 * check if target environment needs to be converted from friendly name to server name
 * read environment name from wif.config

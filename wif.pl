@@ -25,6 +25,8 @@ $VERSION = '0.01';
 
 use Getopt::Long;
 use File::Basename;
+use File::Spec;
+use Cwd;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -49,10 +51,50 @@ my $config_file_full = get_config_file_name($opt_target, $temp_folder);
 # find out what run number we are up to today for this testcase file
 my $run_number = get_run_number($testfile_name);
 
+# indicate that WebInject is running the testfile
 write_pending_results();
+
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder);
 
 # tear down
 remove_temp_folder($temp_folder);
+
+#------------------------------------------------------------------
+sub call_webinject_with_testfile {
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder) = @_;
+
+    $_temp_folder = 'temp/' . $_temp_folder;
+
+    my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full ) ;
+    my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full ) ;
+    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder ) . '/';
+
+    #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
+    #print {*STDOUT} "_abs_config_file_full: [$_abs_config_file_full]\n";
+    #print {*SDDOUT} "_abs_temp_folder: [$_abs_temp_folder]\n";
+
+    my @_args;
+    $_args[0] = $_abs_testfile_full;
+
+    $_args[1] = '--config';
+    $_args[2] = $_abs_config_file_full;
+
+    $_args[3] = '--output';
+    $_args[4] = $_abs_temp_folder;
+
+    $_args[5] = $_automation_controller_flag;
+
+    # WebInject test cases expect the current working directory to be where webinject.pl is
+    my $_orig_cwd = cwd;
+    chdir '..\WebInject';
+
+    # we run it like this so you can see test case execution progress "as it happens"
+    system('webinject.pl', @_args);
+
+    chdir $_orig_cwd;
+
+    return;
+}
 
 #------------------------------------------------------------------
 sub write_pending_results {
