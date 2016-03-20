@@ -26,9 +26,9 @@ X run the test cases with WebInject.pl
 X call subs\publish_results_on_web_server.pl :: wif version will do nothing
 X call subs\write_final_result.pl :: wif version will do nothing
 X call subs\publish_static_files.pl :: wif version will do nothing
-* call subs\CleanupExit.pl :: wif version will do nothing
+X call subs\hard_exit_if_chosen.pl :: wif version will do nothing
 X remove temporary folder
-* can supply a flag for keeping temporary files
+X can supply a flag for keeping temporary files
 * can supply a flag for no close
 * review all the variables needed by subs
 * can locate where webinject.pl is and be in same folder
@@ -42,7 +42,7 @@ X remove temporary folder
 * make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
 * make subs\write_final_result.pl
 * make subs\publish_static_files.pl
-* make subs\CleanupExit.pl
+* make subs\hard_exit_if_chosen.pl
 
 
 ### Later
@@ -109,4 +109,5 @@ X remove temporary folder
 ### MVP
 * Create a batch summary record
 
-
+### Regression.pl
+* http://www.perlmonks.org/?node_id=936683 START

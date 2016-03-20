@@ -32,6 +32,7 @@ use Time::HiRes 'time','sleep';
 local $| = 1; # don't buffer output to STDOUT
 
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile_full, $testfile_name, $testfile_path );
+my ( $opt_keep );
 get_options();  # get command line options
 
 # generate a random folder for the temporary files
@@ -65,7 +66,7 @@ write_final_result();
 publish_static_files();
 
 # tear down
-remove_temp_folder($temp_folder);
+remove_temp_folder($temp_folder, $opt_keep);
 
 hard_exit_if_chosen();
 
@@ -224,7 +225,12 @@ sub create_temp_folder {
 
 #------------------------------------------------------------------
 sub remove_temp_folder {
-    my ($_remove_folder) = @_;
+    my ($_remove_folder, $_opt_keep) = @_;
+
+    if (defined $_opt_keep) {
+        # user has decided to keep temporary files
+        return;
+    }
 
     if (-e 'temp/' . $_remove_folder) {
         unlink glob 'temp/' . $_remove_folder . '/*' or die "Could not delete temporary files in folder temp/$_remove_folder\n";
@@ -266,6 +272,7 @@ sub get_options {  #shell options
         't|target=s'  => \$opt_target,
         'b|batch=s'   => \$opt_batch,
         'e|env=s'   => \$opt_environment,
+        'k|keep'   => \$opt_keep,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
         )
@@ -318,8 +325,7 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 
 -t|--target target environment handle             --target skynet
 -b|--batch  batch name for grouping results       --batch SmokeTests
-
-or
+-k|--keep   keep temporary files                  --keep
 
 wif.pl -v|--version
 wif.pl -h|--help
