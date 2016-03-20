@@ -64,9 +64,11 @@ write_final_result();
 # ensure the stylesheets, assets and manual files are on the web server
 publish_static_files();
 
-
 # tear down
 remove_temp_folder($temp_folder);
+
+hard_exit_if_chosen();
+
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -104,6 +106,17 @@ sub call_webinject_with_testfile {
 
     return;
 }
+
+#------------------------------------------------------------------
+sub hard_exit_if_chosen {
+# may have to achieve this another way
+# http://stackoverflow.com/questions/2049293/how-do-i-exit-the-command-shell-after-it-invokes-a-perl-script
+    my $_cmd = 'subs\hard_exit_if_chosen.pl';
+    my $_result = `$_cmd`;
+
+    return;
+}
+
 
 #------------------------------------------------------------------
 sub publish_static_files {
