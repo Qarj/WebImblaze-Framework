@@ -23,9 +23,9 @@ X call subs\get_run_number.pl :: wif version will always return 1001
 X call subs\check_testfile_xml_parses_ok.pl :: wif version will always pass
 X call subs\write_pending_results.pl :: wif version will do nothing
 X run the test cases with WebInject.pl
-* call subs\publish_results_on_web_server.pl :: wif version will do nothing
-* call subs\BatchSummary.pl :: wif version will do nothing
-* call subs\UpdateStaticFiles.pl :: wif version will do nothing
+X call subs\publish_results_on_web_server.pl :: wif version will do nothing
+X call subs\write_final_result.pl :: wif version will do nothing
+X call subs\publish_static_files.pl :: wif version will do nothing
 * call subs\CleanupExit.pl :: wif version will do nothing
 X remove temporary folder
 * can supply a flag for keeping temporary files
@@ -38,10 +38,10 @@ X remove temporary folder
 * make subs\get_config_file_name.pl (convert friendly name to server name)
 * make subs\get_run_number.pl
 * make subs\check_testfile_xml_parses_ok.pl
-* make subs\write_pending_results.pl
+* make subs\write_pending_result.pl
 * make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
-* make subs\BatchSummary.pl
-* make subs\UpdateStaticFiles.pl
+* make subs\write_final_result.pl
+* make subs\publish_static_files.pl
 * make subs\CleanupExit.pl
 
 

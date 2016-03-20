@@ -61,6 +61,10 @@ publish_results_on_web_server();
 
 write_final_result();
 
+# ensure the stylesheets, assets and manual files are on the web server
+publish_static_files();
+
+
 # tear down
 remove_temp_folder($temp_folder);
 
@@ -97,6 +101,15 @@ sub call_webinject_with_testfile {
     system('webinject.pl', @_args);
 
     chdir $_orig_cwd;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub publish_static_files {
+
+    my $_cmd = 'subs\publish_static_files.pl';
+    my $_result = `$_cmd`;
 
     return;
 }
