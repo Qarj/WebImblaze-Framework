@@ -171,7 +171,7 @@ sub check_testfile_xml_parses_ok {
 
     # if we got an exit code, then it failed parsing
     if ($_result) {
-        die "\n\n$_testfile_full xml did not parse\n";
+        die "\n\n$_result\n";
     }
 
     return;
