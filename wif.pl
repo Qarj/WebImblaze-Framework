@@ -36,7 +36,7 @@ my ( $opt_keep );
 get_options();  # get command line options
 
 # generate a random folder for the temporary files
-my $temp_folder = create_temp_folder();
+my $temp_folder_name = create_temp_folder();
 
 # check the testfile to ensure the XML parses
 check_testfile_xml_parses_ok($testfile_full);
@@ -48,17 +48,17 @@ my $web_server = get_web_server_location();
 my $automation_controller_flag = get_automation_controller_flag();
 
 # generate the config file, and find out where it is
-my $config_file_full = get_config_file_name($opt_target, $temp_folder);
+my $config_file_full = get_config_file_name($opt_target, $temp_folder_name);
 
 # find out what run number we are up to today for this testcase file
-my $run_number = get_run_number($testfile_name);
+my $run_number = get_run_number($opt_environment, $testfile_full, $temp_folder_name);
 
 # indicate that WebInject is running the testfile
 write_pending_result();
 
 my $webinject_path = get_webinject_location();
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder, $webinject_path);
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path);
 
 publish_results_on_web_server();
 
@@ -68,20 +68,20 @@ write_final_result();
 publish_static_files();
 
 # tear down
-remove_temp_folder($temp_folder, $opt_keep);
+remove_temp_folder($temp_folder_name, $opt_keep);
 
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder, $_webinject_path) = @_;
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path) = @_;
 
-    $_temp_folder = 'temp/' . $_temp_folder;
+    $_temp_folder_name = 'temp/' . $_temp_folder_name;
 
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
     my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full ) ;
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full ) ;
-    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder ) . '/';
+    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . '/';
 
     #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
     #print {*STDOUT} "_abs_config_file_full: [$_abs_config_file_full]\n";
@@ -179,9 +179,9 @@ sub check_testfile_xml_parses_ok {
 
 #------------------------------------------------------------------
 sub get_run_number {
-    my ($_testfile_name) = @_;
+    my ($_opt_environment, $_testfile_full, $_temp_folder_name) = @_;
 
-    my $_cmd = 'subs\get_run_number.pl ' . $_testfile_name;
+    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . ' ' . $_testfile_full . ' ' . $_temp_folder_name;
     my $_run_number = `$_cmd`;
     #print {*STDOUT} "run_number [$_run_number]\n";
 
@@ -190,9 +190,9 @@ sub get_run_number {
 
 #------------------------------------------------------------------
 sub get_config_file_name {
-    my ($_target, $_temp_folder) = @_;
+    my ($_target, $_temp_folder_name) = @_;
 
-    my $_cmd = 'subs\get_config_file_name.pl ' . $_target . q{ } . $_temp_folder;
+    my $_cmd = 'subs\get_config_file_name.pl ' . $_target . q{ } . $_temp_folder_name;
     my $_config_file_full = `$_cmd`;
     #print {*STDOUT} "config_file_full [$_config_file_full]\n";
 
