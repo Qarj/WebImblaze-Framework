@@ -88,15 +88,22 @@ sub call_webinject_with_testfile {
     #print {*SDDOUT} "_abs_temp_folder: [$_abs_temp_folder]\n";
 
     my @_args;
-    $_args[0] = $_abs_testfile_full;
 
-    $_args[1] = '--config';
-    $_args[2] = $_abs_config_file_full;
+    push @_args, $_abs_testfile_full;
 
-    $_args[3] = '--output';
-    $_args[4] = $_abs_temp_folder;
+    if ($_abs_config_file_full) {
+        push @_args, '--config';
+        push @_args, $_abs_config_file_full;
+    }    
 
-    $_args[5] = $_automation_controller_flag;
+    if ($_abs_temp_folder) {
+        push @_args, '--output';
+        push @_args, $_abs_temp_folder;
+    }
+
+    if ($_automation_controller_flag) {
+        push @_args, $_automation_controller_flag;
+    }
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
