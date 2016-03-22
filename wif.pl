@@ -63,7 +63,7 @@ call_webinject_with_testfile($testfile_full, $config_file_full, $automation_cont
 
 publish_results_on_web_server();
 
-write_final_result();
+write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 # ensure the stylesheets, assets and manual files are on the web server
 publish_static_files();
@@ -147,8 +147,10 @@ sub publish_results_on_web_server {
 
 #------------------------------------------------------------------
 sub write_final_result {
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_final_result.pl';
+    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
+
     my $_result = `$_cmd`;
 
     return;
