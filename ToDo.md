@@ -32,6 +32,31 @@ X can supply a flag for keeping temporary files
 X call subs_get_webinject_location.pl
 * check if xml results can be parsed - if not, error processing
 * all the selenium bits
+* check if testcase file contains selenium
+* support baseline folder [baseline]
+* support browser selection [chrome]
+* support to use proxy or not [true]
+* support ignore retry
+* do not support automatic retry of the entire file
+* ?read which selenium server to use from config
+* ?support specify selenium server location / full 
+* support read chromedriver from  config file
+* display PID and most recent file run / server
+* support start of a proxy
+* support firefox
+* support phantomjs
+* start chromedriver
+* start selenium server
+* start selenium server as hub (phantomjs)
+* run tests with selenium options
+* write har file
+* write out urls in har file
+* check if har file too big
+* compress har
+* stop chromedriver
+* stop sel server
+* stop hub
+?? can this just be put in before and after files for time being?
 
 wif.pl testcases\research\test.xml --target enzo
 
