@@ -28,6 +28,7 @@ use File::Basename;
 use File::Spec;
 use Cwd;
 use Time::HiRes 'time','sleep';
+#use Config::Any; #print $cfg->{password}->{password};
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -54,7 +55,7 @@ my $config_file_full = get_config_file_name($opt_target, $temp_folder_name);
 my $run_number = get_run_number($opt_environment, $testfile_full, $temp_folder_name);
 
 # indicate that WebInject is running the testfile
-write_pending_result();
+write_pending_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 my $webinject_path = get_webinject_location();
 
@@ -155,8 +156,9 @@ sub write_final_result {
 
 #------------------------------------------------------------------
 sub write_pending_result {
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_pending_result.pl';
+    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
     my $_result = `$_cmd`;
 
     return;

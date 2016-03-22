@@ -39,7 +39,7 @@ X make subs\get_automation_controller_flag.pl
 X make subs\get_config_file_name.pl (convert friendly name to server name)
 X make subs\get_run_number.pl
 X make subs\check_testfile_xml_parses_ok.pl
-* make subs\write_pending_result.pl
+X make subs\write_pending_result.pl
 * make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
 * make subs\write_final_result.pl
 * make subs\publish_static_files.pl
