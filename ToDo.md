@@ -31,6 +31,7 @@ X remove temporary folder
 X can supply a flag for keeping temporary files
 X call subs_get_webinject_location.pl
 * check if xml results can be parsed - if not, error processing
+* all the selenium bits
 
 wif.pl testcases\research\test.xml --target enzo
 
@@ -43,7 +44,7 @@ X make subs\check_testfile_xml_parses_ok.pl
 X make subs\write_pending_result.pl
 X make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
 X make subs\write_final_result.pl
-* make subs\publish_static_files.pl
+X make subs\publish_static_files.pl
 
 
 ### Later

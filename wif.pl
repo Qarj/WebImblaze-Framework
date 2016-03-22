@@ -66,7 +66,7 @@ publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $te
 write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 # ensure the stylesheets, assets and manual files are on the web server
-publish_static_files();
+publish_static_files($opt_environment);
 
 # tear down
 remove_temp_folder($temp_folder_name, $opt_keep);
@@ -129,8 +129,9 @@ sub get_webinject_location {
 
 #------------------------------------------------------------------
 sub publish_static_files {
+    my ($_opt_environment) = @_;
 
-    my $_cmd = 'subs\publish_static_files.pl';
+    my $_cmd = 'subs\publish_static_files.pl ' . $_opt_environment;
     my $_result = `$_cmd`;
 
     return;
