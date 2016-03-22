@@ -61,7 +61,7 @@ my $webinject_path = get_webinject_location();
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path);
 
-publish_results_on_web_server();
+publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
@@ -138,10 +138,12 @@ sub publish_static_files {
 
 #------------------------------------------------------------------
 sub publish_results_on_web_server {
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\publish_results_on_web_server.pl';
+    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
+
     my $_result = `$_cmd`;
-
+    print "result:$_result";
     return;
 }
 
