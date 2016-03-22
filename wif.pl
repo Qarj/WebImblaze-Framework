@@ -143,7 +143,7 @@ sub publish_results_on_web_server {
     my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
 
     my $_result = `$_cmd`;
-    print "result:$_result";
+
     return;
 }
 
