@@ -31,31 +31,22 @@ X remove temporary folder
 X can supply a flag for keeping temporary files
 X call subs_get_webinject_location.pl
 X check if testcase file contains selenium
-* hard code browser selection to chrome
 X support to use proxy or not [false]
-* support ignore retry
-* do not support automatic retry of the entire file
-* ?read which selenium server to use from config
-* ?support specify selenium server location / full 
-* support read chromedriver from  config file
-* display PID and most recent file run / server
-* support start of a proxy
-* support firefox
-* support phantomjs
-* start chromedriver
-* start selenium server
-* start selenium server as hub (phantomjs)
-* run tests with selenium options
+X support ignore retry
+X hard code browser selection to chrome
+X support start of a proxy
+X start selenium server with chromedriver
+X run tests with selenium options
+* stop chromedriver
+* stop sel server
 * write har file
 * write out urls in har file
 * check if har file too big
 * compress har
-* stop chromedriver
-* stop sel server
-* stop hub
-?? can this just be put in before and after files for time being?
+X do not support automatic retry of the entire file
 
 wif.pl testcases\research\test.xml --target enzo
+wif.pl testcases\research\selenium.xml --target enzo --proxy
 
 X make subs\get_webinject_location.pl
 X make subs\get_web_server_location.pl
@@ -70,6 +61,7 @@ X make subs\publish_static_files.pl
 
 
 ### Later
+* display PID and most recent file run / server
 * check if xml results can be parsed - if not, error processing
 * check if error after running WebInject.pl
 * see if an option was supplied to ignore retry
@@ -97,6 +89,13 @@ X make subs\publish_static_files.pl
 * call script to split http.log into one html file for each test step
 * can locate where webinject.pl is and be in same folder
 * create a batch summary record to indicate overall run result (removing the pending records)
+* read which selenium server to use from config
+* support specify selenium server location / full 
+* support read chromedriver from  config file
+* support firefox
+* support phantomjs
+* start selenium server as hub (phantomjs)
+* stop hub
 
 ### Much Later
 * support baseline folder [baseline]

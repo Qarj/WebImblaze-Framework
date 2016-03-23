@@ -22,6 +22,7 @@ $VERSION = '0.01';
 
 #    Example: 
 #              wif.pl ../WebInject/examples/command.xml --target myenv
+#              wif.pl ../WebInject/examples/selenium.xml --target myenv
 
 use Getopt::Long;
 use File::Basename;
@@ -29,6 +30,8 @@ use File::Spec;
 use Cwd;
 use Time::HiRes 'time','sleep';
 use File::Slurp;
+use File::Copy qw(copy);
+use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 #use Config::Any; #print $cfg->{password}->{password};
 
@@ -61,11 +64,15 @@ write_pending_result($opt_environment, $opt_target, $testfile_full, $temp_folder
 
 my $webinject_path = get_webinject_location();
 
-my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
-
 my $proxy_port = start_browsermob_proxy($opt_proxy, $temp_folder_name);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $proxy_port, $opt_no_retry);
+my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
+print "testfile_contains_selenium:$testfile_contains_selenium\n";
+
+my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
+print "selenium_port:$selenium_port\n";
+
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
@@ -80,14 +87,14 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_proxy_port, $_no_retry) = @_;
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
 
     $_temp_folder_name = 'temp/' . $_temp_folder_name;
 
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
-    my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full ) ;
-    my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full ) ;
+    my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full );
+    my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full );
     my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . '/';
 
     #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
@@ -112,14 +119,28 @@ sub call_webinject_with_testfile {
         push @_args, $_automation_controller_flag;
     }
 
-    if ($_proxy_port) {
-        push @_args, '--proxy';
-        push @_args, 'localhost:' . $_proxy_port;
-    }
-
     if ($_no_retry) {
         push @_args, '--ignoreretry';
     }
+
+    # Selenium only options
+    if ($_testfile_contains_selenium) {
+
+        if ($_proxy_port) {
+            push @_args, '--proxy';
+            push @_args, 'localhost:' . $_proxy_port;
+        }
+        
+        push @_args, '--port';
+        push @_args, $_selenium_port;
+
+        # for now we hardcode the browser to Chrome
+        push @_args, '--driver';
+        push @_args, 'chrome';
+
+    }
+
+
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
@@ -131,6 +152,59 @@ sub call_webinject_with_testfile {
     chdir $_orig_cwd;
 
     return;
+}
+
+#------------------------------------------------------------------
+sub start_selenium_server {
+    my ($_testfile_contains_selenium, $_temp_folder_name) = @_;
+
+    # copy chromedriver - source location hardcoded for now
+    copy 'C:\selenium-server\chromedriver.exe', 'temp/' . $_temp_folder_name . '/' . 'chromedriver.eXe';
+
+    # find free port
+    my $_selenium_port = _find_available_port(9001);
+    print "_selenium_port:$_selenium_port\n";
+
+    my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\chromedriver.eXe" );
+    my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\selenium_log.txt" );
+
+
+    if ($_testfile_contains_selenium) {
+        my $_cmd = qq{wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates'}; #
+        my $_result = `$_cmd`;
+        #print "_cmd:\n$_cmd\n";
+        #print "start selenium result:\n$_result\n";
+    }
+
+    return $_selenium_port;
+}
+
+sub __port_available {
+    my ($_port) = @_;
+
+    my $_family = PF_INET;
+    my $_type   = SOCK_STREAM;
+    my $_proto  = getprotobyname('tcp')  or die "getprotobyname: $!";
+    my $_host   = INADDR_ANY;  # Use inet_aton for a specific interface
+
+    socket(my $_sock, $_family, $_type, $_proto) or die "socket: $!";
+    my $_name = sockaddr_in($_port, $_host)     or die "sockaddr_in: $!";
+
+    bind($_sock, $_name) and return 'available';
+    return 'in use';
+}
+
+sub _find_available_port {
+    my ($_start_port) = @_;
+
+    my $_max_attempts = 20;
+    foreach my $i (0..$_max_attempts) {
+        if (__port_available($_start_port + $i) eq 'available') {
+            return $_start_port + $i;
+        }
+    }
+
+    return 'none';
 }
 
 #------------------------------------------------------------------
@@ -153,7 +227,7 @@ sub does_testfile_contain_selenium {
     my $_text = read_file($_testfile_full);
 
     if ($_text =~ m/\$driver->/) {
-        return "true";
+        return 'true';
     }
 
     return;
