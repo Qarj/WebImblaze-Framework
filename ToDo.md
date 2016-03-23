@@ -30,12 +30,9 @@ X call subs\hard_exit_if_chosen.pl - not required - this problem does not exist
 X remove temporary folder
 X can supply a flag for keeping temporary files
 X call subs_get_webinject_location.pl
-* check if xml results can be parsed - if not, error processing
-* all the selenium bits
-* check if testcase file contains selenium
-* support baseline folder [baseline]
-* support browser selection [chrome]
-* support to use proxy or not [true]
+X check if testcase file contains selenium
+* hard code browser selection to chrome
+X support to use proxy or not [false]
 * support ignore retry
 * do not support automatic retry of the entire file
 * ?read which selenium server to use from config
@@ -73,10 +70,12 @@ X make subs\publish_static_files.pl
 
 
 ### Later
+* check if xml results can be parsed - if not, error processing
 * check if error after running WebInject.pl
 * see if an option was supplied to ignore retry
 * check if target environment needs to be converted from friendly name to server name
 * read environment name from wif.config
+* read default proxy from config
 * get target server from wif.config
 * get high level environment from config - e.g. DEV, LIVE, default to DEV
 * check for administrative permissions
@@ -98,6 +97,12 @@ X make subs\publish_static_files.pl
 * call script to split http.log into one html file for each test step
 * can locate where webinject.pl is and be in same folder
 * create a batch summary record to indicate overall run result (removing the pending records)
+
+### Much Later
+* support baseline folder [baseline]
+* support browser selection [chrome]
+* webinject http tests can also use browsermob proxy
+* support not having proxy rules applied
 
 <br />
 

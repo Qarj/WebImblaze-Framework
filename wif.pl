@@ -28,11 +28,13 @@ use File::Basename;
 use File::Spec;
 use Cwd;
 use Time::HiRes 'time','sleep';
+use File::Slurp;
+
 #use Config::Any; #print $cfg->{password}->{password};
 
 local $| = 1; # don't buffer output to STDOUT
 
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_help, $testfile_full, $testfile_name, $testfile_path );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep );
 get_options();  # get command line options
 
@@ -59,7 +61,11 @@ write_pending_result($opt_environment, $opt_target, $testfile_full, $temp_folder
 
 my $webinject_path = get_webinject_location();
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path);
+my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
+
+my $proxy_port = start_browsermob_proxy($opt_proxy, $temp_folder_name);
+
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $proxy_port);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
@@ -74,7 +80,7 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path) = @_;
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_proxy_port) = @_;
 
     $_temp_folder_name = 'temp/' . $_temp_folder_name;
 
@@ -114,6 +120,32 @@ sub call_webinject_with_testfile {
     system('webinject.pl', @_args);
 
     chdir $_orig_cwd;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub start_browsermob_proxy {
+    my ($_opt_proxy, $_temp_folder_name) = @_;
+
+    if (defined $_opt_proxy) {
+        my $_cmd = 'subs\start_browsermob_proxy.pl ' . $_temp_folder_name;
+        my $_proxy_port = `$_cmd`;
+        return $_proxy_port;
+    }
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub does_testfile_contain_selenium {
+    my ($_testfile_full) = @_;
+
+    my $_text = read_file($_testfile_full);
+
+    if ($_text =~ m/\$driver->/) {
+        return "true";
+    }
 
     return;
 }
@@ -286,6 +318,7 @@ sub get_options {  #shell options
         't|target=s'  => \$opt_target,
         'b|batch=s'   => \$opt_batch,
         'e|env=s'   => \$opt_environment,
+        'p|proxy'   => \$opt_proxy,
         'k|keep'   => \$opt_keep,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
@@ -340,6 +373,7 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -t|--target target environment handle             --target skynet
 -b|--batch  batch name for grouping results       --batch SmokeTests
 -e|--env    high level environment DEV, LIVE      --env UAT
+-p|--proxy  use browsermob-proxy                  --proxy
 -k|--keep   keep temporary files                  --keep
 
 wif.pl -v|--version
