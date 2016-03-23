@@ -37,8 +37,8 @@ X hard code browser selection to chrome
 X support start of a proxy
 X start selenium server with chromedriver
 X run tests with selenium options
-* stop chromedriver
-* stop sel server
+* stop sel server with chromedriver
+* shut down dynamic port for the run
 * write har file
 * write out urls in har file
 * check if har file too big

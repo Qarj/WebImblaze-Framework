@@ -74,6 +74,8 @@ print "selenium_port:$selenium_port\n";
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
+shutdown_selenium_server($selenium_port);
+
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
@@ -150,6 +152,19 @@ sub call_webinject_with_testfile {
     system('webinject.pl', @_args);
 
     chdir $_orig_cwd;
+
+    return;
+}
+#------------------------------------------------------------------
+sub shutdown_selenium_server {
+    my ($_selenium_port) = @_;
+
+    require LWP::Simple;
+
+    if (defined $_selenium_port) {
+        my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
+        eval { my $_content = get $_url; }
+    }
 
     return;
 }
