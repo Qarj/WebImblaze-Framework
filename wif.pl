@@ -34,7 +34,7 @@ use File::Slurp;
 
 local $| = 1; # don't buffer output to STDOUT
 
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_help, $testfile_full, $testfile_name, $testfile_path );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep );
 get_options();  # get command line options
 
@@ -65,7 +65,7 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 
 my $proxy_port = start_browsermob_proxy($opt_proxy, $temp_folder_name);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $proxy_port);
+call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $proxy_port, $opt_no_retry);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
@@ -80,7 +80,7 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_proxy_port) = @_;
+    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_proxy_port, $_no_retry) = @_;
 
     $_temp_folder_name = 'temp/' . $_temp_folder_name;
 
@@ -110,6 +110,15 @@ sub call_webinject_with_testfile {
 
     if ($_automation_controller_flag) {
         push @_args, $_automation_controller_flag;
+    }
+
+    if ($_proxy_port) {
+        push @_args, '--proxy';
+        push @_args, 'localhost:' . $_proxy_port;
+    }
+
+    if ($_no_retry) {
+        push @_args, '--ignoreretry';
     }
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
@@ -319,6 +328,7 @@ sub get_options {  #shell options
         'b|batch=s'   => \$opt_batch,
         'e|env=s'   => \$opt_environment,
         'p|proxy'   => \$opt_proxy,
+        'n|noretry'   => \$opt_no_retry,
         'k|keep'   => \$opt_keep,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
@@ -370,11 +380,12 @@ sub print_usage {
 
 Usage: wif.pl tests\testfilename.xml <<options>>
 
--t|--target target environment handle             --target skynet
--b|--batch  batch name for grouping results       --batch SmokeTests
--e|--env    high level environment DEV, LIVE      --env UAT
--p|--proxy  use browsermob-proxy                  --proxy
--k|--keep   keep temporary files                  --keep
+-t|--target  target environment handle             --target skynet
+-b|--batch   batch name for grouping results       --batch SmokeTests
+-e|--env     high level environment DEV, LIVE      --env UAT
+-p|--proxy   use browsermob-proxy                  --proxy
+-n|--noretry use browsermob-proxy                  --noretry
+-k|--keep    keep temporary files                  --keep
 
 wif.pl -v|--version
 wif.pl -h|--help
