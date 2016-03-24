@@ -161,9 +161,12 @@ sub shutdown_selenium_server {
 
     require LWP::Simple;
 
+    my $_content;
+
     if (defined $_selenium_port) {
         my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
-        eval { my $_content = get $_url; }
+        $_content = LWP::Simple::get $_url;
+        #print {*STDOUT} "Shutdown Server:$_content\n";
     }
 
     return;
