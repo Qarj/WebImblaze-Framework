@@ -39,7 +39,7 @@ X start selenium server with chromedriver
 X run tests with selenium options
 X stop sel server with chromedriver
 X shut down dynamic port for the run
-* write har file
+X write har file
 * write out urls in har file
 * check if har file too big
 * compress har

@@ -37,6 +37,8 @@ use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
 
 local $| = 1; # don't buffer output to STDOUT
 
+my $har_file_content;
+
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep );
 get_options();  # get command line options
@@ -76,7 +78,11 @@ call_webinject_with_testfile($testfile_full, $config_file_full, $automation_cont
 
 shutdown_selenium_server($selenium_port);
 
+write_har_file($proxy_port, $temp_folder_name);
+
 shutdown_proxy($proxy_port);
+
+report_har_file_urls($proxy_port, $temp_folder_name);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
@@ -157,14 +163,49 @@ sub call_webinject_with_testfile {
 
     return;
 }
+#------------------------------------------------------------------
+sub report_har_file_urls {
+    my ($_proxy_port, $_temp_folder_name) = @_;
+
+    if (not defined $_proxy_port) {
+        return;
+    }
+
+    while ($har_file_content =~ m{"url":"([^"]*)"}g) #"
+        {
+            print "$1\n";
+        }
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub write_har_file {
+    my ($_proxy_port, $_temp_folder_name) = @_;
+
+    if (not defined $_proxy_port) {
+        return;
+    }
+
+    require LWP::Simple;
+
+    my $_url = "http://localhost:9091/proxy/$_proxy_port/har";
+    $har_file_content = LWP::Simple::get $_url;
+
+    my $_filename = 'temp/' . $_temp_folder_name . '/har.txt';
+    open(my $_fh, '>', $_filename) or die "Could not open file '$_filename' $!";
+    binmode $_fh, ':utf8'; # set binary mode and utf8 character set
+    print $_fh $har_file_content;
+    close $_fh;
+
+    return;
+}
 
 #------------------------------------------------------------------
 sub shutdown_proxy {
     my ($_proxy_port) = @_;
 
     require LWP::UserAgent;
-
-    my $_content;
 
     # prove that that the proxy port is in use
     #my $_available_port= _find_available_port($_proxy_port);
@@ -403,6 +444,7 @@ sub remove_temp_folder {
 
     if (defined $_opt_keep) {
         # user has decided to keep temporary files
+        print {*STDOUT} "\nKept temporary folder $_remove_folder\n";
         return;
     }
 
