@@ -32,6 +32,8 @@ use Time::HiRes 'time','sleep';
 use File::Slurp;
 use File::Copy qw(copy);
 use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
+use Encode;
+
 
 #use Config::Any; #print $cfg->{password}->{password};
 
@@ -150,8 +152,6 @@ sub call_webinject_with_testfile {
 
     }
 
-
-
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
     chdir $_webinject_path;
@@ -193,16 +193,27 @@ sub write_har_file {
         return;
     }
 
+    # get the har file from browsermob-proxy
     require LWP::Simple;
-
     my $_url = "http://localhost:9091/proxy/$_proxy_port/har";
     $har_file_content = LWP::Simple::get $_url;
+    $har_file_content = Encode::encode_utf8( $har_file_content );
 
+    # write har file uncompressed
     my $_filename = 'temp/' . $_temp_folder_name . '/har.txt';
     open(my $_fh, '>', $_filename) or die "Could not open file '$_filename' $!";
-    binmode $_fh, ':utf8'; # set binary mode and utf8 character set
-    print $_fh $har_file_content;
+    binmode $_fh; # set binary mode
+    print {$_fh} $har_file_content;
     close $_fh;
+
+    # write har file compressed
+    require Compress::Zlib;
+    $_filename = 'temp/' . $_temp_folder_name . '/har.gzip';
+    open(my $_fh2, '>', $_filename) or die "Could not open file '$_filename' $!";
+    binmode $_fh2; # set binary mode
+    my $_compressed = Compress::Zlib::memGzip($har_file_content);
+    print {$_fh2} $_compressed;
+    close $_fh2;
 
     return;
 }

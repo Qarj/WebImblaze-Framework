@@ -41,8 +41,7 @@ X stop sel server with chromedriver
 X shut down dynamic port for the run
 X write har file
 X write out urls in har file
-* check if har file too big
-* compress har
+X compress har
 X do not support automatic retry of the entire file
 
 wif.pl testcases\research\test.xml --target enzo
@@ -102,6 +101,8 @@ X make subs\publish_static_files.pl
 * support browser selection [chrome]
 * webinject http tests can also use browsermob proxy
 * support not having proxy rules applied
+* check if har file too big & report on bytes both gzip and not transferred during session
+
 
 <br />
 
