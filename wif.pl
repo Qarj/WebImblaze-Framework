@@ -69,10 +69,10 @@ my $webinject_path = get_webinject_location();
 my $proxy_port = start_browsermob_proxy($opt_proxy, $temp_folder_name);
 
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
-print "testfile_contains_selenium:$testfile_contains_selenium\n";
+#print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
-print "selenium_port:$selenium_port\n";
+#print "selenium_port:$selenium_port\n";
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
@@ -171,10 +171,16 @@ sub report_har_file_urls {
         return;
     }
 
+    my $_filename = 'temp/' . $_temp_folder_name . '/URLs.txt';
+    open(my $_fh, '>', $_filename) or die "Could not open file '$_filename' $!";
+    binmode $_fh, ':utf8'; # set binary mode and utf8 character set
+
     while ($har_file_content =~ m{"url":"([^"]*)"}g) #"
         {
-            print "$1\n";
+            print $_fh "$1\n";
         }
+
+    close $_fh;
 
     return;
 }
@@ -249,7 +255,7 @@ sub start_selenium_server {
 
     # find free port
     my $_selenium_port = _find_available_port(9001);
-    print "_selenium_port:$_selenium_port\n";
+    #print "_selenium_port:$_selenium_port\n";
 
     my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\chromedriver.eXe" );
     my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\selenium_log.txt" );

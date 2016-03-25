@@ -40,7 +40,7 @@ X run tests with selenium options
 X stop sel server with chromedriver
 X shut down dynamic port for the run
 X write har file
-* write out urls in har file
+X write out urls in har file
 * check if har file too big
 * compress har
 X do not support automatic retry of the entire file
