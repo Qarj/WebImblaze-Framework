@@ -43,9 +43,7 @@ X write har file
 X write out urls in har file
 X compress har
 X do not support automatic retry of the entire file
-
-wif.pl testcases\research\test.xml --target enzo
-wif.pl testcases\research\selenium.xml --target enzo --proxy
+X fix structure of other subs to return at start if should not be executed
 
 X make subs\get_webinject_location.pl
 X make subs\get_web_server_location.pl
@@ -58,6 +56,8 @@ X make subs\publish_results_on_web_server.pl (will also copy png and jpg and js 
 X make subs\write_final_result.pl
 X make subs\publish_static_files.pl
 
+wif.pl testcases\research\test.xml --target enzo
+wif.pl testcases\research\selenium.xml --target enzo --proxy
 
 ### Later
 * display PID and most recent file run / server
@@ -91,10 +91,8 @@ X make subs\publish_static_files.pl
 * read which selenium server to use from config
 * support specify selenium server location / full 
 * support read chromedriver from  config file
-* support firefox
-* support phantomjs
-* start selenium server as hub (phantomjs)
-* stop hub
+* write har.gzip directly to web server
+* comment out har file as plain text - it is for debug use only
 
 ### Much Later
 * support baseline folder [baseline]
@@ -102,6 +100,10 @@ X make subs\publish_static_files.pl
 * webinject http tests can also use browsermob proxy
 * support not having proxy rules applied
 * check if har file too big & report on bytes both gzip and not transferred during session
+* support firefox
+* support phantomjs
+* start selenium server as hub (phantomjs)
+* stop hub
 
 
 <br />

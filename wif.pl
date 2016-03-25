@@ -31,15 +31,14 @@ use Cwd;
 use Time::HiRes 'time','sleep';
 use File::Slurp;
 use File::Copy qw(copy);
-use Socket qw( PF_INET SOCK_STREAM INADDR_ANY sockaddr_in );
-use Encode;
-
 
 #use Config::Any; #print $cfg->{password}->{password};
 
 local $| = 1; # don't buffer output to STDOUT
 
+# start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
+# end globally read/wriet variables
 
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep );
@@ -48,7 +47,7 @@ get_options();  # get command line options
 # generate a random folder for the temporary files
 my $temp_folder_name = create_temp_folder();
 
-# check the testfile to ensure the XML parses
+# check the testfile to ensure the XML parses - will die if it doesn't
 check_testfile_xml_parses_ok($testfile_full);
 
 # find out where to publish the results
@@ -197,6 +196,8 @@ sub write_har_file {
     require LWP::Simple;
     my $_url = "http://localhost:9091/proxy/$_proxy_port/har";
     $har_file_content = LWP::Simple::get $_url;
+
+    require Encode;
     $har_file_content = Encode::encode_utf8( $har_file_content );
 
     # write har file uncompressed
@@ -244,15 +245,15 @@ sub shutdown_proxy {
 sub shutdown_selenium_server {
     my ($_selenium_port) = @_;
 
+    if (not defined $_selenium_port) {
+        return;
+    }
+
     require LWP::Simple;
 
-    my $_content;
-
-    if (defined $_selenium_port) {
-        my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
-        $_content = LWP::Simple::get $_url;
-        #print {*STDOUT} "Shutdown Server:$_content\n";
-    }
+    my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
+    my $_content = LWP::Simple::get $_url;
+    #print {*STDOUT} "Shutdown Server:$_content\n";
 
     return;
 }
@@ -260,6 +261,10 @@ sub shutdown_selenium_server {
 #------------------------------------------------------------------
 sub start_selenium_server {
     my ($_testfile_contains_selenium, $_temp_folder_name) = @_;
+
+    if (not defined $_testfile_contains_selenium) {
+        return;
+    }
 
     # copy chromedriver - source location hardcoded for now
     copy 'C:\selenium-server\chromedriver.exe', 'temp/' . $_temp_folder_name . '/' . 'chromedriver.eXe';
@@ -271,13 +276,10 @@ sub start_selenium_server {
     my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\chromedriver.eXe" );
     my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\selenium_log.txt" );
 
-
-    if ($_testfile_contains_selenium) {
-        my $_cmd = qq{wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates'}; #
-        my $_result = `$_cmd`;
-        #print "_cmd:\n$_cmd\n";
-        #print "start selenium result:\n$_result\n";
-    }
+    my $_cmd = qq{wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates'}; #
+    my $_result = `$_cmd`;
+    #print "_cmd:\n$_cmd\n";
+    #print "start selenium result:\n$_result\n";
 
     return $_selenium_port;
 }
@@ -285,13 +287,15 @@ sub start_selenium_server {
 sub __port_available {
     my ($_port) = @_;
 
-    my $_family = PF_INET;
-    my $_type   = SOCK_STREAM;
+    require Socket;
+
+    my $_family = Socket::PF_INET();
+    my $_type   = Socket::SOCK_STREAM();
     my $_proto  = getprotobyname('tcp')  or die "getprotobyname: $!";
-    my $_host   = INADDR_ANY;  # Use inet_aton for a specific interface
+    my $_host   = Socket::INADDR_ANY();  # Use inet_aton for a specific interface
 
     socket(my $_sock, $_family, $_type, $_proto) or die "socket: $!";
-    my $_name = sockaddr_in($_port, $_host)     or die "sockaddr_in: $!";
+    my $_name = Socket::sockaddr_in($_port, $_host)     or die "sockaddr_in: $!";
 
     bind($_sock, $_name) and return 'available';
     return 'in use';
@@ -314,13 +318,14 @@ sub _find_available_port {
 sub start_browsermob_proxy {
     my ($_opt_proxy, $_temp_folder_name) = @_;
 
-    if (defined $_opt_proxy) {
-        my $_cmd = 'subs\start_browsermob_proxy.pl ' . $_temp_folder_name;
-        my $_proxy_port = `$_cmd`;
-        return $_proxy_port;
+    if (not defined $_opt_proxy) {
+        return;
     }
 
-    return;
+    my $_cmd = 'subs\start_browsermob_proxy.pl ' . $_temp_folder_name;
+    my $_proxy_port = `$_cmd`;
+    return $_proxy_port;
+
 }
 
 #------------------------------------------------------------------
@@ -481,7 +486,7 @@ sub remove_temp_folder {
 
         if ( $@ and $_try++ < $_max )
         {
-            print "\nError: $@ Failed to remove folder, trying again...\n";
+            #print "\nError: $@ Failed to remove folder, trying again...\n";
             sleep 0.1;
             redo ATTEMPT;
         }
