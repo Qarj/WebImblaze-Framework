@@ -76,6 +76,8 @@ call_webinject_with_testfile($testfile_full, $config_file_full, $automation_cont
 
 shutdown_selenium_server($selenium_port);
 
+shutdown_proxy($proxy_port);
+
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
 
 write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
@@ -155,6 +157,31 @@ sub call_webinject_with_testfile {
 
     return;
 }
+
+#------------------------------------------------------------------
+sub shutdown_proxy {
+    my ($_proxy_port) = @_;
+
+    require LWP::UserAgent;
+
+    my $_content;
+
+    # prove that that the proxy port is in use
+    #my $_available_port= _find_available_port($_proxy_port);
+    #print "_available_port:$_available_port\n";
+
+    if (defined $_proxy_port) {
+        LWP::UserAgent->new->delete("http://localhost:9091/proxy/$_proxy_port");
+    }
+
+    # prove that that the proxy server has been shut down
+    #$_available_port= _find_available_port($_proxy_port);
+    #print "_proxy_port:$_proxy_port\n";
+    #print "_available_port:$_available_port\n";
+
+    return;
+}
+
 #------------------------------------------------------------------
 sub shutdown_selenium_server {
     my ($_selenium_port) = @_;
