@@ -55,6 +55,8 @@ X make subs\write_pending_result.pl
 X make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
 X make subs\write_final_result.pl
 X make subs\publish_static_files.pl
+* shutdown browsermob_proxy by default
+* option to keep browsermob_proxy running
 
 wif.pl testcases\research\test.xml --target enzo
 wif.pl testcases\research\selenium.xml --target enzo --proxy

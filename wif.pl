@@ -106,7 +106,7 @@ sub call_webinject_with_testfile {
 
     my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full );
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full );
-    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . '/';
+    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . q{/};
 
     #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
     #print {*STDOUT} "_abs_config_file_full: [$_abs_config_file_full]\n";
@@ -119,7 +119,7 @@ sub call_webinject_with_testfile {
     if ($_abs_config_file_full) {
         push @_args, '--config';
         push @_args, $_abs_config_file_full;
-    }    
+    }
 
     if ($_abs_temp_folder) {
         push @_args, '--output';
@@ -141,7 +141,7 @@ sub call_webinject_with_testfile {
             push @_args, '--proxy';
             push @_args, 'localhost:' . $_proxy_port;
         }
-        
+
         push @_args, '--port';
         push @_args, $_selenium_port;
 
@@ -156,7 +156,7 @@ sub call_webinject_with_testfile {
     chdir $_webinject_path;
 
     # we run it like this so you can see test case execution progress "as it happens"
-    system('webinject.pl', @_args);
+    system 'webinject.pl', @_args;
 
     chdir $_orig_cwd;
 
@@ -171,15 +171,15 @@ sub report_har_file_urls {
     }
 
     my $_filename = 'temp/' . $_temp_folder_name . '/URLs.txt';
-    open(my $_fh, '>', $_filename) or die "Could not open file '$_filename' $!";
-    binmode $_fh, ':utf8'; # set binary mode and utf8 character set
+    open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
+    binmode $_fh, ':encoding(UTF-8)'; # set binary mode and utf8 character set
 
-    while ($har_file_content =~ m{"url":"([^"]*)"}g) #"
-        {
-            print $_fh "$1\n";
-        }
+    my $doublequote = "\x22"; ## no critic(ValuesAndExpressions::ProhibitEscapedCharacters)
+    while ( $har_file_content =~ m/"url":$doublequote([^$doublequote]*)$doublequote/g ) {
+        print {$_fh} "$1\n";
+    }
 
-    close $_fh;
+    close $_fh or die "Could not close file $_filename\n";
 
     return;
 }
@@ -202,19 +202,19 @@ sub write_har_file {
 
     # write har file uncompressed
     my $_filename = 'temp/' . $_temp_folder_name . '/har.txt';
-    open(my $_fh, '>', $_filename) or die "Could not open file '$_filename' $!";
+    open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
     binmode $_fh; # set binary mode
     print {$_fh} $har_file_content;
-    close $_fh;
+    close $_fh or die "Could not close file $_filename\n";
 
     # write har file compressed
     require Compress::Zlib;
     $_filename = 'temp/' . $_temp_folder_name . '/har.gzip';
-    open(my $_fh2, '>', $_filename) or die "Could not open file '$_filename' $!";
+    open my $_fh2, '>', $_filename or die "Could not open file '$_filename' $!\n";
     binmode $_fh2; # set binary mode
     my $_compressed = Compress::Zlib::memGzip($har_file_content);
     print {$_fh2} $_compressed;
-    close $_fh2;
+    close $_fh2 or die "Could not close file $_filename\n";
 
     return;
 }
@@ -267,7 +267,7 @@ sub start_selenium_server {
     }
 
     # copy chromedriver - source location hardcoded for now
-    copy 'C:\selenium-server\chromedriver.exe', 'temp/' . $_temp_folder_name . '/' . 'chromedriver.eXe';
+    copy 'C:/selenium-server/chromedriver.exe', "temp/$_temp_folder_name/chromedriver.eXe";
 
     # find free port
     my $_selenium_port = _find_available_port(9001);
@@ -291,13 +291,16 @@ sub __port_available {
 
     my $_family = Socket::PF_INET();
     my $_type   = Socket::SOCK_STREAM();
-    my $_proto  = getprotobyname('tcp')  or die "getprotobyname: $!";
+    my $_proto  = getprotobyname 'tcp' or die "getprotobyname: $!\n";
     my $_host   = Socket::INADDR_ANY();  # Use inet_aton for a specific interface
 
-    socket(my $_sock, $_family, $_type, $_proto) or die "socket: $!";
-    my $_name = Socket::sockaddr_in($_port, $_host)     or die "sockaddr_in: $!";
+    socket my $_sock, $_family, $_type, $_proto  or die "socket: $!\n";
+    my $_name = Socket::sockaddr_in($_port, $_host)     or die "sockaddr_in: $!\n";
 
-    bind($_sock, $_name) and return 'available';
+    if (bind $_sock, $_name) {
+        return 'available';
+    }
+
     return 'in use';
 }
 
@@ -364,7 +367,7 @@ sub publish_static_files {
 sub publish_results_on_web_server {
     my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
+    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
 
     my $_result = `$_cmd`;
 
@@ -375,7 +378,7 @@ sub publish_results_on_web_server {
 sub write_final_result {
     my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
+    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
 
     my $_result = `$_cmd`;
 
@@ -386,7 +389,7 @@ sub write_final_result {
 sub write_pending_result {
     my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . ' ' . $opt_target . ' ' . $_testfile_full . ' ' . $_temp_folder_name . ' ' . $_opt_batch . ' ' . $_run_number;
+    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
     my $_result = `$_cmd`;
 
     return;
@@ -396,7 +399,7 @@ sub write_pending_result {
 sub check_testfile_xml_parses_ok {
     my ($_testfile_full) = @_;
 
-    my $_cmd = 'subs\check_testfile_xml_parses_ok.pl ' . $_testfile_full;
+    my $_cmd = "subs\\check_testfile_xml_parses_ok.pl $_testfile_full";
     my $_result = `$_cmd`;
 
     # if we got an exit code, then it failed parsing
@@ -411,7 +414,7 @@ sub check_testfile_xml_parses_ok {
 sub get_run_number {
     my ($_opt_environment, $_testfile_full, $_temp_folder_name) = @_;
 
-    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . ' ' . $_testfile_full . ' ' . $_temp_folder_name;
+    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . q{ } . $_testfile_full . q{ } . $_temp_folder_name;
     my $_run_number = `$_cmd`;
     #print {*STDOUT} "run_number [$_run_number]\n";
 
@@ -470,8 +473,8 @@ sub remove_temp_folder {
         return;
     }
 
-    if (-e 'temp/' . $_remove_folder) {
-        unlink glob 'temp/' . $_remove_folder . '/*' or die "Could not delete temporary files in folder temp/$_remove_folder\n";
+    if (-e "temp/$_remove_folder") {
+        unlink glob 'temp/' . $_remove_folder . q{/*} or die "Could not delete temporary files in folder temp/$_remove_folder\n";
     }
 
     my $_max = 30;
