@@ -57,7 +57,7 @@ my $web_server = get_web_server_location();
 my $automation_controller_flag = get_automation_controller_flag();
 
 # generate the config file, and find out where it is
-my $config_file_full = get_config_file_name($opt_target, $temp_folder_name);
+my ($config_file_full, $config_file_name, $config_file_path) = get_config_file_name($opt_target, $temp_folder_name);
 
 # find out what run number we are up to today for this testcase file
 my $run_number = get_run_number($opt_environment, $testfile_full, $temp_folder_name);
@@ -74,6 +74,8 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
 #print "selenium_port:$selenium_port\n";
+
+display_title_info($testfile_name, $config_file_name, $temp_folder_name, $selenium_port, $proxy_port);
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
@@ -162,6 +164,27 @@ sub call_webinject_with_testfile {
 
     return;
 }
+
+
+#------------------------------------------------------------------
+sub display_title_info {
+    my ($_testfile_name, $_config_file_name, $_temp_folder_name, $_selenium_port, $_proxy_port) = @_;
+
+    my $_selenium_port_info = q{};
+    if (defined $_selenium_port) {
+        $_selenium_port_info = " [Selenium Port:$_selenium_port]";
+    }
+
+    my $_proxy_port_info = q{};
+    if (defined $_proxy_port) {
+        $_proxy_port_info = " [Proxy Port:$_proxy_port]";
+    }
+
+    my $_result = `title temp\\$_temp_folder_name $_config_file_name $_testfile_name$_selenium_port_info$_proxy_port_info`;
+
+    return;
+}
+
 #------------------------------------------------------------------
 sub report_har_file_urls {
     my ($_proxy_port, $_temp_folder_name) = @_;
@@ -429,7 +452,9 @@ sub get_config_file_name {
     my $_config_file_full = `$_cmd`;
     #print {*STDOUT} "config_file_full [$_config_file_full]\n";
 
-    return $_config_file_full;
+    my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'.xml');
+
+    return $_config_file_full, $_config_file_name, $_config_file_path;
 }
 
 #------------------------------------------------------------------

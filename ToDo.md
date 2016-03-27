@@ -55,14 +55,12 @@ X make subs\write_pending_result.pl
 X make subs\publish_results_on_web_server.pl (will also copy png and jpg and js files over) (will copy and split http log) (will prepend stylesheet)
 X make subs\write_final_result.pl
 X make subs\publish_static_files.pl
-* shutdown browsermob_proxy by default
-* option to keep browsermob_proxy running
 
 wif.pl testcases\research\test.xml --target enzo
 wif.pl testcases\research\selenium.xml --target enzo --proxy
 
 ### Later
-* display PID and most recent file run / server
+X display most recent file run / server
 * check if xml results can be parsed - if not, error processing
 * check if error after running WebInject.pl
 * see if an option was supplied to ignore retry
@@ -96,6 +94,11 @@ wif.pl testcases\research\selenium.xml --target enzo --proxy
 * write har.gzip directly to web server
 * comment out har file as plain text - it is for debug use only
 
+### More later
+
+* shutdown browsermob_proxy by default
+* option to keep browsermob_proxy running
+
 ### Much Later
 * support baseline folder [baseline]
 * support browser selection [chrome]
@@ -106,7 +109,7 @@ wif.pl testcases\research\selenium.xml --target enzo --proxy
 * support phantomjs
 * start selenium server as hub (phantomjs)
 * stop hub
-
+* display pid
 
 <br />
 
