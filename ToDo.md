@@ -59,23 +59,24 @@ X make subs\publish_static_files.pl
 
 wif.pl testcases\research\test.xml --target enzo
 wif.pl testcases\research\selenium.xml --target enzo --proxy
+wif.pl
 
 ### Later
 X display most recent file run / server
 X display run number in title
 X see if an option was supplied to ignore retry
 X read environment name from wif.config
-* read default proxy from config
+X read proxy flag from config
 X get target server from wif.config
 X get high level environment from config - e.g. DEV, LIVE, default to DEV
-* update config with most recent run (target server, environment)
+X update config with most recent run (target server, environment)
 X read which selenium server to use from config
 * support read chromedriver from  config file
 X save config with options
 X option not to save config
 
-* Remove check_testfile_xml_parses_ok.pl
-    * check that test file xml is valid (subscript or sub?)
+X Remove check_testfile_xml_parses_ok.pl
+    X check that test file xml is valid (subscript or sub?)
 
 * Remove get_web_server_location.pl
     * can locate where webinject.pl is and be in same folder

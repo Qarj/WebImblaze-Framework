@@ -32,6 +32,7 @@ use Time::HiRes 'time','sleep';
 use File::Slurp;
 use File::Copy qw(copy);
 use Config::Tiny;
+use XML::Simple;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -431,12 +432,21 @@ sub write_pending_result {
 sub check_testfile_xml_parses_ok {
     my ($_testfile_full) = @_;
 
-    my $_cmd = "subs\\check_testfile_xml_parses_ok.pl $_testfile_full";
-    my $_result = `$_cmd`;
+    my $_xml = read_file($_testfile_full);
 
-    # if we got an exit code, then it failed parsing
-    if ($_result) {
-        die "\n\n$_result\n";
+    # for convenience, WebInject allows ampersand and less than to appear in xml data, so this needs to be masked
+    $_xml =~ s/&/{AMPERSAND}/g;  
+    $_xml =~ s/\\</{LESSTHAN}/g;      
+
+    # here we parse the xml file in an eval, and capture any error returned (in $@)
+    my $_message;
+    my $_result = eval { XMLin($_xml) };
+
+    if ($@) {
+        $_message = $@;
+        $_message =~ s| at C:.*||g; # remove misleading reference Parser.pm
+        $_message =~ s|\n||g; # remove line feeds
+        die "\n".$_message." in $_testfile_full\n";
     }
 
     return;
