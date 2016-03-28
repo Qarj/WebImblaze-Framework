@@ -67,10 +67,10 @@ write_pending_result($opt_environment, $opt_target, $testfile_full, $temp_folder
 
 my $webinject_path = get_webinject_location();
 
-my $proxy_port = start_browsermob_proxy($opt_proxy, $temp_folder_name);
-
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
+
+my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_proxy, $temp_folder_name);
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
 #print "selenium_port:$selenium_port\n";
@@ -342,9 +342,18 @@ sub _find_available_port {
 
 #------------------------------------------------------------------
 sub start_browsermob_proxy {
-    my ($_opt_proxy, $_temp_folder_name) = @_;
+    my ($_testfile_contains_selenium, $_opt_proxy, $_temp_folder_name) = @_;
 
     if (not defined $_opt_proxy) {
+        return;
+    }
+
+    if (not lc $_opt_proxy eq 'true') {
+        return;
+    }
+
+    # for the moment, a proxy can only be used in conjunction with selenium
+    if (not defined $_testfile_contains_selenium) {
         return;
     }
 
@@ -538,31 +547,57 @@ sub _read_config {
     my $_opt_environment = $_config->{main}->{environment};
     my $_testfile_full = $_config->{main}->{testfile_full};
     my $_selenium_location_full = $_config->{main}->{selenium_location_full};
+    my $_opt_proxy = $_config->{main}->{proxy};
     my $_web_server_location_full = $_config->{main}->{web_server_location_full};
 
-    return $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_web_server_location_full;
+    return $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full;
+}
+
+#------------------------------------------------------------------
+sub _write_config {
+    my ($_opt_no_update_config, $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full) = @_;    
+
+    if (defined $_opt_no_update_config) {
+        return;
+    }
+
+    my $_config = Config::Tiny->new;
+
+    $_config->{main}->{target} = $_opt_target;
+    $_config->{main}->{batch} = $_opt_batch;
+    $_config->{main}->{environment} = $_opt_environment;
+    $_config->{main}->{testfile_full} = $_testfile_full;
+    $_config->{main}->{selenium_location_full} = $_selenium_location_full;
+    $_config->{main}->{proxy} = $_opt_proxy;
+    $_config->{main}->{web_server_location_full} = $_web_server_location_full;
+
+    $_config->write( 'wif.config' );
+
+    return;
 }
 
 #------------------------------------------------------------------
 sub get_options_and_config {  #shell options
 
-    ($opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $web_server_location_full) = _read_config();
+    ($opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $opt_proxy, $web_server_location_full) = _read_config();
 
     # config file definition wins over hard coded defaults
     if (not defined $opt_environment) { $opt_environment = 'DEV'; }; # default the environment name
     if (not defined $opt_batch) { $opt_batch = 'Default_Batch'; }; # default the batch
 
+    my $_opt_no_update_config;
     # options specified at the command line win over those defined in wif.config
     Getopt::Long::Configure('bundling');
     GetOptions(
-        't|target=s'  => \$opt_target,
-        'b|batch=s'   => \$opt_batch,
-        'e|env=s'   => \$opt_environment,
-        'p|proxy'   => \$opt_proxy,
-        'n|no-retry'   => \$opt_no_retry,
-        'k|keep'   => \$opt_keep,
-        'v|V|version' => \$opt_version,
-        'h|help'      => \$opt_help,
+        't|target=s'         => \$opt_target,
+        'b|batch=s'          => \$opt_batch,
+        'e|env=s'            => \$opt_environment,
+        'p|proxy=s'          => \$opt_proxy,
+        'n|no-retry'         => \$opt_no_retry,
+        'u|no-update-config' => \$_opt_no_update_config,
+        'k|keep'             => \$opt_keep,
+        'v|V|version'        => \$opt_version,
+        'h|help'             => \$opt_help,
         )
         or do {
             print_usage();
@@ -600,6 +635,9 @@ sub get_options_and_config {  #shell options
         exit;
     }
 
+    # now we know what the preferred settings are, save them for next time
+    _write_config($_opt_no_update_config, $opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $opt_proxy, $web_server_location_full);
+
     return;
 }
 
@@ -613,12 +651,13 @@ sub print_usage {
 
 Usage: wif.pl tests\testfilename.xml <<options>>
 
--t|--target   target environment handle             --target skynet
--b|--batch    batch name for grouping results       --batch SmokeTests
--e|--env      high level environment DEV, LIVE      --env UAT
--p|--proxy    use browsermob-proxy                  --proxy
--n|--no-retry do not invoke retries                 --no-retry
--k|--keep     keep temporary files                  --keep
+-t|--target           target environment handle             --target skynet
+-b|--batch            batch name for grouping results       --batch SmokeTests
+-e|--env              high level environment DEV, LIVE      --env UAT
+-p|--proxy            use browsermob-proxy
+-n|--no-retry         do not invoke retries
+-u|--no-update-config do not update config to reflect options
+-k|--keep             keep temporary files
 
 wif.pl -v|--version
 wif.pl -h|--help
