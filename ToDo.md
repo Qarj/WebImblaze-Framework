@@ -61,6 +61,7 @@ wif.pl testcases\research\selenium.xml --target enzo --proxy
 
 ### Later
 X display most recent file run / server
+* display run number in title
 * check if xml results can be parsed - if not, error processing
 * check if error after running WebInject.pl
 * see if an option was supplied to ignore retry

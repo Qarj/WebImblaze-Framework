@@ -75,7 +75,7 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
 #print "selenium_port:$selenium_port\n";
 
-display_title_info($testfile_name, $config_file_name, $temp_folder_name, $selenium_port, $proxy_port);
+display_title_info($testfile_name, $run_number, $config_file_name, $temp_folder_name, $selenium_port, $proxy_port);
 
 call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
@@ -168,7 +168,7 @@ sub call_webinject_with_testfile {
 
 #------------------------------------------------------------------
 sub display_title_info {
-    my ($_testfile_name, $_config_file_name, $_temp_folder_name, $_selenium_port, $_proxy_port) = @_;
+    my ($_testfile_name, $_run_number, $_config_file_name, $_temp_folder_name, $_selenium_port, $_proxy_port) = @_;
 
     my $_selenium_port_info = q{};
     if (defined $_selenium_port) {
@@ -180,7 +180,7 @@ sub display_title_info {
         $_proxy_port_info = " [Proxy Port:$_proxy_port]";
     }
 
-    my $_result = `title temp\\$_temp_folder_name $_config_file_name $_testfile_name$_selenium_port_info$_proxy_port_info`;
+    my $_result = `title temp\\$_temp_folder_name $_config_file_name $_run_number:$_testfile_name$_selenium_port_info$_proxy_port_info`;
 
     return;
 }
