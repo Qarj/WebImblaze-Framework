@@ -64,15 +64,12 @@ wif.pl testcases\research\selenium.xml --target enzo --proxy
 X display most recent file run / server
 X display run number in title
 X see if an option was supplied to ignore retry
-* read environment name from wif.config
+X read environment name from wif.config
 * read default proxy from config
-* get target server from wif.config
-* get high level environment from config - e.g. DEV, LIVE, default to DEV
+X get target server from wif.config
+X get high level environment from config - e.g. DEV, LIVE, default to DEV
 * update config with most recent run (target server, environment)
-* default high level environment
-* default low level environment
-* read which selenium server to use from config
-* support specify selenium server location / full 
+X read which selenium server to use from config
 * support read chromedriver from  config file
 
 * Remove check_testfile_xml_parses_ok.pl

@@ -21,8 +21,8 @@ $VERSION = '0.01';
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebInject/examples/command.xml --target myenv
-#              wif.pl ../WebInject/examples/selenium.xml --target myenv
+#              wif.pl ../WebInject/examples/command.xml --target my_sub_environment
+#              wif.pl ../WebInject/examples/selenium.xml --target my_sub_environment
 
 use Getopt::Long;
 use File::Basename;
@@ -31,8 +31,7 @@ use Cwd;
 use Time::HiRes 'time','sleep';
 use File::Slurp;
 use File::Copy qw(copy);
-
-#use Config::Any; #print $cfg->{password}->{password};
+use Config::Tiny;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -42,7 +41,8 @@ my $har_file_content;
 
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep );
-get_options();  # get command line options
+my ( $web_server_location_full, $selenium_location_full );
+get_options_and_config();  # get command line options
 
 # generate a random folder for the temporary files
 my $temp_folder_name = create_temp_folder();
@@ -51,7 +51,7 @@ my $temp_folder_name = create_temp_folder();
 check_testfile_xml_parses_ok($testfile_full);
 
 # find out where to publish the results
-my $web_server = get_web_server_location();
+##my $web_server_location_full = get_web_server_location();
 
 # find out if this is the automation controller (vs a developer desktop)
 my $automation_controller_flag = get_automation_controller_flag();
@@ -528,11 +528,31 @@ sub remove_temp_folder {
 }
 
 #------------------------------------------------------------------
-sub get_options {  #shell options
+sub _read_config {
+    my $_config = Config::Tiny->new;
 
-    $opt_environment = 'DEV'; # default the environment name
-    $opt_batch = 'Default_Batch';
+    $_config = Config::Tiny->read( 'wif.config' );
 
+    my $_opt_target = $_config->{main}->{target};
+    my $_opt_batch = $_config->{main}->{batch};
+    my $_opt_environment = $_config->{main}->{environment};
+    my $_testfile_full = $_config->{main}->{testfile_full};
+    my $_selenium_location_full = $_config->{main}->{selenium_location_full};
+    my $_web_server_location_full = $_config->{main}->{web_server_location_full};
+
+    return $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_web_server_location_full;
+}
+
+#------------------------------------------------------------------
+sub get_options_and_config {  #shell options
+
+    ($opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $web_server_location_full) = _read_config();
+
+    # config file definition wins over hard coded defaults
+    if (not defined $opt_environment) { $opt_environment = 'DEV'; }; # default the environment name
+    if (not defined $opt_batch) { $opt_batch = 'Default_Batch'; }; # default the batch
+
+    # options specified at the command line win over those defined in wif.config
     Getopt::Long::Configure('bundling');
     GetOptions(
         't|target=s'  => \$opt_target,
@@ -561,9 +581,11 @@ sub get_options {  #shell options
 
     # read the testfile name, and ensure it exists
     if (($#ARGV + 1) < 1) {
-        print "\nERROR: No test file name given\n";
-        print_usage();
-        exit;
+        if (not defined $testfile_full) {
+            print "\nERROR: No test file name specified at command line or found in wif.config\n";
+            print_usage();
+            exit;
+        }
     } else {
         $testfile_full = $ARGV[0];
     }
