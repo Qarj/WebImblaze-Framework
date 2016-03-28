@@ -539,7 +539,7 @@ sub get_options {  #shell options
         'b|batch=s'   => \$opt_batch,
         'e|env=s'   => \$opt_environment,
         'p|proxy'   => \$opt_proxy,
-        'n|noretry'   => \$opt_no_retry,
+        'n|no-retry'   => \$opt_no_retry,
         'k|keep'   => \$opt_keep,
         'v|V|version' => \$opt_version,
         'h|help'      => \$opt_help,
@@ -591,12 +591,12 @@ sub print_usage {
 
 Usage: wif.pl tests\testfilename.xml <<options>>
 
--t|--target  target environment handle             --target skynet
--b|--batch   batch name for grouping results       --batch SmokeTests
--e|--env     high level environment DEV, LIVE      --env UAT
--p|--proxy   use browsermob-proxy                  --proxy
--n|--noretry use browsermob-proxy                  --noretry
--k|--keep    keep temporary files                  --keep
+-t|--target   target environment handle             --target skynet
+-b|--batch    batch name for grouping results       --batch SmokeTests
+-e|--env      high level environment DEV, LIVE      --env UAT
+-p|--proxy    use browsermob-proxy                  --proxy
+-n|--no-retry do not invoke retries                 --no-retry
+-k|--keep     keep temporary files                  --keep
 
 wif.pl -v|--version
 wif.pl -h|--help

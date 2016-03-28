@@ -44,6 +44,7 @@ X write out urls in har file
 X compress har
 X do not support automatic retry of the entire file
 X fix structure of other subs to return at start if should not be executed
+X option to not delete temporary files
 
 X make subs\get_webinject_location.pl
 X make subs\get_web_server_location.pl
@@ -61,44 +62,66 @@ wif.pl testcases\research\selenium.xml --target enzo --proxy
 
 ### Later
 X display most recent file run / server
-* display run number in title
-* check if xml results can be parsed - if not, error processing
-* check if error after running WebInject.pl
-* see if an option was supplied to ignore retry
-* check if target environment needs to be converted from friendly name to server name
+X display run number in title
+X see if an option was supplied to ignore retry
 * read environment name from wif.config
 * read default proxy from config
 * get target server from wif.config
 * get high level environment from config - e.g. DEV, LIVE, default to DEV
-* check for administrative permissions
-* display process id?
-* determine if this is the automation controller
+* update config with most recent run (target server, environment)
 * default high level environment
 * default low level environment
-* call a script to generate the configuration file
-* update the pending record to indicate execution has started
-* remove previous http.log, if present (redundant?)
-* option to not delete temporary files
-* check that test file xml is valid (subscript or sub?)
-* check to see if webinject aborted, if so, need dummy result to indicate issue
-* check results file to see if it is valid, if not, need dummy result to indicate issue
-* call script to remmove viewstates (needed?)
-* determine the run number for today
-* prepend stylesheet to results file
-* Put the results on the webserver
-* call script to split http.log into one html file for each test step
-* can locate where webinject.pl is and be in same folder
-* create a batch summary record to indicate overall run result (removing the pending records)
 * read which selenium server to use from config
 * support specify selenium server location / full 
 * support read chromedriver from  config file
-* write har.gzip directly to web server
-* comment out har file as plain text - it is for debug use only
+
+* Remove check_testfile_xml_parses_ok.pl
+    * check that test file xml is valid (subscript or sub?)
+
+* Remove get_web_server_location.pl
+    * can locate where webinject.pl is and be in same folder
+
+* Remove get_automation_controller_flag.pl
+    * determine if this is the automation controller
+
+* Remove get_config_file_name.pl
+    * check if target environment needs to be converted from friendly name to server name
+    * call a script to generate the configuration file
+
+* Remove get_run_number.pl
+    * determine the run number for today
+
+* Remove write_pending_result.pl
+    * update the pending record to indicate execution has started
+
+* Remove get_webinject_location.pl
+
+* Remove start_browsermob_proxy.pl
+
+* Remove publish_results_on_web_server.pl
+    * prepend stylesheet to results file
+    * Put the results on the webserver
+    * call script to split http.log into one html file for each test step
+    * write har.gzip directly to web server
+    * comment out har file as plain text - it is for debug use only
+
+* Remove write_final_result.pl
+    * create a batch summary record to indicate overall run result (removing the pending records)
+
+* Remove publish_static_files.pl
+
+* Create sub check_webinject_ran_ok
+    * check if xml results can be parsed - if not, error processing
+    * check if error after running WebInject.pl
+    * check to see if webinject aborted, if so, need dummy result to indicate issue
+    * check results file to see if it is valid, if not, need dummy result to indicate issue
+
 
 ### More later
 
 * shutdown browsermob_proxy by default
 * option to keep browsermob_proxy running
+* check for administrative permissions - or investigate privilleges required
 
 ### Much Later
 * support baseline folder [baseline]
