@@ -51,9 +51,6 @@ my $temp_folder_name = create_temp_folder();
 # check the testfile to ensure the XML parses - will die if it doesn't
 check_testfile_xml_parses_ok($testfile_full);
 
-# find out where to publish the results
-##my $web_server_location_full = get_web_server_location();
-
 # find out if this is the automation controller (vs a developer desktop)
 my $automation_controller_flag = get_automation_controller_flag();
 
