@@ -42,39 +42,40 @@ my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermo
 my ( $opt_keep, $opt_no_update_config );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
+my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 # end globally read/write variables
 
 get_options_and_config();  # get command line options
 
 # generate a random folder for the temporary files
-my $temp_folder_name = create_temp_folder();
+$temp_folder_name = create_temp_folder();
 
 # check the testfile to ensure the XML parses - will die if it doesn't
-check_testfile_xml_parses_ok($testfile_full);
+check_testfile_xml_parses_ok();
 
 # generate the config file, and find out where it is
-my ($config_file_full, $config_file_name, $config_file_path) = get_config_file_name($opt_target, $temp_folder_name);
+my ($config_file_full, $config_file_name, $config_file_path) = get_config_file_name();
 
 # find out what run number we are up to today for this testcase file
-my $run_number = get_run_number($opt_environment, $testfile_full, $temp_folder_name);
+my $run_number = get_run_number($opt_environment, $testfile_full);
 
 # indicate that WebInject is running the testfile
-write_pending_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
+write_pending_result($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
 my $webinject_path = get_webinject_location();
 
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
-my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_use_browsermob_proxy, $temp_folder_name);
+my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_use_browsermob_proxy);
 
-my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
+my $selenium_port = start_selenium_server($testfile_contains_selenium);
 #print "selenium_port:$selenium_port\n";
 
-display_title_info($testfile_name, $run_number, $config_file_name, $temp_folder_name, $selenium_port, $proxy_port);
+display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
+call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
 shutdown_selenium_server($selenium_port);
 
@@ -82,11 +83,11 @@ write_har_file($proxy_port, $temp_folder_name);
 
 shutdown_proxy($proxy_port);
 
-report_har_file_urls($proxy_port, $temp_folder_name);
+report_har_file_urls($proxy_port);
 
-publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
+publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
-write_final_result($opt_environment, $opt_target, $testfile_full, $temp_folder_name, $opt_batch, $run_number);
+write_final_result($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
 # ensure the stylesheets, assets and manual files are on the web server
 publish_static_files($opt_environment);
@@ -97,9 +98,9 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_is_automation_controller, $_temp_folder_name, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
+    my ($_testfile_full, $_config_file_full, $_is_automation_controller, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
 
-    $_temp_folder_name = 'temp/' . $_temp_folder_name;
+    my $_temp_folder_name = 'temp/' . $temp_folder_name;
 
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
@@ -165,7 +166,7 @@ sub call_webinject_with_testfile {
 
 #------------------------------------------------------------------
 sub display_title_info {
-    my ($_testfile_name, $_run_number, $_config_file_name, $_temp_folder_name, $_selenium_port, $_proxy_port) = @_;
+    my ($_testfile_name, $_run_number, $_config_file_name, $_selenium_port, $_proxy_port) = @_;
 
     my $_selenium_port_info = q{};
     if (defined $_selenium_port) {
@@ -177,20 +178,20 @@ sub display_title_info {
         $_proxy_port_info = " [Proxy Port:$_proxy_port]";
     }
 
-    my $_result = `title temp\\$_temp_folder_name $_config_file_name $_run_number:$_testfile_name$_selenium_port_info$_proxy_port_info`;
+    my $_result = `title temp\\$temp_folder_name $_config_file_name $_run_number:$_testfile_name$_selenium_port_info$_proxy_port_info`;
 
     return;
 }
 
 #------------------------------------------------------------------
 sub report_har_file_urls {
-    my ($_proxy_port, $_temp_folder_name) = @_;
+    my ($_proxy_port) = @_;
 
     if (not defined $_proxy_port) {
         return;
     }
 
-    my $_filename = 'temp/' . $_temp_folder_name . '/URLs.txt';
+    my $_filename = 'temp/' . $temp_folder_name . '/URLs.txt';
     open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
     binmode $_fh, ':encoding(UTF-8)'; # set binary mode and utf8 character set
 
@@ -206,7 +207,7 @@ sub report_har_file_urls {
 
 #------------------------------------------------------------------
 sub write_har_file {
-    my ($_proxy_port, $_temp_folder_name) = @_;
+    my ($_proxy_port) = @_;
 
     if (not defined $_proxy_port) {
         return;
@@ -221,7 +222,7 @@ sub write_har_file {
     $har_file_content = Encode::encode_utf8( $har_file_content );
 
     # write har file uncompressed
-    my $_filename = 'temp/' . $_temp_folder_name . '/har.txt';
+    my $_filename = 'temp/' . $temp_folder_name . '/har.txt';
     open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
     binmode $_fh; # set binary mode
     print {$_fh} $har_file_content;
@@ -229,7 +230,7 @@ sub write_har_file {
 
     # write har file compressed
     require Compress::Zlib;
-    $_filename = 'temp/' . $_temp_folder_name . '/har.gzip';
+    $_filename = 'temp/' . $temp_folder_name . '/har.gzip';
     open my $_fh2, '>', $_filename or die "Could not open file '$_filename' $!\n";
     binmode $_fh2; # set binary mode
     my $_compressed = Compress::Zlib::memGzip($har_file_content);
@@ -280,21 +281,21 @@ sub shutdown_selenium_server {
 
 #------------------------------------------------------------------
 sub start_selenium_server {
-    my ($_testfile_contains_selenium, $_temp_folder_name) = @_;
+    my ($_testfile_contains_selenium) = @_;
 
     if (not defined $_testfile_contains_selenium) {
         return;
     }
 
     # copy chromedriver - source location hardcoded for now
-    copy 'C:/selenium-server/chromedriver.exe', "temp/$_temp_folder_name/chromedriver.eXe";
+    copy 'C:/selenium-server/chromedriver.exe', "temp/$temp_folder_name/chromedriver.eXe";
 
     # find free port
     my $_selenium_port = _find_available_port(9001);
     #print "_selenium_port:$_selenium_port\n";
 
-    my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\chromedriver.eXe" );
-    my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$_temp_folder_name\\selenium_log.txt" );
+    my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\chromedriver.eXe" );
+    my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\selenium_log.txt" );
 
     my $_cmd = qq{wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates'}; #
     my $_result = `$_cmd`;
@@ -339,7 +340,7 @@ sub _find_available_port {
 
 #------------------------------------------------------------------
 sub start_browsermob_proxy {
-    my ($_testfile_contains_selenium, $_opt_use_browsermob_proxy, $_temp_folder_name) = @_;
+    my ($_testfile_contains_selenium, $_opt_use_browsermob_proxy) = @_;
 
     if (not defined $_opt_use_browsermob_proxy) {
         return;
@@ -354,7 +355,7 @@ sub start_browsermob_proxy {
         return;
     }
 
-    my $_cmd = 'subs\start_browsermob_proxy.pl ' . $_temp_folder_name;
+    my $_cmd = 'subs\start_browsermob_proxy.pl ' . $temp_folder_name;
     my $_proxy_port = `$_cmd`;
     return $_proxy_port;
 
@@ -394,9 +395,9 @@ sub publish_static_files {
 
 #------------------------------------------------------------------
 sub publish_results_on_web_server {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
 
     my $_result = `$_cmd`;
 
@@ -405,9 +406,9 @@ sub publish_results_on_web_server {
 
 #------------------------------------------------------------------
 sub write_final_result {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
 
     my $_result = `$_cmd`;
 
@@ -416,9 +417,9 @@ sub write_final_result {
 
 #------------------------------------------------------------------
 sub write_pending_result {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_temp_folder_name, $_opt_batch, $_run_number) = @_;
+    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
 
-    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $_temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
     my $_result = `$_cmd`;
 
     return;
@@ -426,9 +427,8 @@ sub write_pending_result {
 
 #------------------------------------------------------------------
 sub check_testfile_xml_parses_ok {
-    my ($_testfile_full) = @_;
 
-    my $_xml = read_file($_testfile_full);
+    my $_xml = read_file($testfile_full);
 
     # for convenience, WebInject allows ampersand and less than to appear in xml data, so this needs to be masked
     $_xml =~ s/&/{AMPERSAND}/g;
@@ -442,7 +442,7 @@ sub check_testfile_xml_parses_ok {
         $_message = $@;
         $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
         $_message =~ s{\n}{}g; # remove line feeds
-        die "\n".$_message." in $_testfile_full\n";
+        die "\n".$_message." in $testfile_full\n";
     }
 
     return;
@@ -450,9 +450,9 @@ sub check_testfile_xml_parses_ok {
 
 #------------------------------------------------------------------
 sub get_run_number {
-    my ($_opt_environment, $_testfile_full, $_temp_folder_name) = @_;
+    my ($_opt_environment, $_testfile_full) = @_;
 
-    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . q{ } . $_testfile_full . q{ } . $_temp_folder_name;
+    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . q{ } . $_testfile_full . q{ } . $temp_folder_name;
     my $_run_number = `$_cmd`;
     #print {*STDOUT} "run_number [$_run_number]\n";
 
@@ -461,9 +461,8 @@ sub get_run_number {
 
 #------------------------------------------------------------------
 sub get_config_file_name {
-    my ($_target, $_temp_folder_name) = @_;
 
-    my $_cmd = 'subs\get_config_file_name.pl ' . $_target . q{ } . $_temp_folder_name;
+    my $_cmd = 'subs\get_config_file_name.pl ' . $opt_target . q{ } . $temp_folder_name;
     my $_config_file_full = `$_cmd`;
     #print {*STDOUT} "config_file_full [$_config_file_full]\n";
 
