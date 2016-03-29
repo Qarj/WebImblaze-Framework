@@ -76,13 +76,13 @@ X save config with options
 X option not to save config
 
 X Remove check_testfile_xml_parses_ok.pl
-    X check that test file xml is valid (subscript or sub?)
+X   X check that test file xml is valid (subscript or sub?)
 
 X Remove get_web_server_location.pl
-    X can locate where webinject.pl is and be in same folder
+X   X can locate where webinject.pl is and be in same folder
 
-* Remove get_automation_controller_flag.pl
-    * determine if this is the automation controller
+X Remove get_automation_controller_flag.pl
+X   X determine if this is the automation controller
 
 * Remove get_config_file_name.pl
     * check if target environment needs to be converted from friendly name to server name

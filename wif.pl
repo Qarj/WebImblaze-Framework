@@ -38,11 +38,13 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-# end globally read/wriet variables
-
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
-my ( $opt_keep );
+my ( $opt_keep, $opt_no_update_config );
+my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
+my $config = Config::Tiny->new;
+# end globally read/write variables
+
 get_options_and_config();  # get command line options
 
 # generate a random folder for the temporary files
@@ -50,9 +52,6 @@ my $temp_folder_name = create_temp_folder();
 
 # check the testfile to ensure the XML parses - will die if it doesn't
 check_testfile_xml_parses_ok($testfile_full);
-
-# find out if this is the automation controller (vs a developer desktop)
-my $automation_controller_flag = get_automation_controller_flag();
 
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = get_config_file_name($opt_target, $temp_folder_name);
@@ -75,7 +74,7 @@ my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_fol
 
 display_title_info($testfile_name, $run_number, $config_file_name, $temp_folder_name, $selenium_port, $proxy_port);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $automation_controller_flag, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
+call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $temp_folder_name, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
 shutdown_selenium_server($selenium_port);
 
@@ -98,7 +97,7 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_automation_controller_flag, $_temp_folder_name, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
+    my ($_testfile_full, $_config_file_full, $_is_automation_controller, $_temp_folder_name, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
 
     $_temp_folder_name = 'temp/' . $_temp_folder_name;
 
@@ -126,8 +125,8 @@ sub call_webinject_with_testfile {
         push @_args, $_abs_temp_folder;
     }
 
-    if ($_automation_controller_flag) {
-        push @_args, $_automation_controller_flag;
+    if ($_is_automation_controller eq 'true') {
+        push @_args, '--autocontroller';
     }
 
     if ($_no_retry) {
@@ -346,7 +345,7 @@ sub start_browsermob_proxy {
         return;
     }
 
-    if (not lc $_opt_proxy eq 'true') {
+    if (not $_opt_proxy eq 'true') {
         return;
     }
 
@@ -474,16 +473,6 @@ sub get_config_file_name {
 }
 
 #------------------------------------------------------------------
-sub get_automation_controller_flag {
-
-    my $_cmd = 'subs\get_automation_controller_flag.pl';
-    my $_auto_flag = `$_cmd`;
-    #print {*STDOUT} "auto_flag [$_auto_flag]\n";
-
-    return $_auto_flag;
-}
-
-#------------------------------------------------------------------
 sub get_web_server_location {
 
     my $_cmd = 'subs\get_web_server_location.pl';
@@ -545,40 +534,53 @@ sub remove_temp_folder {
 
 #------------------------------------------------------------------
 sub _read_config {
-    my $_config = Config::Tiny->new;
+    $config = Config::Tiny->read( 'wif.config' );
 
-    $_config = Config::Tiny->read( 'wif.config' );
+    $opt_target = $config->{main}->{target};
+    $opt_batch = $config->{main}->{batch};
+    $opt_environment = $config->{main}->{environment};
+    $testfile_full = $config->{main}->{testfile_full};
+    $selenium_location_full = $config->{main}->{selenium_location_full};
+    $opt_proxy = $config->{main}->{proxy};
+    $web_server_location_full = $config->{main}->{web_server_location_full};
+    $config_is_automation_controller = $config->{main}->{is_automation_controller};
 
-    my $_opt_target = $_config->{main}->{target};
-    my $_opt_batch = $_config->{main}->{batch};
-    my $_opt_environment = $_config->{main}->{environment};
-    my $_testfile_full = $_config->{main}->{testfile_full};
-    my $_selenium_location_full = $_config->{main}->{selenium_location_full};
-    my $_opt_proxy = $_config->{main}->{proxy};
-    my $_web_server_location_full = $_config->{main}->{web_server_location_full};
+    # normalise config
+    if (lc $config_is_automation_controller eq 'true' ) {
+        $config_is_automation_controller = 'true';
+    } else {
+        $config_is_automation_controller = 'false';
+    }
 
-    return $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full;
+    # normalise config
+    if (lc $opt_proxy eq 'true' ) {
+        $opt_proxy = 'true';
+    } else {
+        $opt_proxy = 'false';
+    }
+
+    return;
 }
 
 #------------------------------------------------------------------
 sub _write_config {
-    my ($_opt_no_update_config, $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full) = @_;
 
-    if (defined $_opt_no_update_config) {
+    if (defined $opt_no_update_config) {
         return;
     }
 
     my $_config = Config::Tiny->new;
 
-    $_config->{main}->{target} = $_opt_target;
-    $_config->{main}->{batch} = $_opt_batch;
-    $_config->{main}->{environment} = $_opt_environment;
-    $_config->{main}->{testfile_full} = $_testfile_full;
-    $_config->{main}->{selenium_location_full} = $_selenium_location_full;
-    $_config->{main}->{proxy} = $_opt_proxy;
-    $_config->{main}->{web_server_location_full} = $_web_server_location_full;
+    $config->{main}->{target} = $opt_target;
+    $config->{main}->{batch} = $opt_batch;
+    $config->{main}->{environment} = $opt_environment;
+    $config->{main}->{testfile_full} = $testfile_full;
+    $config->{main}->{selenium_location_full} = $selenium_location_full;
+    $config->{main}->{proxy} = $opt_proxy;
+    $config->{main}->{web_server_location_full} = $web_server_location_full;
+    $config->{main}->{is_automation_controller} = $config_is_automation_controller;
 
-    $_config->write( 'wif.config' );
+    $config->write( 'wif.config' );
 
     return;
 }
@@ -586,7 +588,7 @@ sub _write_config {
 #------------------------------------------------------------------
 sub get_options_and_config {  #shell options
 
-    ($opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $opt_proxy, $web_server_location_full) = _read_config();
+    _read_config();
 
     # config file definition wins over hard coded defaults
     if (not defined $opt_environment) { $opt_environment = 'DEV'; }; # default the environment name
@@ -601,7 +603,7 @@ sub get_options_and_config {  #shell options
         'e|env=s'            => \$opt_environment,
         'p|proxy=s'          => \$opt_proxy,
         'n|no-retry'         => \$opt_no_retry,
-        'u|no-update-config' => \$_opt_no_update_config,
+        'u|no-update-config' => \$opt_no_update_config,
         'k|keep'             => \$opt_keep,
         'v|V|version'        => \$opt_version,
         'h|help'             => \$opt_help,
@@ -643,7 +645,7 @@ sub get_options_and_config {  #shell options
     }
 
     # now we know what the preferred settings are, save them for next time
-    _write_config($_opt_no_update_config, $opt_target, $opt_batch, $opt_environment, $testfile_full, $selenium_location_full, $opt_proxy, $web_server_location_full);
+    _write_config();
 
     return;
 }
