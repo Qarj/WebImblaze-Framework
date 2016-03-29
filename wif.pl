@@ -432,8 +432,8 @@ sub check_testfile_xml_parses_ok {
     my $_xml = read_file($_testfile_full);
 
     # for convenience, WebInject allows ampersand and less than to appear in xml data, so this needs to be masked
-    $_xml =~ s/&/{AMPERSAND}/g;  
-    $_xml =~ s/\\</{LESSTHAN}/g;      
+    $_xml =~ s/&/{AMPERSAND}/g;
+    $_xml =~ s/\\</{LESSTHAN}/g;
 
     # here we parse the xml file in an eval, and capture any error returned (in $@)
     my $_message;
@@ -441,8 +441,8 @@ sub check_testfile_xml_parses_ok {
 
     if ($@) {
         $_message = $@;
-        $_message =~ s| at C:.*||g; # remove misleading reference Parser.pm
-        $_message =~ s|\n||g; # remove line feeds
+        $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
+        $_message =~ s{\n}{}g; # remove line feeds
         die "\n".$_message." in $_testfile_full\n";
     }
 
@@ -562,7 +562,7 @@ sub _read_config {
 
 #------------------------------------------------------------------
 sub _write_config {
-    my ($_opt_no_update_config, $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full) = @_;    
+    my ($_opt_no_update_config, $_opt_target, $_opt_batch, $_opt_environment, $_testfile_full, $_selenium_location_full, $_opt_proxy, $_web_server_location_full) = @_;
 
     if (defined $_opt_no_update_config) {
         return;
