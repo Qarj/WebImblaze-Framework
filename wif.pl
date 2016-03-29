@@ -55,7 +55,7 @@ $temp_folder_name = create_temp_folder();
 check_testfile_xml_parses_ok();
 
 # generate the config file, and find out where it is
-my ($config_file_full, $config_file_name, $config_file_path) = get_config_file_name();
+my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file();
 
 # find out what run number we are up to today for this testcase file
 my $run_number = get_run_number($opt_environment, $testfile_full);
@@ -79,7 +79,7 @@ call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_autom
 
 shutdown_selenium_server($selenium_port);
 
-write_har_file($proxy_port, $temp_folder_name);
+write_har_file($proxy_port);
 
 shutdown_proxy($proxy_port);
 
@@ -460,7 +460,8 @@ sub get_run_number {
 }
 
 #------------------------------------------------------------------
-sub get_config_file_name {
+sub create_webinject_config_file {
+    #http://stackoverflow.com/questions/9927296/perl-iterating-through-ini-files
 
     my $_cmd = 'subs\get_config_file_name.pl ' . $opt_target . q{ } . $temp_folder_name;
     my $_config_file_full = `$_cmd`;
