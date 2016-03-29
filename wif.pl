@@ -38,7 +38,7 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
 my ( $opt_keep, $opt_no_update_config );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
@@ -67,7 +67,7 @@ my $webinject_path = get_webinject_location();
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
-my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_proxy, $temp_folder_name);
+my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_use_browsermob_proxy, $temp_folder_name);
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium, $temp_folder_name);
 #print "selenium_port:$selenium_port\n";
@@ -339,13 +339,13 @@ sub _find_available_port {
 
 #------------------------------------------------------------------
 sub start_browsermob_proxy {
-    my ($_testfile_contains_selenium, $_opt_proxy, $_temp_folder_name) = @_;
+    my ($_testfile_contains_selenium, $_opt_use_browsermob_proxy, $_temp_folder_name) = @_;
 
-    if (not defined $_opt_proxy) {
+    if (not defined $_opt_use_browsermob_proxy) {
         return;
     }
 
-    if (not $_opt_proxy eq 'true') {
+    if (not $_opt_use_browsermob_proxy eq 'true') {
         return;
     }
 
@@ -541,7 +541,7 @@ sub _read_config {
     $opt_environment = $config->{main}->{environment};
     $testfile_full = $config->{main}->{testfile_full};
     $selenium_location_full = $config->{main}->{selenium_location_full};
-    $opt_proxy = $config->{main}->{proxy};
+    $opt_use_browsermob_proxy = $config->{main}->{use_browsermob_proxy};
     $web_server_location_full = $config->{main}->{web_server_location_full};
     $config_is_automation_controller = $config->{main}->{is_automation_controller};
 
@@ -553,10 +553,10 @@ sub _read_config {
     }
 
     # normalise config
-    if (lc $opt_proxy eq 'true' ) {
-        $opt_proxy = 'true';
+    if (lc $opt_use_browsermob_proxy eq 'true' ) {
+        $opt_use_browsermob_proxy = 'true';
     } else {
-        $opt_proxy = 'false';
+        $opt_use_browsermob_proxy = 'false';
     }
 
     return;
@@ -576,7 +576,7 @@ sub _write_config {
     $config->{main}->{environment} = $opt_environment;
     $config->{main}->{testfile_full} = $testfile_full;
     $config->{main}->{selenium_location_full} = $selenium_location_full;
-    $config->{main}->{proxy} = $opt_proxy;
+    $config->{main}->{use_browsermob_proxy} = $opt_use_browsermob_proxy;
     $config->{main}->{web_server_location_full} = $web_server_location_full;
     $config->{main}->{is_automation_controller} = $config_is_automation_controller;
 
@@ -598,15 +598,15 @@ sub get_options_and_config {  #shell options
     # options specified at the command line win over those defined in wif.config
     Getopt::Long::Configure('bundling');
     GetOptions(
-        't|target=s'         => \$opt_target,
-        'b|batch=s'          => \$opt_batch,
-        'e|env=s'            => \$opt_environment,
-        'p|proxy=s'          => \$opt_proxy,
-        'n|no-retry'         => \$opt_no_retry,
-        'u|no-update-config' => \$opt_no_update_config,
-        'k|keep'             => \$opt_keep,
-        'v|V|version'        => \$opt_version,
-        'h|help'             => \$opt_help,
+        't|target=s'                => \$opt_target,
+        'b|batch=s'                 => \$opt_batch,
+        'e|env=s'                   => \$opt_environment,
+        'p|use-browsermob-proxy=s'  => \$opt_use_browsermob_proxy,
+        'n|no-retry'                => \$opt_no_retry,
+        'u|no-update-config'        => \$opt_no_update_config,
+        'k|keep'                    => \$opt_keep,
+        'v|V|version'               => \$opt_version,
+        'h|help'                    => \$opt_help,
         )
         or do {
             print_usage();
@@ -660,13 +660,13 @@ sub print_usage {
 
 Usage: wif.pl tests\testfilename.xml <<options>>
 
--t|--target           target environment handle             --target skynet
--b|--batch            batch name for grouping results       --batch SmokeTests
--e|--env              high level environment DEV, LIVE      --env UAT
--p|--proxy            use browsermob-proxy
--n|--no-retry         do not invoke retries
--u|--no-update-config do not update config to reflect options
--k|--keep             keep temporary files
+-t|--target                 target environment handle           --target skynet
+-b|--batch                  batch name for grouping results     --batch SmokeTests
+-e|--env                    high level environment DEV, LIVE    --env UAT
+-p|--use-browesermob-proxy  use browsermob-proxy
+-n|--no-retry               do not invoke retries
+-u|--no-update-config       do not update config to reflect options
+-k|--keep                   keep temporary files
 
 wif.pl -v|--version
 wif.pl -h|--help
