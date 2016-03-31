@@ -84,9 +84,9 @@ X   X can locate where webinject.pl is and be in same folder
 X Remove get_automation_controller_flag.pl
 X   X determine if this is the automation controller
 
-* Remove get_config_file_name.pl
-    * check if target environment needs to be converted from friendly name to server name
-    * call a script to generate the configuration file
+X Remove get_config_file_name.pl
+X   X check if target environment needs to be converted from friendly name to server name
+X   X call a script to generate the configuration file
 
 * Remove get_run_number.pl
     * determine the run number for today

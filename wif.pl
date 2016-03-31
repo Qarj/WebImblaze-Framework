@@ -44,6 +44,10 @@ my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
+my $target_config = Config::Tiny->new;
+my $global_config = Config::Tiny->new;
+my $environment_config = Config::Tiny->new;
+my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
 get_options_and_config();  # get command line options
@@ -461,15 +465,101 @@ sub get_run_number {
 
 #------------------------------------------------------------------
 sub create_webinject_config_file {
-    #http://stackoverflow.com/questions/9927296/perl-iterating-through-ini-files
 
-    my $_cmd = 'subs\get_config_file_name.pl ' . $opt_target . q{ } . $temp_folder_name;
-    my $_config_file_full = `$_cmd`;
-    #print {*STDOUT} "config_file_full [$_config_file_full]\n";
+    if (not -e 'environment_config/' . $opt_environment . '.config') {
+        die "Could not find environment_config/$opt_environment.config\n";
+    }
+
+    if (not -e 'environment_config/' . $opt_environment) {
+        die "Could not find folder environment_config/$opt_environment\n";
+    }
+
+    # if $opt_target contains an alias, change it to the real value
+    my $_alias = Config::Tiny->new;
+    if (-e "environment_config/$opt_environment/_alias.config") {
+        $_alias = Config::Tiny->read( "environment_config/$opt_environment/_alias.config" );
+
+        if (defined $_alias->{_}->{$opt_target}) {
+            $opt_target = $_alias->{_}->{$opt_target};
+        }
+    }
+
+    if (not -e "environment_config/$opt_environment/$opt_target.config") {
+        die "Could not find environment_config/$opt_environment/$opt_target.config\n";
+    }
+
+    $target_config = Config::Tiny->read( "environment_config/$opt_environment/$opt_target.config" );
+
+    $environment_config = Config::Tiny->read( "environment_config/$opt_environment.config" );
+    
+    if (-e "environment_config/_global.config") {
+        $global_config = Config::Tiny->read( 'environment_config/_global.config' );
+    }
+
+    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml"; 
+    open $WEBINJECT_CONFIG, '>' ,"$_config_file_full" or die "\nERROR: Failed to open $_config_file_full for writing\n\n";
+    print {$WEBINJECT_CONFIG} "<root>\n";
+    _write_webinject_config('main');
+    _write_webinject_config('userdefined');
+    _write_webinject_config('autoassertions');
+    _write_webinject_config('smartassertions');
+    print {$WEBINJECT_CONFIG} "</root>\n";
+    close $WEBINJECT_CONFIG or die "\nCould not close $_config_file_full\n\n";
 
     my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'.xml');
 
     return $_config_file_full, $_config_file_name, $_config_file_path;
+}
+
+#------------------------------------------------------------------
+sub _write_webinject_config {
+    my ($_section) = @_;
+
+    # config parameters defined under [main] will be written at the root level of the WebInject config
+    my $_indent = q{};
+    if (not $_section eq 'main') {
+        $_indent = q{    };
+        print {$WEBINJECT_CONFIG} "    <$_section>\n";
+    }
+
+    foreach my $_parameter (sort keys %{$target_config->{$_section}}) {
+        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
+        print {$WEBINJECT_CONFIG} "$target_config->{$_section}->{$_parameter}";
+        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+    }
+
+    foreach my $_parameter (sort keys %{$environment_config->{$_section}}) {
+        if ( $target_config->{$_section}->{$_parameter} ) {
+            # _target_config takes priority - parameter has already been written
+            next;
+        }
+
+        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
+        print {$WEBINJECT_CONFIG} "$environment_config->{$_section}->{$_parameter}";
+        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+    }
+
+    foreach my $_parameter (sort keys %{$global_config->{$_section}}) {
+        if ( $target_config->{$_section}->{$_parameter} ) {
+            # _target_config takes priority - parameter has already been written
+            next;
+        }
+
+        if ( $environment_config->{$_section}->{$_parameter} ) {
+            # _environment_config takes priority - parameter has already been written
+            next;
+        }
+
+        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
+        print {$WEBINJECT_CONFIG} "$global_config->{$_section}->{$_parameter}";
+        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+    }
+
+    if (not $_section eq 'main') {
+        print {$WEBINJECT_CONFIG} "    </$_section>\n";
+    }
+    
+    return;
 }
 
 #------------------------------------------------------------------
