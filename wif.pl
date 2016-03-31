@@ -39,7 +39,7 @@ local $| = 1; # don't buffer output to STDOUT
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
-my ( $opt_keep, $opt_no_update_config );
+my ( $opt_keep );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
 my ( $temp_folder_name );
@@ -466,11 +466,11 @@ sub get_run_number {
 #------------------------------------------------------------------
 sub create_webinject_config_file {
 
-    if (not -e 'environment_config/' . $opt_environment . '.config') {
+    if ( not -e "environment_config/$opt_environment.config" ) {
         die "Could not find environment_config/$opt_environment.config\n";
     }
 
-    if (not -e 'environment_config/' . $opt_environment) {
+    if ( not -e "environment_config/$opt_environment" ) {
         die "Could not find folder environment_config/$opt_environment\n";
     }
 
@@ -491,12 +491,12 @@ sub create_webinject_config_file {
     $target_config = Config::Tiny->read( "environment_config/$opt_environment/$opt_target.config" );
 
     $environment_config = Config::Tiny->read( "environment_config/$opt_environment.config" );
-    
-    if (-e "environment_config/_global.config") {
+
+    if (-e 'environment_config/_global.config') {
         $global_config = Config::Tiny->read( 'environment_config/_global.config' );
     }
 
-    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml"; 
+    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
     open $WEBINJECT_CONFIG, '>' ,"$_config_file_full" or die "\nERROR: Failed to open $_config_file_full for writing\n\n";
     print {$WEBINJECT_CONFIG} "<root>\n";
     _write_webinject_config('main');
@@ -558,7 +558,7 @@ sub _write_webinject_config {
     if (not $_section eq 'main') {
         print {$WEBINJECT_CONFIG} "    </$_section>\n";
     }
-    
+
     return;
 }
 
@@ -655,10 +655,6 @@ sub _read_config {
 #------------------------------------------------------------------
 sub _write_config {
 
-    if (defined $opt_no_update_config) {
-        return;
-    }
-
     my $_config = Config::Tiny->new;
 
     $config->{main}->{target} = $opt_target;
@@ -693,7 +689,7 @@ sub get_options_and_config {  #shell options
         'e|env=s'                   => \$opt_environment,
         'p|use-browsermob-proxy=s'  => \$opt_use_browsermob_proxy,
         'n|no-retry'                => \$opt_no_retry,
-        'u|no-update-config'        => \$opt_no_update_config,
+        'u|no-update-config'        => \$_opt_no_update_config,
         'k|keep'                    => \$opt_keep,
         'v|V|version'               => \$opt_version,
         'h|help'                    => \$opt_help,
@@ -735,7 +731,9 @@ sub get_options_and_config {  #shell options
     }
 
     # now we know what the preferred settings are, save them for next time
-    _write_config();
+    if ( not defined $_opt_no_update_config ) {
+        _write_config();
+    }
 
     return;
 }
