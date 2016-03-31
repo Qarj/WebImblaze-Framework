@@ -38,8 +38,8 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $testfile_full, $testfile_name, $testfile_path );
-my ( $opt_keep );
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep);
+my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $selenium_location_full );
 my ( $temp_folder_name );
@@ -51,7 +51,7 @@ my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
 # start globally read variables  - will only be written to from the main script
-my ( $yyyy, $mm, $dd ) = _get_todays_date();
+my ( $yyyy, $mm, $dd ) = get_todays_date();
 # end globally read variables
 
 get_options_and_config();  # get command line options
@@ -66,7 +66,7 @@ check_testfile_xml_parses_ok();
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file();
 
 # find out what run number we are up to today for this testcase file
-my $run_number = get_run_number($opt_environment, $testfile_full);
+my $run_number = create_run_number();
 
 # indicate that WebInject is running the testfile
 write_pending_result($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
@@ -173,7 +173,7 @@ sub call_webinject_with_testfile {
 
 
 #------------------------------------------------------------------
-sub _get_todays_date {
+sub get_todays_date {
 
     ## put the current date and time into variables - startdatetime - for recording the start time in a format an xsl stylesheet can process
     my @_MONTHS = qw(01 02 03 04 05 06 07 08 09 10 11 12);
@@ -476,14 +476,33 @@ sub check_testfile_xml_parses_ok {
 }
 
 #------------------------------------------------------------------
-sub get_run_number {
-    my ($_opt_environment, $_testfile_full) = @_;
+sub create_run_number {
 
-    my $_cmd = 'subs\get_run_number.pl ' . $_opt_environment . q{ } . $_testfile_full . q{ } . $temp_folder_name;
-    my $_run_number = `$_cmd`;
-    #print {*STDOUT} "run_number [$_run_number]\n";
+    my $_run_number = '1001';
+
+    if (not -e "$web_server_location_full" ) {
+        die "Web server location of $web_server_location_full does not exist\n";
+    }
+
+    _make_dir( "$web_server_location_full/$opt_environment" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
 
     return $_run_number;
+}
+
+#------------------------------------------------------------------
+sub _make_dir {
+    my ($_new_dir) = @_;
+
+    if (not -e "$_new_dir" ) {
+        mkdir "$_new_dir" or die "Could not create folder $_new_dir\n";
+    }
+
+    return;
 }
 
 #------------------------------------------------------------------
@@ -743,6 +762,10 @@ sub get_options_and_config {  #shell options
         $testfile_full = $ARGV[0];
     }
     ($testfile_name, $testfile_path) = fileparse($testfile_full,'.xml');
+
+    my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
+    $testfile_parent_folder_name =  basename ( dirname($_abs_testfile_full) );
+    # done like this in case we were told the test file is in "./" - we need the complete name for reporting purposes
 
     if (not -e $testfile_full) {
         die "\n\nERROR: no such test file found $testfile_full\n";
