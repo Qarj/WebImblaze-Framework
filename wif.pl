@@ -50,6 +50,10 @@ my $environment_config = Config::Tiny->new;
 my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
+# start globally read variables  - will only be written to from the main script
+my ( $yyyy, $mm, $dd ) = _get_todays_date();
+# end globally read variables
+
 get_options_and_config();  # get command line options
 
 # generate a random folder for the temporary files
@@ -167,6 +171,25 @@ sub call_webinject_with_testfile {
     return;
 }
 
+
+#------------------------------------------------------------------
+sub _get_todays_date {
+
+    ## put the current date and time into variables - startdatetime - for recording the start time in a format an xsl stylesheet can process
+    my @_MONTHS = qw(01 02 03 04 05 06 07 08 09 10 11 12);
+    #my @_WEEKDAYS = qw(Sun Mon Tue Wed Thu Fri Sat Sun);
+    my ($_SECOND, $_MINUTE, $_HOUR, $_DAYOFMONTH, $_MONTH, $_YEAROFFSET, $_DAYOFWEEK, $_DAYOFYEAR, $_DAYLIGHTSAVINGS) = localtime;
+    my $_YEAR = 1900 + $_YEAROFFSET;
+    #my $_YY = substr $_YEAR, 2; #year as 2 digits
+    $_DAYOFMONTH = sprintf '%02d', $_DAYOFMONTH;
+    #my $_WEEKOFMONTH = int(($_DAYOFMONTH-1)/7)+1;
+    #$_MINUTE = sprintf '%02d', $_MINUTE; #put in up to 2 leading zeros
+    #$_SECOND = sprintf '%02d', $_SECOND;
+    #$_HOUR = sprintf '%02d', $_HOUR;
+    #my $_TIMESECONDS = ($_HOUR * 60 * 60) + ($_MINUTE * 60) + $_SECOND;
+
+    return $_YEAR, $_MONTHS[$_MONTH], $_DAYOFMONTH;
+}
 
 #------------------------------------------------------------------
 sub display_title_info {
