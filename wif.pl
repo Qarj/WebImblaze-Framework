@@ -489,7 +489,7 @@ sub create_run_number {
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name" );
 
     return $_run_number;
 }
