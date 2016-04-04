@@ -71,7 +71,7 @@ X get target server from wif.config
 X get high level environment from config - e.g. DEV, LIVE, default to DEV
 X update config with most recent run (target server, environment)
 X read which selenium server to use from config
-* support read chromedriver from  config file
+* support read chromedriver from config file
 X save config with options
 X option not to save config
 
@@ -88,8 +88,8 @@ X Remove get_config_file_name.pl
 X   X check if target environment needs to be converted from friendly name to server name
 X   X call a script to generate the configuration file
 
-* Remove get_run_number.pl
-    * determine the run number for today
+X Remove get_run_number.pl
+X   X determine the run number for today
 
 * Remove write_pending_result.pl
     * update the pending record to indicate execution has started

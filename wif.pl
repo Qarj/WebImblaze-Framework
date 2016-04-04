@@ -21,8 +21,8 @@ $VERSION = '0.01';
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebInject/examples/command.xml --target my_sub_environment
-#              wif.pl ../WebInject/examples/selenium.xml --target my_sub_environment
+#              wif.pl ../WebInject/examples/command.xml --target skynet
+#              wif.pl ../WebInject/examples/selenium.xml --target skynet
 
 use Getopt::Long;
 use File::Basename;
@@ -30,7 +30,7 @@ use File::Spec;
 use Cwd;
 use Time::HiRes 'time','sleep';
 use File::Slurp;
-use File::Copy qw(copy);
+use File::Copy qw(copy), qw(move);
 use Config::Tiny;
 use XML::Simple;
 
@@ -478,12 +478,11 @@ sub check_testfile_xml_parses_ok {
 #------------------------------------------------------------------
 sub create_run_number {
 
-    my $_run_number = '1001';
-
     if (not -e "$web_server_location_full" ) {
         die "Web server location of $web_server_location_full does not exist\n";
     }
 
+    # if they do not exist already, folders are created for this test file for todays date
     _make_dir( "$web_server_location_full/$opt_environment" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
@@ -491,7 +490,126 @@ sub create_run_number {
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name" );
 
+    my $_run_number_full = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name/Run_Number.txt";
+    _lock_file($_run_number_full);
+    my $_run_number = _increment_run_number($_run_number_full);
+    _unlock_file($_run_number_full);
+
+    # create a folder for this run number
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name/results_$_run_number" );
+
     return $_run_number;
+}
+
+#------------------------------------------------------------------
+sub _increment_run_number {
+    my ($_run_number_full) = @_;
+
+    my $_run_number;
+    if (-e $_run_number_full) {
+        my $_run_number_string = read_file($_run_number_full);
+        $_run_number_string =~ m/([\d]*)/;
+        $_run_number = $1;
+    }
+
+    if (! $_run_number) {
+        $_run_number = 1000;
+    }
+
+    $_run_number++;
+
+    open my $RUNFILE, '>', "$_run_number_full" or die "\nERROR: Failed to create $_run_number_full\n\n";
+    print {$RUNFILE} "$_run_number";
+    close $RUNFILE or die "\nERROR: Failed to close $_run_number_full\n\n";
+
+    return $_run_number;
+}
+
+#------------------------------------------------------------------
+sub _unlock_file {
+    my ($_file_to_unlock_full) = @_;
+
+    my $_unlocked_file_indicator = _prepend_to_filename('Unlocked_', $_file_to_unlock_full);
+    unlink $_unlocked_file_indicator;
+
+    my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_unlock_full);
+    unlink $_locked_file_indicator."_$temp_folder_name";
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _lock_file {
+    my ($_file_to_lock_full) = @_;
+
+    # first the file we want to lock may not even exist, in which case we create it
+    my $_unlocked_file_indicator = _prepend_to_filename('Unlocked_', $_file_to_lock_full);
+    my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_lock_full);
+    if (not -e "$_unlocked_file_indicator" ) {
+        ###print "$_unlocked_file_indicator\n";
+        # file is not unlocked
+        if (not glob("$_locked_file_indicator"."_*") ) {
+            ###print "$_locked_file_indicator".'_*';
+            # file is not locked either, so it must not exist
+            # so we can create a file indicating that the file is unlocked
+            _touch($_unlocked_file_indicator);
+        }
+    }
+
+    # now to actually lock the file
+    # we do this by renaming the Unlocked indicator file to the name Locked_filename.filesufix_tempfoldername
+    # the temp folder name is unique to this process
+    my $_max = 200;
+    my $_try = 0;
+    ATTEMPT:
+    {
+        eval {
+            move $_unlocked_file_indicator, $_locked_file_indicator.'_'.$temp_folder_name or die "cannot one lah\n";
+        }; # eval needs a semicolon
+
+        if ( $@ and $_try++ < $_max ) {
+            print {*STDOUT} "WARN: $@ Failed try $_try to lock $_file_to_lock_full\n";
+            sleep 0.1;
+            redo ATTEMPT;
+        }
+    }
+
+    if ($@) {
+        # we can get here if a parallel process aborts at exactly the wrong spot
+        # so we forcibly lock the file
+        print {*STDOUT} "\nError: $@ Failed to lock $_file_to_lock_full after $_max tries\n\n";
+        print {*STDOUT} "Executing fail safe - deleting lock and creating our own lock\n\n";
+        unlink glob($_locked_file_indicator.'_*');
+        unlink $_unlocked_file_indicator;
+        _touch($_locked_file_indicator.'_'.$temp_folder_name);
+        # this might screw things up a little, but it prevents things being screwed up a lot (i.e. no more test results for the rest of the day)
+        # people just have to rerun their most recent tests and all should be fine
+    }
+
+    # now we have locked the file by fair means or by foul
+
+    return;
+}
+
+
+#------------------------------------------------------------------
+sub _touch {
+    my ($_file_full) = @_;
+
+    open my $TOUCHFILE, '>', "$_file_full" or die "\nERROR: Failed to create $_file_full\n\n";
+    close $TOUCHFILE or die "\nERROR: Failed to close $_file_full\n\n";
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _prepend_to_filename {
+    my ($_string, $_file_full) = @_;
+
+    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html'));
+
+    return $_file_path.$_string.$_file_name.$_file_suffix;
+
 }
 
 #------------------------------------------------------------------
