@@ -51,7 +51,7 @@ my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
 # start globally read variables  - will only be written to from the main script
-my ( $yyyy, $mm, $dd ) = get_todays_date();
+my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date();
 # end globally read variables
 
 get_options_and_config();  # get command line options
@@ -69,7 +69,7 @@ my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_
 my $run_number = create_run_number();
 
 # indicate that WebInject is running the testfile
-write_pending_result($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
+write_pending_result($run_number);
 
 my $webinject_path = get_webinject_location();
 
@@ -183,12 +183,12 @@ sub get_todays_date {
     #my $_YY = substr $_YEAR, 2; #year as 2 digits
     $_DAYOFMONTH = sprintf '%02d', $_DAYOFMONTH;
     #my $_WEEKOFMONTH = int(($_DAYOFMONTH-1)/7)+1;
-    #$_MINUTE = sprintf '%02d', $_MINUTE; #put in up to 2 leading zeros
-    #$_SECOND = sprintf '%02d', $_SECOND;
-    #$_HOUR = sprintf '%02d', $_HOUR;
-    #my $_TIMESECONDS = ($_HOUR * 60 * 60) + ($_MINUTE * 60) + $_SECOND;
+    $_MINUTE = sprintf '%02d', $_MINUTE; #put in up to 2 leading zeros
+    $_SECOND = sprintf '%02d', $_SECOND;
+    $_HOUR = sprintf '%02d', $_HOUR;
+    my $_TIMESECONDS = ($_HOUR * 60 * 60) + ($_MINUTE * 60) + $_SECOND;
 
-    return $_YEAR, $_MONTHS[$_MONTH], $_DAYOFMONTH;
+    return $_YEAR, $_MONTHS[$_MONTH], $_DAYOFMONTH, $_HOUR, $_MINUTE, $_SECOND, $_TIMESECONDS;
 }
 
 #------------------------------------------------------------------
@@ -444,14 +444,100 @@ sub write_final_result {
 
 #------------------------------------------------------------------
 sub write_pending_result {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
+    my ($_run_number) = @_;
 
-    my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
-    my $_result = `$_cmd`;
+    #my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    #my $_result = `$_cmd`;
+
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches" );
+
+    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch" );
+
+    _write_pending_record( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
+
+    # lock batch xml file so parallel instances of wif.pl cannot update it
+    my $_batch_full = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch".'.xml';
+    _lock_file($_batch_full);
+
+    # create an array containing all files representent runs in the batch
+    my @_runs = glob("$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch/".'*.txt');
+
+    # sort by date created, ascending
+    my @_sorted_runs = sort { -C $b <=> -C $a } @_runs;
+
+    # write the header
+    my $_batch = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
+    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="/batch.xsl"?>\n|;
+    $_batch .= qq|<batch>\n|;
+
+    # write all the run records
+    foreach (@_sorted_runs) {
+        $_batch .= read_file($_);
+    }
+
+    # write the footer
+    $_batch .= qq|</batch>\n|;
+
+    # dump batch xml file from memory into file system
+    _write_file ("$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch".'.xml', $_batch);
+
+    # unlock batch xml file
+    _unlock_file($_batch_full);
 
     return;
 }
 
+#------------------------------------------------------------------
+sub _write_file {
+    my ($_file_full, $_file_content) = @_;
+
+    open my $_FILE, '>', "$_file_full" or die "\nERROR: Failed to create $_file_full\n\n";
+    print {$_FILE} $_file_content;
+    close $_FILE or die "\nERROR: Failed to close $_file_full\n\n";
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _write_pending_record {
+    my ($_file_full, $_run_number) = @_;
+
+    my $_record;
+
+    my $_start_date_time = "$yyyy-$mm-$dd".'T'."$hour:$minute:$second";
+
+    $_record .= qq|   <run id="$opt_batch">\n|;
+    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <testdriver>unknown</testdriver>\n|;
+    $_record .= qq|      <browser>unknown</browser>\n|;
+    $_record .= qq|      <environment>$opt_environment</environment>\n|;
+    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
+    $_record .= qq|      <basename>$testfile_name</basename>\n|;
+    $_record .= qq|      <totalruntime>0</totalruntime>\n|;
+    $_record .= qq|      <testcasesfailed>0</testcasesfailed>\n|;
+    $_record .= qq|      <testcasesrun>0</testcasesrun>\n|;
+    $_record .= qq|      <assertionskips></assertionskips>\n|;
+    $_record .= qq|      <sanitycheckpassed>true</sanitycheckpassed>\n|;
+    $_record .= qq|      <maxresptime>0.0</maxresptime>\n|;
+    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <computername>unused</computername>\n|;
+    $_record .= qq|      <dnssuffix>unused</dnssuffix>\n|;
+    $_record .= qq|      <userdnsdomain>unused</userdnsdomain>\n|;
+    $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
+    $_record .= qq|      <mm>$mm</mm>\n|;
+    $_record .= qq|      <dd>$dd</dd>\n|;
+    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
+    $_record .= qq|      <starttime>unused</starttime>\n|;
+    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
+    $_record .= qq|      <endtime>PENDING</endtime>\n|;
+    $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
+    $_record .= qq|      <endseconds>$seconds</endseconds>\n|;
+    $_record .= qq|   </run>\n|;
+
+    _write_file ($_file_full, $_record);
+
+    return;
+}
 #------------------------------------------------------------------
 sub check_testfile_xml_parses_ok {
 

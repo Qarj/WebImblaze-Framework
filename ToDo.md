@@ -92,7 +92,8 @@ X Remove get_run_number.pl
 X   X determine the run number for today
 
 * Remove write_pending_result.pl
-    * update the pending record to indicate execution has started
+    X update the pending batch record to indicate execution has started
+    * update summary of batches record too
 
 * Remove get_webinject_location.pl
 
