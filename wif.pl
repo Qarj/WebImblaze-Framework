@@ -41,7 +41,7 @@ my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $selenium_location_full );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -52,9 +52,11 @@ my $WEBINJECT_CONFIG;
 
 # start globally read variables  - will only be written to from the main script
 my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date();
+my $today_home;
 # end globally read variables
 
 get_options_and_config();  # get command line options
+$today_home = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd";
 
 # generate a random folder for the temporary files
 $temp_folder_name = create_temp_folder();
@@ -70,6 +72,9 @@ my $run_number = create_run_number();
 
 # indicate that WebInject is running the testfile
 write_pending_result($run_number);
+
+# there is now a new item in the batch, so the overall summary of everything has to be updated
+update_summary_of_batches();
 
 my $webinject_path = get_webinject_location();
 
@@ -443,24 +448,101 @@ sub write_final_result {
 }
 
 #------------------------------------------------------------------
+sub update_summary_of_batches {
+
+    my $_summary_record_full = "$today_home/All_Batches/$opt_batch".'_summary.record';
+
+    _lock_file( $_summary_record_full );
+
+    _write_summary_record( $_summary_record_full );
+
+    # create an array containing all files representing summary records for all of todays batches
+    my @_summary_records = glob("$today_home/All_Batches/$opt_batch".'_*.record');
+
+    # sort by date created, ascending
+    my @_sorted_summary = sort { -C $b <=> -C $a } @_summary_records;
+
+    # write the header
+    my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
+    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="/summary.xsl"?>\n|;
+    $_summary .= qq|<summary version="2.0">\n|;
+    $_summary .= qq|    <channel>\n|;
+
+    # write all the batch records
+    foreach (@_sorted_summary) {
+        $_summary .= read_file($_);
+    }
+
+    # write the footer
+    $_summary .= qq|    </channel>\n|;
+    $_summary .= qq|</summary>\n|;
+
+    # dump summary xml file from memory into file system
+    my $_summary_full = "$today_home/All_Batches/BatchesSummary.xml";
+
+    _lock_file( $_summary_full );
+    _write_file ( $_summary_full, $_summary );
+    _unlock_file( $_summary_full );
+
+    # unlock batch xml file
+    _unlock_file( $_summary_record_full );
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub write_summary_record {
+    my ($_file_full) = @_;
+
+    require XML::Twig;
+
+    my $_twig = XML::Twig->new();
+    $_twig->parsefile( "$today_home/All_Batches/$opt_batch".'.xml' );
+    my $_root = $_twig->root;
+
+    my $_record;
+
+    $_record .= qq|      <title>$opt_environment summary (click for previous day)</title>\n|;
+    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/BatchesSummary.xml</link>\n|;
+    $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
+    $_record .= qq|      <item>\n|;
+    $_record .= qq|         <title>|;
+    
+    if ($sanityfailed > 0) { # got up to here
+        $_record .= qq|$overall $dayOfMonth/$months[$month] $starttime - $endtime $numitemstext $Environ $batch: $sanityfailed SANITY FAILURE(s), $totalfailed/$totalrun FAILED, $elapsedmins mins $concurrencytext *$webenv*</title>\n|;
+    } else {
+    	if ($totalfailed > 0) {
+            $_record .= qq|$overall $dayOfMonth/$months[$month] $starttime - $endtime $numitemstext $Environ $batch: $totalfailed/$totalrun FAILED, $elapsedmins mins $concurrencytext *$webenv*</title>\n|;
+    	} else {
+            $_record .= qq|$overall $dayOfMonth/$months[$month] $starttime - $endtime $numitemstext $Environ $batch: ALL $totalrun steps OK, $elapsedmins mins $concurrencytext *$webenv*</title>\n|;
+    	}
+    }
+    
+    $_record .= qq|         <link>http://$computername$dnssuffix/$Environ/$yyyy/$mm/$dd/A_Summary/$batch.xml</link>\n|;
+    $_record .= qq|         <description></description>\n|;
+    $_record .= qq|         <pubDate>$pubDate $hour:$minute</pubDate>\n|;
+    $_record .= qq|      </item>\n|;
+
+    _write_file ($_file_full, $_record);
+
+    return;
+}
+#------------------------------------------------------------------
 sub write_pending_result {
     my ($_run_number) = @_;
 
-    #my $_cmd = 'subs\write_pending_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
-    #my $_result = `$_cmd`;
+    _make_dir( "$today_home/All_Batches" );
 
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches" );
+    _make_dir( "$today_home/All_Batches/$opt_batch" );
 
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch" );
-
-    _write_pending_record( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
+    _write_pending_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
     # lock batch xml file so parallel instances of wif.pl cannot update it
-    my $_batch_full = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch".'.xml';
+    my $_batch_full = "$today_home/All_Batches/$opt_batch".'.xml';
     _lock_file($_batch_full);
 
     # create an array containing all files representent runs in the batch
-    my @_runs = glob("$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch/".'*.txt');
+    my @_runs = glob("$today_home/All_Batches/$opt_batch/".'*.txt');
 
     # sort by date created, ascending
     my @_sorted_runs = sort { -C $b <=> -C $a } @_runs;
@@ -479,7 +561,7 @@ sub write_pending_result {
     $_batch .= qq|</batch>\n|;
 
     # dump batch xml file from memory into file system
-    _write_file ("$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch".'.xml', $_batch);
+    _write_file ("$today_home/All_Batches/$opt_batch".'.xml', $_batch);
 
     # unlock batch xml file
     _unlock_file($_batch_full);
@@ -572,17 +654,17 @@ sub create_run_number {
     _make_dir( "$web_server_location_full/$opt_environment" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy" );
     _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd" );
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name" );
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name" );
+    _make_dir( "$today_home" );
+    _make_dir( "$today_home/$testfile_parent_folder_name" );
+    _make_dir( "$today_home/$testfile_parent_folder_name/$testfile_name" );
 
-    my $_run_number_full = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name/Run_Number.txt";
+    my $_run_number_full = "$today_home/$testfile_parent_folder_name/$testfile_name/Run_Number.txt";
     _lock_file($_run_number_full);
     my $_run_number = _increment_run_number($_run_number_full);
     _unlock_file($_run_number_full);
 
     # create a folder for this run number
-    _make_dir( "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd/$testfile_parent_folder_name/$testfile_name/results_$_run_number" );
+    _make_dir( "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number" );
 
     return $_run_number;
 }
@@ -692,7 +774,7 @@ sub _touch {
 sub _prepend_to_filename {
     my ($_string, $_file_full) = @_;
 
-    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html'));
+    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html', '.record'));
 
     return $_file_path.$_string.$_file_name.$_file_suffix;
 
@@ -879,6 +961,7 @@ sub _read_config {
     $selenium_location_full = $config->{main}->{selenium_location_full};
     $opt_use_browsermob_proxy = $config->{main}->{use_browsermob_proxy};
     $web_server_location_full = $config->{main}->{web_server_location_full};
+    $web_server_address = $config->{main}->{web_server_address};
     $config_is_automation_controller = $config->{main}->{is_automation_controller};
 
     # normalise config
@@ -910,6 +993,7 @@ sub _write_config {
     $config->{main}->{selenium_location_full} = $selenium_location_full;
     $config->{main}->{use_browsermob_proxy} = $opt_use_browsermob_proxy;
     $config->{main}->{web_server_location_full} = $web_server_location_full;
+    $config->{main}->{web_server_address} = $web_server_address;
     $config->{main}->{is_automation_controller} = $config_is_automation_controller;
 
     $config->write( 'wif.config' );
