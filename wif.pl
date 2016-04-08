@@ -579,7 +579,7 @@ sub _build_items_text {
     if ( $_number_of_items == 1) {
         $_items_word = "item";
     } else {
-        my $_items_word = "items";
+        $_items_word = "items";
     }
 
     # if there are some pending items, we need a different text
@@ -738,6 +738,11 @@ sub _get_largest_end_time {
       	        $_end_time=$_elt->field();
             }
       }
+
+    if (length $_end_time < 11) {
+        # there is not an end time, batch is still pending
+        return q{};
+    }
 
     # just return the time portion of the date time string
     return substr $_end_time, 11;

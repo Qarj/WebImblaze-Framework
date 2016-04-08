@@ -59,7 +59,7 @@ X make subs\publish_static_files.pl
 
 wif.pl testcases\research\test.xml --target enzo
 wif.pl testcases\research\selenium.xml --target enzo --proxy
-wif.pl
+01-Run A PAT pat research test B1
 
 ### Later
 X display most recent file run / server
