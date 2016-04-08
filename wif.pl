@@ -33,6 +33,7 @@ use File::Slurp;
 use File::Copy qw(copy), qw(move);
 use Config::Tiny;
 use XML::Simple;
+use XML::Twig;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -98,7 +99,7 @@ report_har_file_urls($proxy_port);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
-write_final_result($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
+write_final_result($run_number);
 
 # ensure the stylesheets, assets and manual files are on the web server
 publish_static_files($opt_environment);
@@ -427,11 +428,118 @@ sub publish_results_on_web_server {
 
 #------------------------------------------------------------------
 sub write_final_result {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
+    my ($_run_number) = @_;
 
-    my $_cmd = 'subs\write_final_result.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    _write_final_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
-    my $_result = `$_cmd`;
+
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _write_final_record {
+    my ($_file_full, $_run_number) = @_;
+
+    my $_results_content = read_file("temp/$temp_folder_name/results.xml");
+
+    if ( $_results_content =~ m{</test-summary>}i ) {
+        # WebInject ran to completion - all ok
+    } else {
+        # WebInject did not start, or crashed part way through
+        _write_corrupt_record($_file_full, $_run_number);
+        return;
+    }
+
+    my $_twig = XML::Twig->new();
+    
+    $_twig->parsefile("temp/$temp_folder_name/results.xml");
+    my $_root = $_twig->root;
+     
+    my $_start_time = $_root->first_child('test-summary')->first_child_text('start-time');
+    my $_start_seconds = $_root->first_child('test-summary')->first_child_text('start-seconds');
+    my $_start_date_time = $_root->first_child('test-summary')->first_child_text('start-date-time');
+    my $_total_run_time = $_root->first_child('test-summary')->first_child_text('total-run-time');
+    my $_max_response_time = $_root->first_child('test-summary')->first_child_text('max-response-time'); $_max_response_time = sprintf '%.1f', $_max_response_time;
+    my $_test_cases_run = $_root->first_child('test-summary')->first_child_text('test-cases-run');
+    #my $_test_cases_passed = $_root->first_child('test-summary')->first_child_text('test-cases-passed');
+    my $_test_cases_failed = $_root->first_child('test-summary')->first_child_text('test-cases-failed');
+    my $_assertion_skips = $_root->first_child('test-summary')->first_child_text('assertion-skips');
+    #my $_verifications_passed = $_root->first_child('test-summary')->first_child_text('verifications-passed');
+    #my $_verifications_failed = $_root->first_child('test-summary')->first_child_text('verifications-failed');
+    my $_sanity_check_passed = $_root->first_child('test-summary')->first_child_text('sanity-check-passed');
+
+    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_todays_date();
+    my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
+
+    my $_record;
+
+    $_record .= qq|   <run id="$opt_batch">\n|;
+    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <environment>$opt_environment</environment>\n|;
+    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
+    $_record .= qq|      <basename>$testfile_name</basename>\n|;
+    $_record .= qq|      <totalruntime>$_total_run_time</totalruntime>\n|;
+    $_record .= qq|      <testcasesfailed>$_test_cases_failed</testcasesfailed>\n|;
+    $_record .= qq|      <testcasesrun>$_test_cases_run</testcasesrun>\n|;
+    $_record .= qq|      <assertionskips>$_assertion_skips</assertionskips>\n|;
+    $_record .= qq|      <sanitycheckpassed>$_sanity_check_passed</sanitycheckpassed>\n|;
+    $_record .= qq|      <maxresptime>$_max_response_time</maxresptime>\n|;
+    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
+    $_record .= qq|      <mm>$mm</mm>\n|;
+    $_record .= qq|      <dd>$dd</dd>\n|;
+    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
+    $_record .= qq|      <starttime>$_start_time</starttime>\n|;
+    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
+    $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
+    $_record .= qq|      <startseconds>$_start_seconds</startseconds>\n|;
+    $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
+    $_record .= qq|      <overall>NORMAL</overall>\n|;
+    $_record .= qq|   </run>\n|;
+
+    _write_file ($_file_full, $_record);
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _write_corrupt_record {
+    my ($_file_full, $_run_number) = @_;
+
+    my $_record;
+
+    my $_start_date_time = "$yyyy-$mm-$dd".'T'."$hour:$minute:$second";
+
+    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_todays_date();
+    my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
+
+
+    $_record .= qq|   <run id="$opt_batch">\n|;
+    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <environment>$opt_environment</environment>\n|;
+    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
+    $_record .= qq|      <basename>$testfile_name</basename>\n|;
+    $_record .= qq|      <totalruntime>0</totalruntime>\n|;
+    $_record .= qq|      <testcasesfailed>0</testcasesfailed>\n|;
+    $_record .= qq|      <testcasesrun>0</testcasesrun>\n|;
+    $_record .= qq|      <assertionskips></assertionskips>\n|;
+    $_record .= qq|      <sanitycheckpassed>true</sanitycheckpassed>\n|;
+    $_record .= qq|      <maxresptime>0.0</maxresptime>\n|;
+    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
+    $_record .= qq|      <mm>$mm</mm>\n|;
+    $_record .= qq|      <dd>$dd</dd>\n|;
+    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
+    $_record .= qq|      <starttime>unused</starttime>\n|;
+    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
+    $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
+    $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
+    $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
+    $_record .= qq|      <overall>CORRUPT</overall>\n|;
+    $_record .= qq|   </run>\n|;
+
+    _write_file ($_file_full, $_record);
 
     return;
 }
@@ -480,8 +588,6 @@ sub update_summary_of_batches {
 #------------------------------------------------------------------
 sub _write_summary_record {
     my ($_file_full) = @_;
-
-    require XML::Twig;
 
     my $_twig = XML::Twig->new();
     $_twig->parsefile( "$today_home/All_Batches/$opt_batch".'.xml' );
@@ -800,8 +906,6 @@ sub _write_pending_record {
 
     $_record .= qq|   <run id="$opt_batch">\n|;
     $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
-    $_record .= qq|      <testdriver>unknown</testdriver>\n|;
-    $_record .= qq|      <browser>unknown</browser>\n|;
     $_record .= qq|      <environment>$opt_environment</environment>\n|;
     $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
     $_record .= qq|      <basename>$testfile_name</basename>\n|;
@@ -812,9 +916,6 @@ sub _write_pending_record {
     $_record .= qq|      <sanitycheckpassed>true</sanitycheckpassed>\n|;
     $_record .= qq|      <maxresptime>0.0</maxresptime>\n|;
     $_record .= qq|      <webenv>$opt_target</webenv>\n|;
-    $_record .= qq|      <computername>unused</computername>\n|;
-    $_record .= qq|      <dnssuffix>unused</dnssuffix>\n|;
-    $_record .= qq|      <userdnsdomain>unused</userdnsdomain>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
     $_record .= qq|      <mm>$mm</mm>\n|;
     $_record .= qq|      <dd>$dd</dd>\n|;
@@ -824,12 +925,14 @@ sub _write_pending_record {
     $_record .= qq|      <endtime>PENDING</endtime>\n|;
     $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
     $_record .= qq|      <endseconds>$seconds</endseconds>\n|;
+    $_record .= qq|      <overall>NORMAL</overall>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);
 
     return;
 }
+
 #------------------------------------------------------------------
 sub check_testfile_xml_parses_ok {
 
