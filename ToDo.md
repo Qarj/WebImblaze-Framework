@@ -91,9 +91,9 @@ X   X call a script to generate the configuration file
 X Remove get_run_number.pl
 X   X determine the run number for today
 
-* Remove write_pending_result.pl
-    X update the pending batch record to indicate execution has started
-    * update summary of batches record too
+X Remove write_pending_result.pl
+X   X update the pending batch record to indicate execution has started
+X   X update summary of batches record too
 
 * Remove get_webinject_location.pl
 
