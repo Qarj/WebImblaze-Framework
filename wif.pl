@@ -41,7 +41,7 @@ my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $webinject_location );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -76,8 +76,6 @@ write_pending_result($run_number);
 # there is now a new item in the batch, so the overall summary of everything has to be updated
 update_summary_of_batches();
 
-my $webinject_path = get_webinject_location();
-
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
@@ -88,7 +86,7 @@ my $selenium_port = start_selenium_server($testfile_contains_selenium);
 
 display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $webinject_path, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
+call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $webinject_location, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
 
 shutdown_selenium_server($selenium_port);
 
@@ -404,15 +402,6 @@ sub does_testfile_contain_selenium {
     }
 
     return;
-}
-
-#------------------------------------------------------------------
-sub get_webinject_location {
-
-    my $_cmd = 'subs\get_webinject_location.pl';
-    my $_result = `$_cmd`;
-
-    return $_result;
 }
 
 #------------------------------------------------------------------
@@ -1183,6 +1172,7 @@ sub _read_config {
     $opt_use_browsermob_proxy = $config->{main}->{use_browsermob_proxy};
     $web_server_location_full = $config->{main}->{web_server_location_full};
     $web_server_address = $config->{main}->{web_server_address};
+    $webinject_location = $config->{main}->{webinject_location};
     $config_is_automation_controller = $config->{main}->{is_automation_controller};
 
     # normalise config
@@ -1215,6 +1205,7 @@ sub _write_config {
     $config->{main}->{use_browsermob_proxy} = $opt_use_browsermob_proxy;
     $config->{main}->{web_server_location_full} = $web_server_location_full;
     $config->{main}->{web_server_address} = $web_server_address;
+    $config->{main}->{webinject_location} = $webinject_location;
     $config->{main}->{is_automation_controller} = $config_is_automation_controller;
 
     $config->write( 'wif.config' );

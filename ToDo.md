@@ -95,7 +95,7 @@ X Remove write_pending_result.pl
 X   X update the pending batch record to indicate execution has started
 X   X update summary of batches record too
 
-* Remove get_webinject_location.pl
+X Remove get_webinject_location.pl
 
 * Remove start_browsermob_proxy.pl
 
