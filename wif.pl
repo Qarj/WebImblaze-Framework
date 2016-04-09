@@ -432,7 +432,7 @@ sub write_final_result {
 
     _write_final_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
-
+    # continue from line 38 
 
     return;
 }
