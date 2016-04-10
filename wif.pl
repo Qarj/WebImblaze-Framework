@@ -42,7 +42,7 @@ my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $webinject_location );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $webinject_location, $browsermob_proxy_location_full );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -1292,16 +1292,20 @@ sub remove_temp_folder {
 sub _read_config {
     $config = Config::Tiny->read( 'wif.config' );
 
+    # main
     $opt_target = $config->{main}->{target};
     $opt_batch = $config->{main}->{batch};
     $opt_environment = $config->{main}->{environment};
-    $testfile_full = $config->{main}->{testfile_full};
-    $selenium_location_full = $config->{main}->{selenium_location_full};
     $opt_use_browsermob_proxy = $config->{main}->{use_browsermob_proxy};
-    $web_server_location_full = $config->{main}->{web_server_location_full};
-    $web_server_address = $config->{main}->{web_server_address};
-    $webinject_location = $config->{main}->{webinject_location};
     $config_is_automation_controller = $config->{main}->{is_automation_controller};
+
+    # path
+    $testfile_full = $config->{path}->{testfile_full};
+    $selenium_location_full = $config->{path}->{selenium_location_full};
+    $web_server_location_full = $config->{path}->{web_server_location_full};
+    $web_server_address = $config->{path}->{web_server_address};
+    $webinject_location = $config->{path}->{webinject_location};
+    $browsermob_proxy_location_full = $config->{path}->{browsermob_proxy_location_full};
 
     # normalise config
     if (lc $config_is_automation_controller eq 'true' ) {
@@ -1325,16 +1329,20 @@ sub _write_config {
 
     my $_config = Config::Tiny->new;
 
+    # main
     $config->{main}->{target} = $opt_target;
     $config->{main}->{batch} = $opt_batch;
     $config->{main}->{environment} = $opt_environment;
-    $config->{main}->{testfile_full} = $testfile_full;
-    $config->{main}->{selenium_location_full} = $selenium_location_full;
     $config->{main}->{use_browsermob_proxy} = $opt_use_browsermob_proxy;
-    $config->{main}->{web_server_location_full} = $web_server_location_full;
-    $config->{main}->{web_server_address} = $web_server_address;
-    $config->{main}->{webinject_location} = $webinject_location;
     $config->{main}->{is_automation_controller} = $config_is_automation_controller;
+
+    # path
+    $config->{path}->{testfile_full} = $testfile_full;
+    $config->{path}->{selenium_location_full} = $selenium_location_full;
+    $config->{path}->{web_server_location_full} = $web_server_location_full;
+    $config->{path}->{web_server_address} = $web_server_address;
+    $config->{path}->{webinject_location} = $webinject_location;
+    $config->{path}->{browsermob_proxy_location_full} = $browsermob_proxy_location_full;
 
     $config->write( 'wif.config' );
 
