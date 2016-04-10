@@ -123,6 +123,11 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * shutdown browsermob_proxy by default
 * option to keep browsermob_proxy running
 * check for administrative permissions - or investigate privilleges required
+* dealing with the SSL cert for browsermob proxy
+* instructions for browsermob proxy installation
+* setting up a website for results and BMP
+* serving up .less files in website
+* record traffic in HAR file
 
 ### Much Later
 * support baseline folder [baseline]

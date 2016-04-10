@@ -80,7 +80,7 @@ build_summary_of_batches();
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
-my $proxy_port = start_browsermob_proxy($testfile_contains_selenium, $opt_use_browsermob_proxy);
+my $proxy_port = start_browsermob_proxy($testfile_contains_selenium);
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium);
 #print "selenium_port:$selenium_port\n";
@@ -93,9 +93,9 @@ shutdown_selenium_server($selenium_port);
 
 write_har_file($proxy_port);
 
-shutdown_proxy($proxy_port);
+#shutdown_proxy($proxy_port);
 
-report_har_file_urls($proxy_port);
+#report_har_file_urls($proxy_port);
 
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
@@ -331,14 +331,29 @@ sub start_selenium_server {
     my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\chromedriver.eXe" );
     my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\selenium_log.txt" );
 
-    my $_cmd = qq{wmic process call create 'cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates'}; #
-    my $_result = `$_cmd`;
-    #print "_cmd:\n$_cmd\n";
-    #print "start selenium result:\n$_result\n";
+    my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar C:\\selenium-server\\selenium-server-standalone-2.46.0.jar -port $_selenium_port -trustAllSSLCertificates});
 
     return $_selenium_port;
 }
 
+#------------------------------------------------------------------
+sub _start_windows_process {
+    my ($_command) = @_;
+
+    my $_wmic = "wmic process call create '$_command'"; #
+    my $_result = `$_wmic`;
+    #print "_wmic:$_wmic\n";
+    #print "$_result\n";
+
+    my $_pid;
+    if ( $_result =~ m/ProcessId = (\d+)/ ) {
+        $_pid = $1;
+    }
+
+    return $_pid;
+}
+
+#------------------------------------------------------------------
 sub __port_available {
     my ($_port) = @_;
 
@@ -374,13 +389,16 @@ sub _find_available_port {
 
 #------------------------------------------------------------------
 sub start_browsermob_proxy {
-    my ($_testfile_contains_selenium, $_opt_use_browsermob_proxy) = @_;
+    my ($_testfile_contains_selenium) = @_;
 
-    if (not defined $_opt_use_browsermob_proxy) {
+    require LWP::UserAgent;
+    #require Data::Dumper;
+
+    if (not defined $opt_use_browsermob_proxy) {
         return;
     }
 
-    if (not $_opt_use_browsermob_proxy eq 'true') {
+    if (not $opt_use_browsermob_proxy eq 'true') {
         return;
     }
 
@@ -389,10 +407,94 @@ sub start_browsermob_proxy {
         return;
     }
 
-    my $_cmd = 'subs\start_browsermob_proxy.pl ' . $temp_folder_name;
-    my $_proxy_port = `$_cmd`;
+    #my $_cmd = 'subs\start_browsermob_proxy.pl ' . $temp_folder_name;
+    #my $_proxy_port = `$_cmd`;
+
+    # we need two ports, one for the proxy (server) server, and the other for the proxy (server)
+    # find free port
+    # start proxy server
+    my $_proxy_server_port = _find_available_port(int(rand(999))+9000);
+    my $_proxy_server_pid = _start_windows_process( "cmd /c $browsermob_proxy_location_full -port $_proxy_server_port" );
+    #print "_proxy_server_port:$_proxy_server_port\n";
+
+    # start proxy
+    my $_proxy_port = _find_available_port(int(rand(999))+10_000);
+    _http_post ("http://localhost:$_proxy_server_port/proxy", 'port', $_proxy_port);
+
+    #print "_proxy_port:$_proxy_port\n";
+
+    my $_browsermob_config = Config::Tiny->read( 'plugins/browsermob_proxy/browsermob_proxy.config' );
+    foreach my $_blacklist (sort keys %{$_browsermob_config->{'blacklist'}}) {
+        #print "blacklist:$_blacklist\n";
+        _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/blacklist", "regex=http.*$_blacklist.*&status=200");
+    }
+
     return $_proxy_port;
 
+}
+
+#------------------------------------------------------------------
+sub _http_put {
+    my ($_url, $_body) = @_;
+
+    require HTTP::Request;
+    require Data::Dumper;
+
+    my $_agent = LWP::UserAgent->new;
+    my $_request = HTTP::Request->new('PUT', $_url);
+    $_request->content_type('application/x-www-form-urlencoded');
+    $_request->content($_body);
+    my $_response;
+
+    #print '_request:' . Data::Dumper::Dumper($_request). "\n\n";
+
+    my $_max = 50;
+    my $_try = 0;
+    ATTEMPT:
+    {
+        $_response = Data::Dumper::Dumper ( $_agent->request($_request) );
+
+        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) { 
+            #print {*STDOUT} "WARN: cannot connect to $_url\n";
+            sleep 0.1;
+            redo ATTEMPT;
+        }
+    }
+
+    if ( not $_response =~ m/'_rc' => '200'/ ) {
+        print {*STDOUT} "\nERROR: Did not get http response 200 for PUT request\n";
+        print {*STDOUT} "    url:$_url\n";
+        print {*STDOUT} "   body:$_body\n\n";
+    }
+
+    #print "_response:$_response\n";
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _http_post {
+    my ($_url, @_body) = @_;
+
+    require Data::Dumper;
+
+    my $_response;
+
+    my $_max = 50;
+    my $_try = 0;
+    ATTEMPT:
+    {
+        $_response = Data::Dumper::Dumper ( LWP::UserAgent->new->post($_url, \@_body) );
+
+        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) { 
+            #print {*STDOUT} "WARN: cannot connect to $_url\n";
+            sleep 0.1;
+            redo ATTEMPT;
+        }
+    }
+    #print "_response:$_response\n";
+
+    return;
 }
 
 #------------------------------------------------------------------
@@ -1282,7 +1384,7 @@ sub remove_temp_folder {
     }
 
     if ($@) {
-        print "\nError: $@ Failed to remove folder temp/$_remove_folder after $_max tries\n\n";
+        print {*STDOUT} "\nError: $@ Failed to remove folder temp/$_remove_folder after $_max tries\n\n";
     }
 
     return;
@@ -1390,7 +1492,7 @@ sub get_options_and_config {  #shell options
     # read the testfile name, and ensure it exists
     if (($#ARGV + 1) < 1) {
         if (not defined $testfile_full) {
-            print "\nERROR: No test file name specified at command line or found in wif.config\n";
+            print {*STDOUT} "\nERROR: No test file name specified at command line or found in wif.config\n";
             print_usage();
             exit;
         }
@@ -1408,7 +1510,7 @@ sub get_options_and_config {  #shell options
     }
 
     if (not defined $opt_target) {
-        print "\n\nERROR: Target sub environment name must be specified\n";
+        print {*STDOUT} "\n\nERROR: Target sub environment name must be specified\n";
         exit;
     }
 
@@ -1421,7 +1523,7 @@ sub get_options_and_config {  #shell options
 }
 
 sub print_version {
-    print "\nWebInjectFramework version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n\n";
+    print {*STDOUT} "\nWebInjectFramework version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n\n";
     return;
 }
 
@@ -1433,7 +1535,7 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -t|--target                 target environment handle           --target skynet
 -b|--batch                  batch name for grouping results     --batch SmokeTests
 -e|--env                    high level environment DEV, LIVE    --env UAT
--p|--use-browesermob-proxy  use browsermob-proxy
+-p|--use-browsermob-proxy   use browsermob-proxy                --use-browsermob-proxy true
 -n|--no-retry               do not invoke retries
 -u|--no-update-config       do not update config to reflect options
 -k|--keep                   keep temporary files
