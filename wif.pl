@@ -80,7 +80,7 @@ build_summary_of_batches();
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
-my $proxy_port = start_browsermob_proxy($testfile_contains_selenium);
+my ($proxy_server_pid, $proxy_server_port, $proxy_port) = start_browsermob_proxy($testfile_contains_selenium);
 
 my $selenium_port = start_selenium_server($testfile_contains_selenium);
 #print "selenium_port:$selenium_port\n";
@@ -91,9 +91,9 @@ call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_autom
 
 shutdown_selenium_server($selenium_port);
 
-write_har_file($proxy_port);
+#write_har_file($proxy_port);
 
-#shutdown_proxy($proxy_port);
+shutdown_browsermob_proxy($proxy_server_pid, $proxy_server_port, $proxy_port);
 
 #report_har_file_urls($proxy_port);
 
@@ -275,8 +275,8 @@ sub write_har_file {
 }
 
 #------------------------------------------------------------------
-sub shutdown_proxy {
-    my ($_proxy_port) = @_;
+sub shutdown_browsermob_proxy {
+    my ($_proxy_server_pid, $_proxy_server_port, $_proxy_port) = @_;
 
     require LWP::UserAgent;
 
@@ -284,14 +284,18 @@ sub shutdown_proxy {
     #my $_available_port= _find_available_port($_proxy_port);
     #print "_available_port:$_available_port\n";
 
+    # first shutdown the proxy (a bit pointless since we will kill the parent process next)
     if (defined $_proxy_port) {
-        LWP::UserAgent->new->delete("http://localhost:9091/proxy/$_proxy_port");
+        LWP::UserAgent->new->delete("http://localhost:$_proxy_server_port/proxy/$_proxy_port");
     }
 
     # prove that that the proxy server has been shut down
     #$_available_port= _find_available_port($_proxy_port);
     #print "_proxy_port:$_proxy_port\n";
     #print "_available_port:$_available_port\n";
+
+    # now shutdown the proxy server
+    system("taskkill /PID $_proxy_server_pid /T /F");
 
     return;
 }
@@ -429,8 +433,7 @@ sub start_browsermob_proxy {
         _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/blacklist", "regex=http.*$_blacklist.*&status=200");
     }
 
-    return $_proxy_port;
-
+    return $_proxy_server_pid, $_proxy_server_port, $_proxy_port;
 }
 
 #------------------------------------------------------------------
