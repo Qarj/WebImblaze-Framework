@@ -295,7 +295,10 @@ sub shutdown_browsermob_proxy {
     #print "_available_port:$_available_port\n";
 
     # now shutdown the proxy server
-    system("taskkill /PID $_proxy_server_pid /T /F");
+    my $_result = `taskkill /PID $_proxy_server_pid /T /F`;
+    if (not $_result =~ m/SUCCESS.*child process/ ) {
+        print {*STDOUT} "ERROR: Did not kill browsermob proxy (pid $_proxy_server_pid) and child processes\n";
+    }
 
     return;
 }
