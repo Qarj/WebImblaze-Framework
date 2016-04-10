@@ -450,8 +450,19 @@ sub _write_final_record {
         # WebInject ran to completion - all ok
     } else {
         # WebInject did not start, or crashed part way through
-        _write_corrupt_record($_file_full, $_run_number);
+        _write_corrupt_record($_file_full, $_run_number, 'WebInject abnormal end - run manually to diagnose');
         return;
+    }
+
+    # here we parse the xml file in an eval, and capture any error returned (in $@)
+    my $_message;
+    my $_result = eval { XMLin($_results_content) };
+
+    if ($@) {
+        $_message = $@;
+        $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
+        $_message =~ s{\n}{}g; # remove line feeds
+        _write_corrupt_record($_file_full, $_run_number, "$_message in results.xml");
     }
 
     my $_twig = XML::Twig->new();
@@ -508,7 +519,7 @@ sub _write_final_record {
 
 #------------------------------------------------------------------
 sub _write_corrupt_record {
-    my ($_file_full, $_run_number) = @_;
+    my ($_file_full, $_run_number, $_message) = @_;
 
     my $_record;
 
@@ -540,6 +551,7 @@ sub _write_corrupt_record {
     $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
     $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
     $_record .= qq|      <overall>CORRUPT</overall>\n|;
+    $_record .= qq|      <message>$_message</message>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);

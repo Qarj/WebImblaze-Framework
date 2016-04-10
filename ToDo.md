@@ -111,11 +111,11 @@ X   X create a batch summary record to indicate overall run result (removing the
 
 * Remove publish_static_files.pl
 
-* Create sub check_webinject_ran_ok
-    * check if xml results can be parsed - if not, error processing
-    * check if error after running WebInject.pl
-    * check to see if webinject aborted, if so, need dummy result to indicate issue
-    * check results file to see if it is valid, if not, need dummy result to indicate issue
+X Create sub check_webinject_ran_ok
+X   X check if xml results can be parsed - if not, error processing
+X   X check if error after running WebInject.pl
+X   X check to see if webinject aborted, if so, need dummy result to indicate issue
+X   X check results file to see if it is valid, if not, need dummy result to indicate issue
 
 
 ### More later
