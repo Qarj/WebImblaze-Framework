@@ -97,7 +97,7 @@ X   X update summary of batches record too
 
 X Remove get_webinject_location.pl
 
-* Remove start_browsermob_proxy.pl
+X Remove start_browsermob_proxy.pl
 
 * Remove publish_results_on_web_server.pl
     * prepend stylesheet to results file
