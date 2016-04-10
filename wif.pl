@@ -432,8 +432,13 @@ sub start_browsermob_proxy {
 
     my $_browsermob_config = Config::Tiny->read( 'plugins/browsermob_proxy/browsermob_proxy.config' );
     foreach my $_blacklist (sort keys %{$_browsermob_config->{'blacklist'}}) {
-        #print "blacklist:$_blacklist\n";
+        #print "_blacklist:$_blacklist\n";
         _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/blacklist", "regex=http.*$_blacklist.*&status=200");
+    }
+
+    foreach my $_rewrite (sort keys %{$_browsermob_config->{'rewrite'}}) {
+        print "_rewrite:$_rewrite\n";
+        _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/rewrite", "matchRegex=http.*$_rewrite.*&replace=http://localhost/$_rewrite");
     }
 
     return $_proxy_server_pid, $_proxy_server_port, $_proxy_port;
