@@ -52,7 +52,7 @@ my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
 # start globally read variables  - will only be written to from the main script
-my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date();
+my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date(); ## no critic(NamingConventions::ProhibitAmbiguousNames)
 my $today_home;
 # end globally read variables
 
@@ -452,10 +452,10 @@ sub _write_final_record {
     }
 
     my $_twig = XML::Twig->new();
-    
+
     $_twig->parsefile("temp/$temp_folder_name/results.xml");
     my $_root = $_twig->root;
-     
+
     my $_start_time = $_root->first_child('test-summary')->first_child_text('start-time');
     my $_start_seconds = $_root->first_child('test-summary')->first_child_text('start-seconds');
     my $_start_date_time = $_root->first_child('test-summary')->first_child_text('start-date-time');
@@ -557,7 +557,7 @@ sub update_summary_of_batches {
     my @_summary_records = glob("$today_home/All_Batches/$opt_batch".'_*.record');
 
     # sort by date created, ascending
-    my @_sorted_summary = sort { -C $b <=> -C $a } @_summary_records;
+    my @_sorted_summary = reverse sort { -C $a <=> -C $b } @_summary_records;
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
@@ -595,7 +595,7 @@ sub _write_summary_record {
 
     my $_start_time = _get_earliest_start_time($_root);
     my $_end_time = _get_largest_end_time($_root);
-    
+
     my $_number_of_pending_items = _get_number_of_pending_items($_root);
 
     # calculate the number of items in the batch - pending items are not counted
@@ -626,16 +626,16 @@ sub _write_summary_record {
     }
 
     # build concurrency text
-    my $_concurrency_text = "(Concurrency $_concurrency)"; 
+    my $_concurrency_text = "(Concurrency $_concurrency)";
     if ($_concurrency == 0) { $_concurrency_text = q{}; }
 
     my $_total_steps_run = _get_total_steps_run($_root);
 
     # build overall summary text
     my $_overall = 'PASS';
-    if ($_number_of_pending_items > 0) { $_overall = "PEND"; }
-    if ($_number_of_failures > 0) { $_overall = "FAIL"; }
-    if ($_number_of_sanity_failures > 0) { $_overall = "ABORTED"; $_concurrency_text = q{}; }
+    if ($_number_of_pending_items > 0) { $_overall = 'PEND'; }
+    if ($_number_of_failures > 0) { $_overall = 'FAIL'; }
+    if ($_number_of_sanity_failures > 0) { $_overall = 'ABORTED'; $_concurrency_text = q{}; }
 
     my $_record;
 
@@ -643,8 +643,8 @@ sub _write_summary_record {
     $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/Overall_Summary.xml</link>\n|;
     $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
-    $_record .= qq|         <title>|;
-    
+    $_record .= '         <title>';
+
     if ($_number_of_sanity_failures > 0) {
         $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_environment $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     } else {
@@ -672,9 +672,9 @@ sub _build_items_text {
     # singular or plural
     my $_items_word;
     if ( $_number_of_items == 1) {
-        $_items_word = "item";
+        $_items_word = 'item';
     } else {
-        $_items_word = "items";
+        $_items_word = 'items';
     }
 
     # if there are some pending items, we need a different text
@@ -717,7 +717,7 @@ sub _get_end_time_seconds {
             $_end_seconds = $_elt->field();
         }
     }
-    
+
     return $_end_seconds;
 }
 
@@ -728,7 +728,7 @@ sub _get_start_time_seconds {
     # example tag: <startseconds>75059</startseconds>
 
     # there are 86400 seconds in a day, we need to find the smallest start time in seconds
-    my $_start_seconds = 86400;
+    my $_start_seconds = 86_400;
     my $_elt = $_root;
     while ( $_elt= $_elt->next_elt($_root,'startseconds') ) {
         if ($_elt->field() < $_start_seconds) {
@@ -750,7 +750,7 @@ sub _get_total_run_time_seconds {
     while ( $_elt= $_elt->next_elt($_root,'totalruntime') ) {
       	$_total_run_time += $_elt->field();
     }
-    
+
     # format to 0 decimal places
     return sprintf '%.0f', $_total_run_time;
 }
@@ -779,7 +779,7 @@ sub _get_number_of_sanity_failures {
 
     my $_elt = $_root;
     while ( $_elt = $_elt->next_elt( $_root,'sanitycheckpassed') ) {
-        if ($_elt->field() eq "false" ) {
+        if ($_elt->field() eq 'false' ) {
             $_num_failures  += 1;
         }
     }
@@ -796,7 +796,7 @@ sub _get_number_of_pending_items {
 
     my $_elt = $_root;
     while ( $_elt = $_elt->next_elt( $_root,'endtime') ) {
-        if ($_elt->field() eq "PENDING" ) {
+        if ($_elt->field() eq 'PENDING' ) {
             $_num_pending += 1;
         }
     }
@@ -861,7 +861,7 @@ sub write_pending_result {
     my @_runs = glob("$today_home/All_Batches/$opt_batch/".'*.txt');
 
     # sort by date created, ascending
-    my @_sorted_runs = sort { -C $b <=> -C $a } @_runs;
+    my @_sorted_runs = reverse sort { -C $a <=> -C $b } @_runs;
 
     # write the header
     my $_batch = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
@@ -989,8 +989,9 @@ sub _increment_run_number {
     my $_run_number;
     if (-e $_run_number_full) {
         my $_run_number_string = read_file($_run_number_full);
-        $_run_number_string =~ m/([\d]*)/;
-        $_run_number = $1;
+        if ( $_run_number_string =~ m/([\d]*)/ ) {
+            $_run_number = $1;
+        }
     }
 
     if (! $_run_number) {
@@ -1029,7 +1030,7 @@ sub _lock_file {
     if (not -e "$_unlocked_file_indicator" ) {
         ###print "$_unlocked_file_indicator\n";
         # file is not unlocked
-        if (not glob("$_locked_file_indicator"."_*") ) {
+        if (not glob("$_locked_file_indicator".'_*') ) {
             ###print "$_locked_file_indicator".'_*';
             # file is not locked either, so it must not exist
             # so we can create a file indicating that the file is unlocked
