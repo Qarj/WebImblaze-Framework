@@ -74,8 +74,8 @@ my $run_number = create_run_number();
 # indicate that WebInject is running the testfile
 write_pending_result($run_number);
 
-# there is now a new item in the batch, so the overall summary of everything has to be updated
-update_summary_of_batches();
+# there is now a new item in the batch, so the overall summary of everything has to be rebuilt
+build_summary_of_batches();
 
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
@@ -100,6 +100,9 @@ report_har_file_urls($proxy_port);
 publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
 
 write_final_result($run_number);
+
+# the pending item in the batch is now final, so the overall summary of everything has to be rebuilt
+build_summary_of_batches();
 
 # ensure the stylesheets, assets and manual files are on the web server
 publish_static_files($opt_environment);
@@ -432,7 +435,7 @@ sub write_final_result {
 
     _write_final_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
-    # continue from line 38 
+    _build_batch_summary();
 
     return;
 }
@@ -545,7 +548,7 @@ sub _write_corrupt_record {
 }
 
 #------------------------------------------------------------------
-sub update_summary_of_batches {
+sub build_summary_of_batches {
 
     my $_batch_summary_record_full = "$today_home/All_Batches/$opt_batch".'_summary.record';
 
@@ -853,6 +856,14 @@ sub write_pending_result {
 
     _write_pending_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
+    _build_batch_summary();
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _build_batch_summary {
+
     # lock batch xml file so parallel instances of wif.pl cannot update it
     my $_batch_full = "$today_home/All_Batches/$opt_batch".'.xml';
     _lock_file($_batch_full);
@@ -884,6 +895,7 @@ sub write_pending_result {
 
     return;
 }
+
 
 #------------------------------------------------------------------
 sub _write_file {

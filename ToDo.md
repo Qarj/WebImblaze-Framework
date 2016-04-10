@@ -106,8 +106,8 @@ X Remove get_webinject_location.pl
     * write har.gzip directly to web server
     * comment out har file as plain text - it is for debug use only
 
-* Remove write_final_result.pl
-    * create a batch summary record to indicate overall run result (removing the pending records)
+X Remove write_final_result.pl
+X   X create a batch summary record to indicate overall run result (removing the pending records)
 
 * Remove publish_static_files.pl
 
