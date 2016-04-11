@@ -99,23 +99,22 @@ X Remove get_webinject_location.pl
 
 X Remove start_browsermob_proxy.pl
 
-* Remove publish_results_on_web_server.pl
-    * prepend stylesheet to results file
-    * Put the results on the webserver
-    * call script to split http.log into one html file for each test step
-    * write har.gzip directly to web server
-    * comment out har file as plain text - it is for debug use only
+X Remove publish_results_on_web_server.pl
+X   X prepend stylesheet to results file
+X   X Put the results on the webserver
 
 X Remove write_final_result.pl
 X   X create a batch summary record to indicate overall run result (removing the pending records)
-
-* Remove publish_static_files.pl
 
 X Create sub check_webinject_ran_ok
 X   X check if xml results can be parsed - if not, error processing
 X   X check if error after running WebInject.pl
 X   X check to see if webinject aborted, if so, need dummy result to indicate issue
 X   X check results file to see if it is valid, if not, need dummy result to indicate issue
+
+* Remove publish_static_files.pl
+
+* split http.log into one html file for each test step
 
 
 ### More later
@@ -128,6 +127,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * setting up a website for results and BMP
 * serving up .less files in website
 * record traffic in HAR file
+* write har.gzip directly to web server
+* comment out har file as plain text - it is for debug use only
 
 ### Much Later
 * support baseline folder [baseline]
@@ -140,6 +141,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * start selenium server as hub (phantomjs)
 * stop hub
 * display pid
+* copy over baselined imageds
 
 <br />
 

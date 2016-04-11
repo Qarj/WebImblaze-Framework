@@ -545,12 +545,56 @@ sub publish_results_on_web_server {
 
     $results_content = read_file("temp/$temp_folder_name/results.xml");
 
+    my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
+
     # put the results file on the server with a reference to the stylesheet
     my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
     $_results .= '<?xml-stylesheet type="text/xsl" href="/results.xsl"?>'."\n";
     _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results . $results_content);
 
-    # got up to line 27 of publish results on web server dot bat
+    # copy captured email files to web server 
+    _copy ( "temp/$temp_folder_name/*.eml", $_this_run_home);
+
+    # copy any .txt files over
+    _copy ( "temp/$temp_folder_name/*.txt", $_this_run_home);
+
+    # copy any .7z files over - e.g. har.7z
+    _copy ( "temp/$temp_folder_name/*.7z", $_this_run_home);
+    
+    # copy .htm and .html files over
+    _copy ( "temp/$temp_folder_name/*.htm*", $_this_run_home);
+
+    # copy .css and .less files over
+    _copy ( "temp/$temp_folder_name/*ss", $_this_run_home);
+
+    # copy .jpg and .png files over
+    _copy ( "temp/$temp_folder_name/*.jpg", $_this_run_home);
+    _copy ( "temp/$temp_folder_name/*.png", $_this_run_home);
+
+    # copy the .js files over
+    _copy ( "temp/$temp_folder_name/*.js", $_this_run_home);
+
+    # copy chromedriver.log file over as chromedriver.txt so we do not need another MIME type
+    _copy ( "temp/$temp_folder_name/chromedriver.log", "$_this_run_home".'chromedriver.txt');
+
+    # copy http.log file over as http.txt so we do not need another MIME type
+    _copy ( "temp/$temp_folder_name/http.log", "$_this_run_home".'http.txt');
+
+    # split the http.log into a file for each step
+    # perhaps WebInject can do this, and write the log at the same time
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _copy {
+    my ($_source, $_dest) = @_;
+
+    my @_source_files = glob $_source;
+
+    foreach my $_source_file (@_source_files) {
+        copy $_source_file, $_dest;
+    }
 
     return;
 }
