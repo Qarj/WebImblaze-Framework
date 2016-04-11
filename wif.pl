@@ -54,6 +54,7 @@ my $WEBINJECT_CONFIG;
 # start globally read variables  - will only be written to from the main script
 my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date(); ## no critic(NamingConventions::ProhibitAmbiguousNames)
 my $today_home;
+my $results_content;
 # end globally read variables
 
 get_options_and_config();  # get command line options
@@ -97,7 +98,7 @@ shutdown_browsermob_proxy($proxy_server_pid, $proxy_server_port, $proxy_port);
 
 #report_har_file_urls($proxy_port);
 
-publish_results_on_web_server($opt_environment, $opt_target, $testfile_full, $opt_batch, $run_number);
+publish_results_on_web_server($run_number);
 
 write_final_result($run_number);
 
@@ -277,6 +278,10 @@ sub write_har_file {
 #------------------------------------------------------------------
 sub shutdown_browsermob_proxy {
     my ($_proxy_server_pid, $_proxy_server_port, $_proxy_port) = @_;
+
+    if (not defined $_proxy_server_pid) {
+        return;
+    }
 
     require LWP::UserAgent;
 
@@ -533,11 +538,19 @@ sub publish_static_files {
 
 #------------------------------------------------------------------
 sub publish_results_on_web_server {
-    my ($_opt_environment, $_opt_target, $_testfile_full, $_opt_batch, $_run_number) = @_;
+    my ($_run_number) = @_;
 
-    my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    #my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
+    #my $_result = `$_cmd`;
 
-    my $_result = `$_cmd`;
+    $results_content = read_file("temp/$temp_folder_name/results.xml");
+
+    # put the results file on the server with a reference to the stylesheet
+    my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
+    $_results .= '<?xml-stylesheet type="text/xsl" href="/results.xsl"?>'."\n";
+    _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results . $results_content);
+
+    # got up to line 27 of publish results on web server dot bat
 
     return;
 }
@@ -557,9 +570,7 @@ sub write_final_result {
 sub _write_final_record {
     my ($_file_full, $_run_number) = @_;
 
-    my $_results_content = read_file("temp/$temp_folder_name/results.xml");
-
-    if ( $_results_content =~ m{</test-summary>}i ) {
+    if ( $results_content =~ m{</test-summary>}i ) {
         # WebInject ran to completion - all ok
     } else {
         # WebInject did not start, or crashed part way through
@@ -569,7 +580,7 @@ sub _write_final_record {
 
     # here we parse the xml file in an eval, and capture any error returned (in $@)
     my $_message;
-    my $_result = eval { XMLin($_results_content) };
+    my $_result = eval { XMLin($results_content) };
 
     if ($@) {
         $_message = $@;
