@@ -744,7 +744,7 @@ sub build_summary_of_batches {
     _write_summary_record( $_batch_summary_record_full );
 
     # create an array containing all files representing summary records for all of todays batches
-    my @_summary_records = glob("$today_home/All_Batches/$opt_batch".'_*.record');
+    my @_summary_records = glob("$today_home/All_Batches/".'*.record');
 
     # sort by date created, ascending
     my @_sorted_summary = reverse sort { -C $a <=> -C $b } @_summary_records;
@@ -765,9 +765,11 @@ sub build_summary_of_batches {
     $_summary .= qq|</summary>\n|;
 
     # dump summary xml file from memory into file system
-    my $_overall_summary_full = "$today_home/All_Batches/Overall_Summary.xml";
+    my $_overall_summary_full = "$today_home/All_Batches/Summary.xml";
 
+    # save the file to todays area, and a copy to environment root
     _write_file ( $_overall_summary_full, $_summary );
+    _write_file ( $web_server_location_full."/$opt_environment/Summary.xml", $_summary );
 
     # unlock batch xml file
     _unlock_file( $_batch_summary_record_full );

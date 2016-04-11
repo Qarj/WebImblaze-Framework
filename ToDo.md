@@ -114,11 +114,14 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 
 * Remove publish_static_files.pl
     * Summary.xsl -> Summary.xsl
+        * Bug - Only latest?
         * CORRUPT
-        * Links to other wif servers
+        X Links to other wif servers
         * css
         * Scroll up Down
         * fonts
+        * new summary line
+        * light grey background?
     * batch.xsl -> Batch.xsl
     * results.xsl -> Results.xsl
 
