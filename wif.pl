@@ -106,7 +106,7 @@ write_final_result($run_number);
 build_summary_of_batches();
 
 # ensure the stylesheets, assets and manual files are on the web server
-publish_static_files($opt_environment);
+publish_static_files($run_number);
 
 # tear down
 remove_temp_folder($temp_folder_name, $opt_keep);
@@ -528,10 +528,20 @@ sub does_testfile_contain_selenium {
 
 #------------------------------------------------------------------
 sub publish_static_files {
-    my ($_opt_environment) = @_;
+    my ($_run_number) = @_;
 
-    my $_cmd = 'subs\publish_static_files.pl ' . $_opt_environment;
-    my $_result = `$_cmd`;
+    # favourite icon
+    _copy ( 'content/root/*', $web_server_location_full);
+
+    # xsl and css stylesheets plus images
+    _make_dir ( $web_server_location_full.'/content/' ) ;
+    _copy ( 'content/*.css', $web_server_location_full.'/content/' );
+    _copy ( 'content/*.xsl', $web_server_location_full.'/content/' );
+    _copy ( 'content/*.jpg', $web_server_location_full.'/content/' );
+
+    # javascripts
+    _make_dir ( $web_server_location_full.'/scripts/' ) ;
+    _copy ( 'scripts/*.js', $web_server_location_full.'/scripts/' );
 
     return;
 }
@@ -540,16 +550,13 @@ sub publish_static_files {
 sub publish_results_on_web_server {
     my ($_run_number) = @_;
 
-    #my $_cmd = 'subs\publish_results_on_web_server.pl ' . $_opt_environment . q{ } . $opt_target . q{ } . $_testfile_full . q{ } . $temp_folder_name . q{ } . $_opt_batch . q{ } . $_run_number;
-    #my $_result = `$_cmd`;
-
     $results_content = read_file("temp/$temp_folder_name/results.xml");
 
     my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
 
     # put the results file on the server with a reference to the stylesheet
     my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
-    $_results .= '<?xml-stylesheet type="text/xsl" href="/results.xsl"?>'."\n";
+    $_results .= '<?xml-stylesheet type="text/xsl" href="/content/Results.xsl"?>'."\n";
     _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results . $results_content);
 
     # copy captured email files to web server 
@@ -744,7 +751,7 @@ sub build_summary_of_batches {
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="/summary.xsl"?>\n|;
+    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="/content/Summary.xsl"?>\n|;
     $_summary .= qq|<summary version="2.0">\n|;
     $_summary .= qq|    <channel>\n|;
 
@@ -1056,7 +1063,7 @@ sub _build_batch_summary {
 
     # write the header
     my $_batch = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="/batch.xsl"?>\n|;
+    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="/content/Batch.xsl"?>\n|;
     $_batch .= qq|<batch>\n|;
 
     # write all the run records

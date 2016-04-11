@@ -113,6 +113,14 @@ X   X check to see if webinject aborted, if so, need dummy result to indicate is
 X   X check results file to see if it is valid, if not, need dummy result to indicate issue
 
 * Remove publish_static_files.pl
+    * Summary.xsl -> Summary.xsl
+        * CORRUPT
+        * Links to other wif servers
+        * css
+        * Scroll up Down
+        * fonts
+    * batch.xsl -> Batch.xsl
+    * results.xsl -> Results.xsl
 
 * split http.log into one html file for each test step
 
