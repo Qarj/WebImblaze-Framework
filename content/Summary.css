@@ -86,5 +86,8 @@ div#heading h2 { font-weight:normal; margin-bottom:0.3em; color:#D1E6E7; }
   text-decoration: none;
 }
 
+.inputbox { float: right; width:15em; margin-right: 2.5em; margin-top: 0.3em; border:none; }
+#live-filter { width: 100%; border: none; font:110% Verdana; font-weight: bold; background: #D1E6E7; color:DarkSlateGray; padding: 0.2em 0.5em 0.2em 0.5em; box-sizing: border-box; }
+
 div#results { background: #ecf0f1; bottom right no-repeat; margin-right:2.5em; }
 

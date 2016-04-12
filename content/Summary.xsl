@@ -33,7 +33,30 @@
 
         });
    		
+
+    $("#live-filter").keyup(function(){
+ 
+        // Retrieve the input field text
+        var filter = $(this).val();
+ 
+        // Loop through the article list
+        $(".article li").each(function(){
+ 
+            // If the list item does not contain the text phrase fade it out
+            if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                $(this).fadeOut();
+ 
+            // Show the list item if the phrase matches
+            } else {
+                $(this).show();
+            }
+        });
+ 
+    });
+
+
 	});
+
 ]]>
 	</script>
   </head>
@@ -59,7 +82,15 @@
         <button class="btn" data-filter="pend">Show Pending</button>
         <button class="btn" data-filter="sanity">Show Sanity Failed</button>
         <button class="btn" data-filter="fail">Show Failed</button>
+
+        <form id="live-search" action="" class="inputbox" method="post">
+            <fieldset>
+                <input type="text" class="text-input" id="live-filter" value="" />
+            </fieldset>
+        </form>
+
     </div>
+
 
     <div class="spacer"></div>
     
