@@ -62,7 +62,6 @@
     </div>
 
     <div class="spacer"></div>
-
     
     <div id="results">
     <ul>

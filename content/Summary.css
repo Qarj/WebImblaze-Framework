@@ -1,9 +1,26 @@
 * { margin:0; padding:0; }
 
-body { font:80% Verdana, sans-serif; color:#000; padding:25px 0 0 35px; }
+body { background: #ecf0f1; font:80% Verdana, sans-serif; color:#000; padding:25px 0 0 35px; }
 
 a { text-decoration:none; }
 a:hover { color:#5BAB03; text-decoration: underline;}
+
+/* unvisited link */
+h1 a:link {
+    color: #D1E6E7;
+}
+h2 a:link {
+    color: #D1E6E7;
+}
+
+/* visited link */
+h1 a:visited {
+    color: #D1E6E7;
+}
+h2 a:visited {
+    color: #D1E6E7;
+}
+
 
 ul { margin-left:2.5em; }
 li { margin-bottom:0.4em; }
@@ -37,17 +54,37 @@ li a { font-weight:bold;}
 /* do not want bullet points to appear */
 ul
 {
-    list-style-type: none;
+    list-style-type: none; padding:0; margin:0;
 }
 
 div { line-height:1.6em; }
 
-div#heading { padding:1em 1em 0 1em; border:1px solid #ddd; background:Lavender; margin:0 2em 2em 0; }
-div#heading h1 { font-weight:normal; font-size:1.8em; margin-bottom:0.3em; }
-div#heading h2 { font-weight:normal; margin-bottom:0.3em; }
+div#heading { padding:1em 1em 0 1em; border:1px solid #ddd; background:DarkSlateGray; margin:0 2em 2em 0; }
+div#heading h1 { font-weight:normal; font-size:2.5em; margin-bottom:0.3em; font-family: Verdana, sans-serif; color:#D1E6E7; }
+div#heading h2 { font-weight:normal; margin-bottom:0.3em; color:#D1E6E7; }
 
-div#results { background:WhiteSmoke bottom right no-repeat; margin-right:2.5em; }
+/* spacer between heading and results */
+.spacer {
+  clear: both;
+  height: 1em;
+}
 
-#key { float: right; margin-right: 25px }
-#passKey { background-color: green; color: white; width: 50px; padding: 10px; margin: 5px; }
-#failedKey { background-color: #EB2121; width: 50px; color: white; padding: 10px; } 
+.btn {
+  border: none;
+  background: linear-gradient(to bottom, DarkSlateGray, #5B7778);
+  border-radius: 3px;
+  font-family: Arial;
+  color: #D1E6E7;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+  margin: 5px;
+}
+
+/* which button is active */
+.active {
+  background: linear-gradient(to bottom, #7d9394, #5B7778);
+  text-decoration: none;
+}
+
+div#results { background: #ecf0f1; bottom right no-repeat; margin-right:2.5em; }
+

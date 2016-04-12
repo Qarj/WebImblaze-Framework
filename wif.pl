@@ -841,7 +841,7 @@ sub _write_summary_record {
     my $_record;
 
     $_record .= qq|      <title>$opt_environment summary (click for previous day)</title>\n|;
-    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/Overall_Summary.xml</link>\n|;
+    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/Summary.xml</link>\n|;
     $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
     $_record .= '         <title>';
