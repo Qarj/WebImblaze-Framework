@@ -114,14 +114,15 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 
 * Remove publish_static_files.pl
     * Summary.xsl -> Summary.xsl
-        * Bug - Only latest?
-        * CORRUPT
+        X Bug - Only latest?
         X Links to other wif servers
         * css
         * Scroll up Down
         * fonts
         * new summary line
         * light grey background?
+        * click for previous day
+        * CORRUPT
     * batch.xsl -> Batch.xsl
     * results.xsl -> Results.xsl
 

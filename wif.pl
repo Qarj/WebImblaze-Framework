@@ -21,8 +21,12 @@ $VERSION = '0.01';
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebInject/examples/command.xml --target skynet
-#              wif.pl ../WebInject/examples/selenium.xml --target skynet
+#              wif.pl ../WebInject/examples/command.xml --target skynet --batch allgood
+#              wif.pl ../WebInject/examples/sanitycheck.xml --target skynet --batch veryverybad
+#              wif.pl ../WebInject/examples/errormessage.xml --target skynet --batch notgood
+#              wif.pl ../WebInject/examples/corrupt.xml --target skynet --batch worstpossible
+#              wif.pl ../WebInject/examples/sleep.xml --target skynet --batch tired
+#              wif.pl ../WebInject/examples/selenium.xml --target skynet --batch gui
 
 use Getopt::Long;
 use File::Basename;
@@ -638,6 +642,8 @@ sub _write_final_record {
         $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
         $_message =~ s{\n}{}g; # remove line feeds
         _write_corrupt_record($_file_full, $_run_number, "$_message in results.xml");
+        print {*STDOUT} "WebInject results.xml could not be parsed - CORRUPT\n";
+        return;
     }
 
     my $_twig = XML::Twig->new();
@@ -684,7 +690,7 @@ sub _write_final_record {
     $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
     $_record .= qq|      <startseconds>$_start_seconds</startseconds>\n|;
     $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
-    $_record .= qq|      <overall>NORMAL</overall>\n|;
+    $_record .= qq|      <status>NORMAL</status>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);
@@ -725,8 +731,8 @@ sub _write_corrupt_record {
     $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
     $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
     $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
-    $_record .= qq|      <overall>CORRUPT</overall>\n|;
-    $_record .= qq|      <message>$_message</message>\n|;
+    $_record .= qq|      <status>CORRUPT</status>\n|;
+    $_record .= qq|      <status-message>$_message</status-message>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);
@@ -823,11 +829,14 @@ sub _write_summary_record {
 
     my $_total_steps_run = _get_total_steps_run($_root);
 
+    my ($_status, $_status_message) = _get_status($_root);
+
     # build overall summary text
     my $_overall = 'PASS';
     if ($_number_of_pending_items > 0) { $_overall = 'PEND'; }
     if ($_number_of_failures > 0) { $_overall = 'FAIL'; }
-    if ($_number_of_sanity_failures > 0) { $_overall = 'ABORTED'; $_concurrency_text = q{}; }
+    if ($_number_of_sanity_failures > 0) { $_overall = 'SANITY CHECK FAILED'; $_concurrency_text = q{}; }
+    if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
 
     my $_record;
 
@@ -837,13 +846,15 @@ sub _write_summary_record {
     $_record .= qq|      <item>\n|;
     $_record .= '         <title>';
 
-    if ($_number_of_sanity_failures > 0) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_environment $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+    if ($_status eq 'CORRUPT' ) {
+        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message</title>\n|;
+    } elsif ($_number_of_sanity_failures > 0) {
+        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     } else {
     	if ($_number_of_failures > 0) {
-            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_environment $opt_batch: $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     	} else {
-            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_environment $opt_batch: ALL $_total_steps_run steps OK, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: ALL $_total_steps_run steps OK, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     	}
     }
 
@@ -879,6 +890,27 @@ sub _build_items_text {
     }
 
     return $_items_text;
+}
+
+#------------------------------------------------------------------
+sub _get_status {
+    my ($_root) = @_;
+
+    # example tags: <status>CORRUPT</status>
+    #               <status-message>Not well formed at line 582</status-message>
+
+    # for the moment, status-message is only set when status is corrupt
+    my $_status = 'NORMAL';
+    my $_status_message;
+    my $_elt = $_root;
+    while ( $_elt = $_elt->next_elt($_root,'status-message') ) {
+        if ( $_elt->field() ) {
+            $_status_message = $_elt->field();
+            $_status = 'CORRUPT';
+        }
+    }
+
+    return $_status, $_status_message;
 }
 
 #------------------------------------------------------------------
@@ -1126,7 +1158,7 @@ sub _write_pending_record {
     $_record .= qq|      <endtime>PENDING</endtime>\n|;
     $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
     $_record .= qq|      <endseconds>$seconds</endseconds>\n|;
-    $_record .= qq|      <overall>NORMAL</overall>\n|;
+    $_record .= qq|      <status>NORMAL</status>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);
