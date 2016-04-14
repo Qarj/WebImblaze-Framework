@@ -62,21 +62,28 @@
                             <td> <xsl:value-of select="total_run_time"/> </td>
                             <td> <xsl:value-of select="test_steps_run"/> </td>
                             <xsl:choose>
-                                <xsl:when test="test_steps_failed>0">
+                                <xsl:when test="status='NORMAL'">
                                     <xsl:choose>
-                                        <xsl:when test="sanity_check_passed='true'">
-                                            <td class="fail"> <xsl:value-of select="test_steps_failed"/> &#160;&#160; :-(</td>
+                                        <xsl:when test="test_steps_failed>0">
+                                            <xsl:choose>
+                                                <xsl:when test="sanity_check_passed='true'">
+                                                    <td class="fail"> <xsl:value-of select="test_steps_failed"/> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :-(</td>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <td class="sanity"> <xsl:value-of select="test_steps_failed"/> <xsl:text> sanity fail &#160;&#160; O.o</xsl:text> </td>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </xsl:when>
+                                        <xsl:when test="test_steps_failed=0">
+                                            <td class="pass"> <xsl:value-of select="test_steps_failed"/> </td>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <td class="sanity"> <xsl:value-of select="test_steps_failed"/> <xsl:text> sanity fail &#160;&#160; O.o</xsl:text> </td>
+                                            <td class="fail"> <xsl:value-of select="test_steps_failed"/> </td>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:when>
-                                <xsl:when test="test_steps_failed=0">
-                                    <td class="pass"> <xsl:value-of select="test_steps_failed"/> </td>
-                                </xsl:when>
                                 <xsl:otherwise>
-                                    <td class="corrupt"> <xsl:value-of select="test_steps_failed"/> </td>
+                                    <td class="corrupt">xml corrupt &#160;&#160; :-/ </td>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:otherwise>
@@ -107,18 +114,22 @@
 		        <th><xsl:value-of select="translate($maxdate,'T',' ')"/></th>
                 <th align="left"><xsl:value-of select="format-number(sum(batch/run/total_run_time), '#.0')"/></th>
                 <th align="left"><xsl:value-of select="sum(batch/run/test_steps_run)"/></th>
-   	            <xsl:choose>
-                    <xsl:when test="sum(batch/run/test_steps_failed)>0">
-                        <th class="fail"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
-                    </xsl:when>
-                    <xsl:when test="sum(batch/run/test_steps_failed)=0">
-                        <th class="pass"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
+                <xsl:choose>
+                    <xsl:when test="not(element-available('//status_message'))">
+           	            <xsl:choose>
+                            <xsl:when test="sum(batch/run/test_steps_failed)>0">
+                                <th class="fail"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
+                            </xsl:when>
+                            <xsl:when test="sum(batch/run/test_steps_failed)=0">
+                                <th class="pass"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
+                            </xsl:when>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <th class="corrupt"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
+                        <td class="corrupt"> xml corruption </td>
                     </xsl:otherwise>
                 </xsl:choose>
-            </tr>
+             </tr>
         </table>
 
 		<xsl:variable name="lastfails">
