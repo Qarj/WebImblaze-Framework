@@ -7,12 +7,6 @@
     <style type="text/css">
     @import url(/content/Summary.css);
     </style>
-    <style>
-    table, th, td {
-        text-align: center; 
-        border-collapse: collapse;
-    }
-    </style>
 	<script type="text/javascript" src="/scripts/jquery-2.2.3.min.js"></script>
 	<script type="text/javascript">
 <![CDATA[

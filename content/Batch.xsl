@@ -40,10 +40,10 @@
                 <xsl:variable name="pending_href">/<xsl:value-of select="environment"/>/<xsl:value-of select="yyyy"/>/<xsl:value-of select="mm"/>/<xsl:value-of select="dd"/>/<xsl:value-of select="test_parent_folder"/>/<xsl:value-of select="test_name"/>/results_<xsl:value-of select="run_number"/>/incomplete_results</xsl:variable>
                     <xsl:choose>
                         <xsl:when test="end_time='PENDING'">
-                            <td> <a href="{$pending_href}.html" target="_blank"> <xsl:value-of select="run_number"/></a> </td>
+                            <td> <a class="pend" href="{$pending_href}.html"> <xsl:value-of select="run_number"/></a> </td>
                         </xsl:when>
                         <xsl:otherwise>
-                            <td> <a href="{$href}.xml" target="_blank"> <xsl:value-of select="run_number"/></a> </td>
+                            <td> <a class="run_number" href="{$href}.xml"> <xsl:value-of select="run_number"/></a> </td>
                         </xsl:otherwise>
                     </xsl:choose>
                     <td> <xsl:value-of select="test_parent_folder"/> </td>
@@ -73,7 +73,7 @@
                                     </xsl:choose>
                                 </xsl:when>
                                 <xsl:when test="test_steps_failed=0">
-                                    <td class="fail"> <xsl:value-of select="test_steps_failed"/> </td>
+                                    <td class="pass"> <xsl:value-of select="test_steps_failed"/> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <td class="corrupt"> <xsl:value-of select="test_steps_failed"/> </td>
