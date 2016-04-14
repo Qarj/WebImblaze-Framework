@@ -113,16 +113,14 @@ X   X check to see if webinject aborted, if so, need dummy result to indicate is
 X   X check results file to see if it is valid, if not, need dummy result to indicate issue
 
 * Remove publish_static_files.pl
-    * Summary.xsl -> Summary.xsl
+    X Summary.xsl -> Summary.xsl
         X Bug - Only latest?
         X Links to other wif servers
-        * css
-        * Scroll up Down
-        * fonts
-        * new summary line
-        * light grey background?
-        * click for previous day
-        * CORRUPT
+        X css
+        X Scroll up Down
+        X fonts
+        X light grey background?
+        X CORRUPT
     * batch.xsl -> Batch.xsl
     * results.xsl -> Results.xsl
 
@@ -154,6 +152,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * stop hub
 * display pid
 * copy over baselined imageds
+* further styling on Summary.xml
+    [ ] click for previous day and next day (if there is a next day) 
 
 <br />
 
