@@ -670,26 +670,26 @@ sub _write_final_record {
     my $_record;
 
     $_record .= qq|   <run id="$opt_batch">\n|;
-    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <batch_name>$opt_batch</batch_name>\n|;
     $_record .= qq|      <environment>$opt_environment</environment>\n|;
-    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
-    $_record .= qq|      <basename>$testfile_name</basename>\n|;
-    $_record .= qq|      <totalruntime>$_total_run_time</totalruntime>\n|;
-    $_record .= qq|      <testcasesfailed>$_test_cases_failed</testcasesfailed>\n|;
-    $_record .= qq|      <testcasesrun>$_test_cases_run</testcasesrun>\n|;
-    $_record .= qq|      <assertionskips>$_assertion_skips</assertionskips>\n|;
-    $_record .= qq|      <sanitycheckpassed>$_sanity_check_passed</sanitycheckpassed>\n|;
-    $_record .= qq|      <maxresptime>$_max_response_time</maxresptime>\n|;
-    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <test_parent_folder>$testfile_parent_folder_name</test_parent_folder>\n|;
+    $_record .= qq|      <test_name>$testfile_name</test_name>\n|;
+    $_record .= qq|      <total_run_time>$_total_run_time</total_run_time>\n|;
+    $_record .= qq|      <test_steps_failed>$_test_cases_failed</test_steps_failed>\n|;
+    $_record .= qq|      <test_steps_run>$_test_cases_run</test_steps_run>\n|;
+    $_record .= qq|      <assertion_skips>$_assertion_skips</assertion_skips>\n|;
+    $_record .= qq|      <sanity_check_passed>$_sanity_check_passed</sanity_check_passed>\n|;
+    $_record .= qq|      <max_response_time>$_max_response_time</max_response_time>\n|;
+    $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
     $_record .= qq|      <mm>$mm</mm>\n|;
     $_record .= qq|      <dd>$dd</dd>\n|;
-    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
-    $_record .= qq|      <starttime>$_start_time</starttime>\n|;
-    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
-    $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
-    $_record .= qq|      <startseconds>$_start_seconds</startseconds>\n|;
-    $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
+    $_record .= qq|      <run_number>$_run_number</run_number>\n|;
+    $_record .= qq|      <start_time>$_start_time</start_time>\n|;
+    $_record .= qq|      <start_date_time>$_start_date_time</start_date_time>\n|;
+    $_record .= qq|      <end_time>$_end_date_time</end_time>\n|;
+    $_record .= qq|      <start_seconds>$_start_seconds</start_seconds>\n|;
+    $_record .= qq|      <end_seconds>$_seconds</end_seconds>\n|;
     $_record .= qq|      <status>NORMAL</status>\n|;
     $_record .= qq|   </run>\n|;
 
@@ -711,28 +711,28 @@ sub _write_corrupt_record {
 
 
     $_record .= qq|   <run id="$opt_batch">\n|;
-    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <batch_name>$opt_batch</batch_name>\n|;
     $_record .= qq|      <environment>$opt_environment</environment>\n|;
-    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
-    $_record .= qq|      <basename>$testfile_name</basename>\n|;
-    $_record .= qq|      <totalruntime>0</totalruntime>\n|;
-    $_record .= qq|      <testcasesfailed>0</testcasesfailed>\n|;
-    $_record .= qq|      <testcasesrun>0</testcasesrun>\n|;
-    $_record .= qq|      <assertionskips></assertionskips>\n|;
-    $_record .= qq|      <sanitycheckpassed>true</sanitycheckpassed>\n|;
-    $_record .= qq|      <maxresptime>0.0</maxresptime>\n|;
-    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <test_parent_folder>$testfile_parent_folder_name</test_parent_folder>\n|;
+    $_record .= qq|      <test_name>$testfile_name</test_name>\n|;
+    $_record .= qq|      <total_run_time>0</total_run_time>\n|;
+    $_record .= qq|      <test_steps_failed>0</test_steps_failed>\n|;
+    $_record .= qq|      <test_steps_run>0</test_steps_run>\n|;
+    $_record .= qq|      <assertion_skips></assertion_skips>\n|;
+    $_record .= qq|      <sanity_check_passed>true</sanity_check_passed>\n|;
+    $_record .= qq|      <max_response_time>0.0</max_response_time>\n|;
+    $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
     $_record .= qq|      <mm>$mm</mm>\n|;
     $_record .= qq|      <dd>$dd</dd>\n|;
-    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
-    $_record .= qq|      <starttime>unused</starttime>\n|;
-    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
-    $_record .= qq|      <endtime>$_end_date_time</endtime>\n|;
-    $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
-    $_record .= qq|      <endseconds>$_seconds</endseconds>\n|;
+    $_record .= qq|      <run_number>$_run_number</run_number>\n|;
+    $_record .= qq|      <start_time>unused</start_time>\n|;
+    $_record .= qq|      <start_date_time>$_start_date_time</start_date_time>\n|;
+    $_record .= qq|      <end_time>$_end_date_time</end_time>\n|;
+    $_record .= qq|      <start_seconds>$seconds</start_seconds>\n|;
+    $_record .= qq|      <end_seconds>$_seconds</end_seconds>\n|;
     $_record .= qq|      <status>CORRUPT</status>\n|;
-    $_record .= qq|      <status-message>$_message</status-message>\n|;
+    $_record .= qq|      <status_message>$_message</status_message>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);
@@ -840,7 +840,7 @@ sub _write_summary_record {
 
     my $_record;
 
-    $_record .= qq|      <title>$opt_environment summary (click for previous day)</title>\n|;
+    $_record .= qq|      <title>$opt_environment Summary</title>\n|;
     $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/Summary.xml</link>\n|;
     $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
@@ -903,7 +903,7 @@ sub _get_status {
     my $_status = 'NORMAL';
     my $_status_message;
     my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt($_root,'status-message') ) {
+    while ( $_elt = $_elt->next_elt($_root,'status_message') ) {
         if ( $_elt->field() ) {
             $_status_message = $_elt->field();
             $_status = 'CORRUPT';
@@ -921,7 +921,7 @@ sub _get_total_steps_run {
 
     my $_total_run = 0;
     my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'testcasesrun') ) {
+    while ( $_elt= $_elt->next_elt($_root,'test_steps_run') ) {
         $_total_run += $_elt->field();
     }
 
@@ -936,7 +936,7 @@ sub _get_end_time_seconds {
 
     my $_end_seconds = 0;
     my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'endseconds') ) {
+    while ( $_elt= $_elt->next_elt($_root,'end_seconds') ) {
         if ($_elt->field() > $_end_seconds) {
             $_end_seconds = $_elt->field();
         }
@@ -954,7 +954,7 @@ sub _get_start_time_seconds {
     # there are 86400 seconds in a day, we need to find the smallest start time in seconds
     my $_start_seconds = 86_400;
     my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'startseconds') ) {
+    while ( $_elt= $_elt->next_elt($_root,'start_seconds') ) {
         if ($_elt->field() < $_start_seconds) {
             $_start_seconds = $_elt->field();
         }
@@ -971,7 +971,7 @@ sub _get_total_run_time_seconds {
 
     my $_elt = $_root;
     my $_total_run_time = 0;
-    while ( $_elt= $_elt->next_elt($_root,'totalruntime') ) {
+    while ( $_elt= $_elt->next_elt($_root,'total_run_time') ) {
       	$_total_run_time += $_elt->field();
     }
 
@@ -987,7 +987,7 @@ sub _get_number_of_failures {
     my $_num_failures = 0;
 
     my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'testcasesfailed') ) {
+    while ( $_elt = $_elt->next_elt( $_root,'test_steps_failed') ) {
         $_num_failures += $_elt->field();
     }
 
@@ -1002,7 +1002,7 @@ sub _get_number_of_sanity_failures {
     my $_num_failures = 0;
 
     my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'sanitycheckpassed') ) {
+    while ( $_elt = $_elt->next_elt( $_root,'sanity_check_passed') ) {
         if ($_elt->field() eq 'false' ) {
             $_num_failures  += 1;
         }
@@ -1019,7 +1019,7 @@ sub _get_number_of_pending_items {
     my $_num_pending = 0;
 
     my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'endtime') ) {
+    while ( $_elt = $_elt->next_elt( $_root,'end_time') ) {
         if ($_elt->field() eq 'PENDING' ) {
             $_num_pending += 1;
         }
@@ -1035,7 +1035,7 @@ sub _get_earliest_start_time {
     # example tag: <startdatetime>2016-04-05T20:50:59</startdatetime>
     # the very first run in the batch will always contain the earliest start time
 
-    my $_start_time = $_root->first_child('run')->first_child_text('startdatetime');
+    my $_start_time = $_root->first_child('run')->first_child_text('start_date_time');
 
     # just return the time portion of the date time string
     return substr $_start_time, 11;
@@ -1045,12 +1045,12 @@ sub _get_earliest_start_time {
 sub _get_largest_end_time {
     my ($_root) = @_;
 
-    # example tag: <endtime>2016-04-05T20:51:00</endtime>
+    # example tag: <end_time>2016-04-05T20:51:00</end_time>
     # we do not know which run in the batch ended last, so we have to examine all of them
 
     my $_elt = $_root;
-    my $_end_time = $_root->last_child('run')->last_child_text('endtime');
-    while ( $_elt = $_elt->next_elt($_root,'endtime') )
+    my $_end_time = $_root->last_child('run')->last_child_text('end_time');
+    while ( $_elt = $_elt->next_elt($_root,'end_time') )
       {
         #cmp comparison operator -1 if string smaller, 0 if the same, 1 if first string greater than second
         if ( ($_elt->field() cmp $_end_time) == 1) {
@@ -1138,26 +1138,26 @@ sub _write_pending_record {
     my $_start_date_time = "$yyyy-$mm-$dd".'T'."$hour:$minute:$second";
 
     $_record .= qq|   <run id="$opt_batch">\n|;
-    $_record .= qq|      <batchid>$opt_batch</batchid>\n|;
+    $_record .= qq|      <batch_name>$opt_batch</batch_name>\n|;
     $_record .= qq|      <environment>$opt_environment</environment>\n|;
-    $_record .= qq|      <site>$testfile_parent_folder_name</site>\n|;
-    $_record .= qq|      <basename>$testfile_name</basename>\n|;
-    $_record .= qq|      <totalruntime>0</totalruntime>\n|;
-    $_record .= qq|      <testcasesfailed>0</testcasesfailed>\n|;
-    $_record .= qq|      <testcasesrun>0</testcasesrun>\n|;
-    $_record .= qq|      <assertionskips></assertionskips>\n|;
-    $_record .= qq|      <sanitycheckpassed>true</sanitycheckpassed>\n|;
-    $_record .= qq|      <maxresptime>0.0</maxresptime>\n|;
-    $_record .= qq|      <webenv>$opt_target</webenv>\n|;
+    $_record .= qq|      <test_parent_folder>$testfile_parent_folder_name</test_parent_folder>\n|;
+    $_record .= qq|      <test_name>$testfile_name</test_name>\n|;
+    $_record .= qq|      <total_run_time>0</total_run_time>\n|;
+    $_record .= qq|      <test_steps_failed>0</test_steps_failed>\n|;
+    $_record .= qq|      <test_steps_run>0</test_steps_run>\n|;
+    $_record .= qq|      <assertion_skips></assertion_skips>\n|;
+    $_record .= qq|      <sanity_check_passed>true</sanity_check_passed>\n|;
+    $_record .= qq|      <max_response_time>0.0</max_response_time>\n|;
+    $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
     $_record .= qq|      <mm>$mm</mm>\n|;
     $_record .= qq|      <dd>$dd</dd>\n|;
-    $_record .= qq|      <numruns>$_run_number</numruns>\n|;
-    $_record .= qq|      <starttime>unused</starttime>\n|;
-    $_record .= qq|      <startdatetime>$_start_date_time</startdatetime>\n|;
-    $_record .= qq|      <endtime>PENDING</endtime>\n|;
-    $_record .= qq|      <startseconds>$seconds</startseconds>\n|;
-    $_record .= qq|      <endseconds>$seconds</endseconds>\n|;
+    $_record .= qq|      <run_number>$_run_number</run_number>\n|;
+    $_record .= qq|      <start_time>unused</start_time>\n|;
+    $_record .= qq|      <start_date_time>$_start_date_time</start_date_time>\n|;
+    $_record .= qq|      <end_time>PENDING</end_time>\n|;
+    $_record .= qq|      <start_seconds>$seconds</start_seconds>\n|;
+    $_record .= qq|      <end_seconds>$seconds</end_seconds>\n|;
     $_record .= qq|      <status>NORMAL</status>\n|;
     $_record .= qq|   </run>\n|;
 
@@ -1279,11 +1279,15 @@ sub _lock_file {
     ATTEMPT:
     {
         eval {
-            move $_unlocked_file_indicator, $_locked_file_indicator.'_'.$temp_folder_name or die "cannot one lah\n";
+            move $_unlocked_file_indicator, $_locked_file_indicator.'_'.$temp_folder_name or die "Cannot lock file\n";
         }; # eval needs a semicolon
 
+        # if we failed to lock the file but there are attempts remaining
         if ( $@ and $_try++ < $_max ) {
-            print {*STDOUT} "WARN: $@ Failed try $_try to lock $_file_to_lock_full\n";
+            # only write a message to STDOUT every 25 attempts
+            if ( ($_try / 25) == int($_try / 25) ) {
+                print {*STDOUT} "WARN: $@ Failed try $_try to lock $_file_to_lock_full\n";
+            }
             sleep 0.1;
             redo ATTEMPT;
         }

@@ -3,7 +3,7 @@
 <xsl:template match="/">
 <html>
   <head>
-    <title>WebInject Results</title>
+    <title>Overall Summary</title>
     <style type="text/css">
     @import url(/content/Summary.css);
     </style>
@@ -99,21 +99,21 @@
       <xsl:for-each select="summary/channel/item">
       <div class="article">
         <xsl:if test="contains(title, 'PASS')">
-           <li><a class="result pass" href="{link}" target="_blank" rel="bookmark"><xsl:value-of select="title"/></a></li>
+           <li><a class="result pass" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
         </xsl:if>        
         <xsl:if test="contains(title, 'PEND')">
-           <li><a class="result pend" href="{link}" target="_blank" rel="bookmark"><xsl:value-of select="title"/></a></li>
+           <li><a class="result pend" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
         </xsl:if>        
         <xsl:if test="contains(title, 'CORRUPT')">
-           <li><a class="result corrupt" href="{link}" target="_blank" rel="bookmark"><xsl:value-of select="title"/></a></li>
+           <li><a class="result corrupt" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
         </xsl:if>        
         <xsl:if test="contains(title, 'FAILED')">
             <xsl:choose>
                 <xsl:when test="contains(title, 'SANITY FAILURE')">
-                    <li><a class="result sanity" href="{link}" target="_blank" rel="bookmark"><xsl:value-of select="title"/></a></li>
+                    <li><a class="result sanity" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
                 </xsl:when>        
                 <xsl:otherwise>        
-                    <li><a class="result fail" href="{link}" target="_blank" rel="bookmark"><xsl:value-of select="title"/></a></li>
+                    <li><a class="result fail" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
                 </xsl:otherwise>
             </xsl:choose>    
         </xsl:if>        
