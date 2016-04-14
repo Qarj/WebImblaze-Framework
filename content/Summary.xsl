@@ -67,7 +67,11 @@
         )
       </h1>
       <br />
-      <h2><a href="{summary/channel/link}"><xsl:value-of select="summary/channel/title"/></a> </h2>
+      <h2>
+         <xsl:value-of select="summary/channel/title"/>
+         &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;
+         <a href="{summary/channel/link}">(Click for previous day's results)</a>
+      </h2>
     </div>
 
     <div id="filter">
