@@ -56,7 +56,7 @@ my $WEBINJECT_CONFIG;
 # end globally read/write variables
 
 # start globally read variables  - will only be written to from the main script
-my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_todays_date(); ## no critic(NamingConventions::ProhibitAmbiguousNames)
+my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_date(0); ## no critic(NamingConventions::ProhibitAmbiguousNames)
 my $today_home;
 my $results_content;
 # end globally read variables
@@ -185,12 +185,13 @@ sub call_webinject_with_testfile {
 
 
 #------------------------------------------------------------------
-sub get_todays_date {
+sub get_date {
+    my ($_time_offset) = @_;
 
-    ## put the current date and time into variables - startdatetime - for recording the start time in a format an xsl stylesheet can process
+    ## put the specified date and time into variables - startdatetime - for recording the start time in a format an xsl stylesheet can process
     my @_MONTHS = qw(01 02 03 04 05 06 07 08 09 10 11 12);
     #my @_WEEKDAYS = qw(Sun Mon Tue Wed Thu Fri Sat Sun);
-    my ($_SECOND, $_MINUTE, $_HOUR, $_DAYOFMONTH, $_MONTH, $_YEAROFFSET, $_DAYOFWEEK, $_DAYOFYEAR, $_DAYLIGHTSAVINGS) = localtime;
+    my ($_SECOND, $_MINUTE, $_HOUR, $_DAYOFMONTH, $_MONTH, $_YEAROFFSET, $_DAYOFWEEK, $_DAYOFYEAR, $_DAYLIGHTSAVINGS) = localtime (time + $_time_offset);
     my $_YEAR = 1900 + $_YEAROFFSET;
     #my $_YY = substr $_YEAR, 2; #year as 2 digits
     $_DAYOFMONTH = sprintf '%02d', $_DAYOFMONTH;
@@ -664,7 +665,7 @@ sub _write_final_record {
     #my $_verifications_failed = $_root->first_child('test-summary')->first_child_text('verifications-failed');
     my $_sanity_check_passed = $_root->first_child('test-summary')->first_child_text('sanity-check-passed');
 
-    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_todays_date();
+    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_date(0);
     my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
 
     my $_record;
@@ -706,7 +707,7 @@ sub _write_corrupt_record {
 
     my $_start_date_time = "$yyyy-$mm-$dd".'T'."$hour:$minute:$second";
 
-    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_todays_date();
+    my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_date(0);
     my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
 
 
@@ -838,10 +839,13 @@ sub _write_summary_record {
     if ($_number_of_sanity_failures > 0) { $_overall = 'SANITY CHECK FAILED'; $_concurrency_text = q{}; }
     if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
 
+    # get date for yesterday
+    my ( $_yesterday_yyyy, $_yesterday_mm, $_yesterday_dd ) = get_date( - 86_400);
+
     my $_record;
 
     $_record .= qq|      <title>$opt_environment Summary</title>\n|;
-    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/Summary.xml</link>\n|;
+    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$_yesterday_yyyy/$_yesterday_mm/$_yesterday_dd/All_Batches/Summary.xml</link>\n|;
     $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
     $_record .= '         <title>';
