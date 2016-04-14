@@ -27,7 +27,7 @@ div { line-height:1.6em; }
 
 /* different colours for the results based on status */
 .pass { color:#5BAB03; }
-.fail { color:#FF5940; font-weight:normal; }
+.fail { color:#FF5940; }
 .sanity { color:Fuchsia; }
 .corrupt { color:Black; }
 .pend { color:SteelBlue; font-weight:bold; }
