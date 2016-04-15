@@ -642,6 +642,10 @@ sub _write_final_record {
         $_message = $@;
         $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
         $_message =~ s{\n}{}g; # remove line feeds
+        #$_message =~ s/[&<>]//g;
+        $_message =~ s/[&]/{AMPERSAND}/g;
+        $_message =~ s/[<]/{LT}/g;
+        $_message =~ s/[>]/{GT}/g;
         _write_corrupt_record($_file_full, $_run_number, "$_message in results.xml");
         print {*STDOUT} "WebInject results.xml could not be parsed - CORRUPT\n";
         return;
@@ -709,7 +713,6 @@ sub _write_corrupt_record {
 
     my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_date(0);
     my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
-
 
     $_record .= qq|   <run id="$opt_batch">\n|;
     $_record .= qq|      <batch_name>$opt_batch</batch_name>\n|;
