@@ -10,7 +10,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     <body>
 
         <div id="heading">
-            <xsl:variable name="runof"><xsl:value-of select="substring-before(substring-after(results/testcases/@file,'\testcases\'),'.xml')"/></xsl:variable>
             <h1>Test Results [<xsl:value-of select="results/test-summary/test-file-name"/>]</h1>
             <br />
             <h2>
@@ -20,15 +19,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
             </h2>
         </div>
 
-    <xsl:for-each select="results/test-summary">
       <xsl:text>Started </xsl:text>
-      <xsl:value-of select="start-time"/>
+      <xsl:value-of select="results/test-summary/start-time"/>
       <xsl:text>. Max response time </xsl:text>
-      <xsl:value-of select="max-response-time"/>
+      <xsl:value-of select="results/test-summary/max-response-time"/>
       <xsl:text> s. Ran for </xsl:text>
-      <xsl:value-of select="total-run-time"/>
+      <xsl:value-of select="results/test-summary/total-run-time"/>
       <xsl:text> s.</xsl:text>
-    </xsl:for-each>
+
     <xsl:text> Sum of response times </xsl:text>
     <xsl:value-of  select="sum(//responsetime)" /> 
     <xsl:text> s. </xsl:text>
@@ -56,7 +54,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     </tr>
     <xsl:for-each select="results/testcases/testcase">
     <!--	Set a variable to hold the href link -->
-    <xsl:variable name="href"><xsl:value-of select="@id"/></xsl:variable>
+    <xsl:variable name="step_number"><xsl:value-of select="@id"/></xsl:variable>
 
    	  <xsl:choose>
         <xsl:when test="section">
@@ -75,7 +73,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </xsl:choose>
 
     <tr>
-      <td><a href="{$environment_link}.html" target="_blank"><xsl:value-of select="@id"/></a></td>
+      <td><a href="{$step_number}.html" target="_blank"><xsl:value-of select="@id"/></a></td>
       <td>
         
         <!-- Make any text that appears between square brackets brown bold -->
