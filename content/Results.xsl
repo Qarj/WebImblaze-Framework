@@ -31,6 +31,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     <xsl:value-of  select="sum(//responsetime)" /> 
     <xsl:text> s. </xsl:text>
     <br/><A href="http.txt" target="_blank">Full HTTP log (with headers)</A> <xsl:text> </xsl:text> <A href="results.html">Results.html</A>
+    <br/>
+    <br/>
     <xsl:choose>
       <xsl:when test="sum(//verificationtime)>0">
         <xsl:text> </xsl:text> <A href="selenium_log.txt">selenium_log</A>
@@ -38,12 +40,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <xsl:text> </xsl:text> <A href="TransferSize.txt">TransferSize (small tests only) </A>
       </xsl:when>
     </xsl:choose>
-    <table border="1" style="font-family:Arial;font-size:80%">
-    <tr bgcolor="#CCCCCC">
-      <th align="left">id</th>
-      <th align="left">Test Step</th>
-      <th align="left">Result</th>
-      <th align="left">Time</th>
+    <table>
+    <tr>
+      <th>id</th>
+      <th>Test Step</th>
+      <th>Result</th>
+      <th>Time</th>
       <xsl:choose>
         <xsl:when test="sum(//baselinematch)>0">
           <th align="left">Image Match</th>
@@ -59,13 +61,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
    	  <xsl:choose>
         <xsl:when test="section">
             <tr>
-                <td bgcolor="#E7CECE"></td>
-                <td bgcolor="#E7CECE" align="center"> <b> <xsl:value-of select="section"/> </b> </td>
-                <td bgcolor="#E7CECE"></td>
-                <td bgcolor="#E7CECE"></td>
+                <td class="section"></td>
+                <td class="section"><xsl:value-of select="section"/></td>
+                <td class="section"></td>
+                <td class="section"></td>
                 <xsl:choose>
                     <xsl:when test="sum(//baselinematch)>0">
-                        <td bgcolor="#E7CECE"></td>
+                        <td class="section"></td>
                     </xsl:when>
                 </xsl:choose>
             </tr>
@@ -105,33 +107,33 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <xsl:variable name="message" select="result-message" />
      	<xsl:choose>
         <xsl:when test="result-message='TEST CASE FAILED'">
-          <td bgcolor="#FA6565"> <xsl:text>FAIL</xsl:text> </td>
+          <td class="fail"> <xsl:text>FAIL</xsl:text> </td>
         </xsl:when>
         <xsl:when test="result-message='TEST CASE PASSED'">
-          <td bgcolor="#CCFF99"> <xsl:text>PASS</xsl:text> </td>
+          <td class="pass"> <xsl:text>PASS</xsl:text> </td>
         </xsl:when>
         <xsl:when test="contains($message,'RETRYING...')">
-          <td bgcolor="#CCFF99"><xsl:value-of select="result-message"/></td>
+          <td class="retry"><xsl:value-of select="result-message"/></td>
         </xsl:when>
         <xsl:when test="contains($message,'RETRYING FROM STEP')">
-          <td bgcolor="#FFCC00"><xsl:value-of select="result-message"/></td>
+          <td class="retry"><xsl:value-of select="result-message"/></td>
         </xsl:when>
         <xsl:otherwise>
-          <td bgcolor="#FA6565"><xsl:value-of select="result-message"/></td>
+          <td class="sanity"><xsl:value-of select="result-message"/></td>
         </xsl:otherwise>
       </xsl:choose>
      	<xsl:choose>
         <xsl:when test="responsetime>90">
-          <td bgcolor="#FF4500"> <xsl:value-of select="responsetime"/> </td>
+          <td class="extremeslow"> <xsl:value-of select="responsetime"/> </td>
         </xsl:when>
         <xsl:when test="responsetime>30">
-          <td bgcolor="#FFA500"> <xsl:value-of select="responsetime"/> </td>
+          <td class="veryslow"> <xsl:value-of select="responsetime"/> </td>
         </xsl:when>
         <xsl:when test="responsetime>5">
-          <td bgcolor="#B8CCE4"> <xsl:value-of select="responsetime"/> </td>
+          <td class="slow"> <xsl:value-of select="responsetime"/> </td>
         </xsl:when>
         <xsl:otherwise>
-          <td bgcolor="#FFFFFF"><xsl:value-of select="responsetime"/></td>
+          <td class="normal"><xsl:value-of select="responsetime"/></td>
         </xsl:otherwise>
       </xsl:choose>
  

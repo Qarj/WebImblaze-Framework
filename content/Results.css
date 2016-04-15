@@ -36,6 +36,15 @@ div { line-height:1.6em; }
 /* END BASE CSS */
 /*              */
 
+/* retry was invoked */
+.retry { color:Orange; }
+
+/* response time */
+.extremeslow { color:Red; }
+.veryslow { color:Orange; }
+.slow { color:Blue; }
+.normal {  }
+
 table {
     border-collapse: collapse;
 }
