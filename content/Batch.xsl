@@ -21,6 +21,15 @@
             </h2>
         </div>
 
+		<xsl:variable name="corrupt_status">
+			<xsl:for-each select="batch/run/status[contains(.,'CORRUPT')]">
+				<xsl:if test="position()=1">
+					<xsl:copy-of select="."/>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:variable>
+
+
         <table>
             <tr class="header_row">
                 <th>Run</th>
@@ -115,7 +124,7 @@
                 <th align="left"><xsl:value-of select="format-number(sum(batch/run/total_run_time), '#.0')"/></th>
                 <th align="left"><xsl:value-of select="sum(batch/run/test_steps_run)"/></th>
                 <xsl:choose>
-                    <xsl:when test="not(element-available('//status_message'))">
+                    <xsl:when test="not($corrupt_status='CORRUPT')">
            	            <xsl:choose>
                             <xsl:when test="sum(batch/run/test_steps_failed)>0">
                                 <th class="fail"> <xsl:value-of select="sum(batch/run/test_steps_failed)"/> </th>
