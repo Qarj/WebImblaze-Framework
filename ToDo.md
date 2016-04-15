@@ -139,6 +139,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * record traffic in HAR file
 * write har.gzip directly to web server
 * comment out har file as plain text - it is for debug use only
+* supply an upstream proxy server to browsermob proxy
+* set an exit code for wif, 0 all passed, 1 if errors
 
 ### Much Later
 * support baseline folder [baseline]
