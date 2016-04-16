@@ -154,9 +154,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X Sum of response times in footer row
         X remove max response time
         X start time in header
-        * Full http log and Results buttons after footer (new tab)
-        * pass / fail filter buttons
-        * text filter
+        X Full http log and Results links styled as buttons (open in new tab)
+        X text filter
 
 * split http.log into one html file for each test step
 

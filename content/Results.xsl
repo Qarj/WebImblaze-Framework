@@ -11,22 +11,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 <![CDATA[
     $(document).ready(function() {
 
-        var $batches = $("#results > ul > div.article > li > a.result");
-        var $buttons = $(".btn").on("click", function() {
-  
-            var active = $buttons.removeClass("active")
-                         .filter(this)
-                         .addClass("active")
-                         .data("filter");
-  
-            $batches
-             .hide()
-             .filter( "." + active )
-             .fadeIn(450);
-
-        });
-   		
-
         $("#live-filter").keyup(function(){
      
             // Retrieve the input field text
@@ -70,9 +54,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         </div>
 
         <div id="filter">
-            <button class="active btn" data-filter="result">Show All</button>
-            <button class="btn" data-filter="pass">Passed</button>
-            <button class="btn" data-filter="fail">Failed</button>
+            <A class="btn" href="http.txt" target="_blank">Full HTTP Log</A>
+            <A class="btn" href="Results.html" target="_blank">HTML Results</A>
     
             <form id="live-search" action="" class="inputbox" method="post">
                 <fieldset>
@@ -82,13 +65,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     
         </div>
     
-    
         <div class="spacer"></div>
 
-
-
-    <br/><A href="http.txt" target="_blank">Full HTTP log (with headers)</A> <xsl:text> </xsl:text> <A href="results.html">Results.html</A>
-    <br/>
     <br/>
     <xsl:choose>
       <xsl:when test="sum(//verificationtime)>0">
