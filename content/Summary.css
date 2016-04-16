@@ -45,14 +45,9 @@ div { line-height:1.6em; }
 /*              */
 
 
-
-/* results overall styles */
-ul { margin-left:2.5em; }
-li { margin-bottom:0.4em; }
-li a { font-weight:bold;}
-
-/* do not want bullet points to appear */
-ul { list-style-type: none; padding:0; margin:0; }
+/*                  */
+/* BEGIN FILTER CSS */
+/*                  */
 
 /* spacer between heading and results */
 .spacer {
@@ -99,6 +94,14 @@ ul { list-style-type: none; padding:0; margin:0; }
 	box-sizing: border-box; 
 }
 
+/*                */
+/* END FILTER CSS */
+/*                */
+
+/*                      */
+/* SUMMARY.CSS SPECIFIC */
+/*                      */
+
 /* where all the Summary of batch run results go */
 div#results 
 { 
@@ -106,4 +109,12 @@ div#results
 	bottom right no-repeat; 
 	margin-right:2.5em; 
 }
+
+/* results overall styles */
+ul { margin-left:2.5em; }
+li { margin-bottom:0.4em; }
+li a { font-weight:bold;}
+
+/* do not want bullet points to appear */
+ul { list-style-type: none; padding:0; margin:0; }
 

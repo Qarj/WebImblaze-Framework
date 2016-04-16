@@ -89,6 +89,61 @@ td {
 /* END BASE TABLE CSS */
 /*                      */
 
+
+/*                  */
+/* BEGIN FILTER CSS */
+/*                  */
+
+/* spacer between heading and results */
+.spacer {
+  clear: both;
+  height: 1em;
+}
+
+/* buttons for filter of results */
+.btn {
+  border: none;
+  background: linear-gradient(to bottom, DarkSlateGray, #5B7778);
+  border-radius: 3px;
+  font-family: Arial;
+  color: #D1E6E7;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+  margin: 5px;
+}
+
+/* which button is active */
+.active {
+  background: linear-gradient(to bottom, #7d9394, #5B7778);
+  text-decoration: none;
+}
+
+/* for the live filter */
+.inputbox 
+{ 
+  float: right; 
+  width:15em; 
+  margin-right: 2.5em; 
+  margin-top: 0.3em; 
+  border:none; 
+}
+#live-filter 
+{ 
+  width: 100%; 
+  border: none; 
+  font:110% Verdana; 
+  font-weight: bold; 
+  background: #D1E6E7; 
+  color:DarkSlateGray; 
+  padding: 0.2em 0.5em 0.2em 0.5em; 
+  box-sizing: border-box; 
+}
+
+/*                */
+/* END FILTER CSS */
+/*                */
+
+
 /*                      */
 /* RESULTS.CSS SPECIFIC */
 /*                      */

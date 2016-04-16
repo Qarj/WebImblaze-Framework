@@ -6,6 +6,52 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <style type="text/css">
         @import url(/content/Results.css);
         </style>
+    	<script type="text/javascript" src="/scripts/jquery-2.2.3.min.js"></script>
+    	<script type="text/javascript">
+<![CDATA[
+    $(document).ready(function() {
+
+        var $batches = $("#results > ul > div.article > li > a.result");
+        var $buttons = $(".btn").on("click", function() {
+  
+            var active = $buttons.removeClass("active")
+                         .filter(this)
+                         .addClass("active")
+                         .data("filter");
+  
+            $batches
+             .hide()
+             .filter( "." + active )
+             .fadeIn(450);
+
+        });
+   		
+
+        $("#live-filter").keyup(function(){
+     
+            // Retrieve the input field text
+            var filter = $(this).val();
+     
+            // Loop through the test step results
+            $("tr.step_result").each(function(){
+     
+                // If the list item does not contain the text phrase fade it out
+                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                    $(this).fadeOut();
+     
+                // Show the list item if the phrase matches
+                } else {
+                    $(this).show();
+                }
+            });
+     
+        });
+
+
+	});
+
+]]>
+    	</script>
     </head>
     <body>
 
@@ -22,6 +68,24 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                 <a href="{$environment_link}"> Summary </a> -&gt; <a href="{$batch_link}"> Batch Summary </a> -&gt; Run Results
             </h2>
         </div>
+
+        <div id="filter">
+            <button class="active btn" data-filter="result">Show All</button>
+            <button class="btn" data-filter="pass">Passed</button>
+            <button class="btn" data-filter="fail">Failed</button>
+    
+            <form id="live-search" action="" class="inputbox" method="post">
+                <fieldset>
+                    <input type="text" class="text-input" id="live-filter" value="" />
+                </fieldset>
+            </form>
+    
+        </div>
+    
+    
+        <div class="spacer"></div>
+
+
 
     <br/><A href="http.txt" target="_blank">Full HTTP log (with headers)</A> <xsl:text> </xsl:text> <A href="results.html">Results.html</A>
     <br/>
@@ -68,7 +132,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         </xsl:when>
       </xsl:choose>
 
-    <tr>
+    <tr class="step_result">
       <td><a href="{$step_number}.html" target="_blank"><xsl:value-of select="@id"/></a></td>
       <td>
         

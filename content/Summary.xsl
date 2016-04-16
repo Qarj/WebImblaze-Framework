@@ -28,25 +28,25 @@
         });
    		
 
-    $("#live-filter").keyup(function(){
- 
-        // Retrieve the input field text
-        var filter = $(this).val();
- 
-        // Loop through the article list
-        $(".article li").each(function(){
- 
-            // If the list item does not contain the text phrase fade it out
-            if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut();
- 
-            // Show the list item if the phrase matches
-            } else {
-                $(this).show();
-            }
+        $("#live-filter").keyup(function(){
+     
+            // Retrieve the input field text
+            var filter = $(this).val();
+     
+            // Loop through the article list
+            $(".article li").each(function(){
+     
+                // If the list item does not contain the text phrase fade it out
+                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                    $(this).fadeOut();
+     
+                // Show the list item if the phrase matches
+                } else {
+                    $(this).show();
+                }
+            });
+     
         });
- 
-    });
 
 
 	});
@@ -76,10 +76,10 @@
 
     <div id="filter">
         <button class="active btn" data-filter="result">Show All</button>
-        <button class="btn" data-filter="pass">Show Passed</button>
-        <button class="btn" data-filter="pend">Show Pending</button>
-        <button class="btn" data-filter="sanity">Show Sanity Failed</button>
-        <button class="btn" data-filter="fail">Show Failed</button>
+        <button class="btn" data-filter="pass">Passed</button>
+        <button class="btn" data-filter="pend">Pending</button>
+        <button class="btn" data-filter="fail">Failed</button>
+        <button class="btn" data-filter="sanity">Sanity Failed</button>
 
         <form id="live-search" action="" class="inputbox" method="post">
             <fieldset>
