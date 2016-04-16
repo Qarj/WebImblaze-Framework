@@ -85,7 +85,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       <th>Time</th>
       <xsl:choose>
         <xsl:when test="sum(//baselinematch)>0">
-          <th align="left">Image Match</th>
+          <th>Image Match</th>
         </xsl:when>
       </xsl:choose>
     </tr>
@@ -96,14 +96,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
    	  <xsl:choose>
         <xsl:when test="section">
-            <tr>
-                <td class="section"></td>
-                <td class="section"><xsl:value-of select="section"/></td>
-                <td class="section"></td>
-                <td class="section"></td>
+            <tr class="section">
+                <td></td>
+                <td><xsl:value-of select="section"/></td>
+                <td></td>
+                <td></td>
                 <xsl:choose>
                     <xsl:when test="sum(//baselinematch)>0">
-                        <td class="section"></td>
+                        <td></td>
                     </xsl:when>
                 </xsl:choose>
             </tr>
