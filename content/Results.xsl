@@ -10,7 +10,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     <body>
 
         <div id="heading">
-            <h1>Test Results [<xsl:value-of select="results/test-summary/test-file-name"/>]</h1>
+            <h1 class="alignleft">Test Results [<xsl:value-of select="results/test-summary/test-file-name"/> - <xsl:value-of select="results/test-summary/total-run-time"/><xsl:text>s</xsl:text>]</h1>
+            <h3 class="alignright">
+              <xsl:value-of select="results/test-summary/start-time"/>
+            </h3>
+            <div style="clear: both;"></div>
             <br />
             <h2>
                 <xsl:variable name="environment_link">/<xsl:value-of select="results/wif/environment"/>/<xsl:value-of select="results/wif/yyyy"/>/<xsl:value-of select="results/wif/mm"/>/<xsl:value-of select="results/wif/dd"/>/All_Batches/Summary.xml</xsl:variable>
@@ -19,13 +23,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
             </h2>
         </div>
 
-      <xsl:text>Started </xsl:text>
-      <xsl:value-of select="results/test-summary/start-time"/>
-      <xsl:text>. Max response time </xsl:text>
-      <xsl:value-of select="results/test-summary/max-response-time"/>
-      <xsl:text> s. Ran for </xsl:text>
-      <xsl:value-of select="results/test-summary/total-run-time"/>
-      <xsl:text> s.</xsl:text>
+      <xsl:text> Ran for </xsl:text>
+      
+      
 
     <xsl:text> Sum of response times </xsl:text>
     <xsl:value-of  select="sum(//responsetime)" /> 
