@@ -127,8 +127,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             - //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
             - <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
             - <xsl:template match='*[contains(name(), "Nokia_5.0")]'> - of if it just contains the wanted string
-        * research if image match support need
-        * create a testfile with examples of all types of elements
+        * research if "image-match" and "image-message" support needed - no it is not
+        X create a testfile with examples of all types of elements
         * make the stylesheet support each multi type
             - searchimage
             - verifynegative
@@ -138,16 +138,25 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         * make the style sheet support each single type
             - assertionskips
             - verifyreponsecode
-            - image-success
-            - searchimage-success
             - result-message
             - responsetime
             - baselinematch
+            - retry
+            - retryfromstep
+            - description1, description2
+            - verifyresponsetime
+            - verifyresponsecode
+            - checkpositive
+            - checknegative
+            - checkresponsecode
+            - sanitycheck
         * Run time in header
         * Sum of response times in footer row
         * remove max response time
         * start time in header
         * Full http log and Results buttons after footer (new tab)
+        * pass / fail filter buttons
+        * text filter
 
 * split http.log into one html file for each test step
 
@@ -178,7 +187,10 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * start selenium server as hub (phantomjs)
 * stop hub
 * display pid
-* copy over baselined imageds
+* searchimage
+    - copy over baselined imageds
+    - image-success
+    - searchimage-success
 * further styling on Summary.xml
     [ ] click for previous day and next day (if there is a next day) 
 * need to fix corruption so overal batch summary message is xml corruption - element-available test does not work...

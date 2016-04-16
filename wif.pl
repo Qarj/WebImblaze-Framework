@@ -21,6 +21,7 @@ $VERSION = '0.01';
 #    GNU General Public License for more details.
 
 #    Example: 
+#              wif.pl ../WebInject/examples/demo.xml --target skynet --batch demonstration
 #              wif.pl ../WebInject/examples/command.xml --target skynet --batch allgood
 #              wif.pl ../WebInject/examples/sanitycheck.xml --target skynet --batch veryverybad
 #              wif.pl ../WebInject/examples/errormessage.xml --target skynet --batch notgood
