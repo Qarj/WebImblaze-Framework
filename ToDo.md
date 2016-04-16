@@ -121,8 +121,33 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X fonts
         X light grey background?
         X CORRUPT
-    * batch.xsl -> Batch.xsl
+    X batch.xsl -> Batch.xsl
     * results.xsl -> Results.xsl
+        X wildcard match on attribute names possible?
+            - //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
+            - <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
+            - <xsl:template match='*[contains(name(), "Nokia_5.0")]'> - of if it just contains the wanted string
+        * research if image match support need
+        * create a testfile with examples of all types of elements
+        * make the stylesheet support each multi type
+            - searchimage
+            - verifynegative
+            - verifypositive
+            - autoassertion
+            - smartassertion
+        * make the style sheet support each single type
+            - assertionskips
+            - verifyreponsecode
+            - image-success
+            - searchimage-success
+            - result-message
+            - responsetime
+            - baselinematch
+        * Run time in header
+        * Sum of response times in footer row
+        * remove max response time
+        * start time in header
+        * Full http log and Results buttons after footer (new tab)
 
 * split http.log into one html file for each test step
 
