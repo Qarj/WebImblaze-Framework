@@ -127,7 +127,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             - //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
             - <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
             - <xsl:template match='*[contains(name(), "Nokia_5.0")]'> - of if it just contains the wanted string
-        * research if "image-match" and "image-message" support needed - no it is not
+        X research if "image-success" and "image-message" support needed - no it is not
         X create a testfile with examples of all types of elements
         * make the stylesheet support each multi type
             - searchimage

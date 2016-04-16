@@ -270,17 +270,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                        </xsl:when>
                    </xsl:choose>
                    <xsl:choose>
-                       <xsl:when test="image-success='false'">
-                           <td bgcolor="#FFC000">
-                      	   <xsl:choose>
-                               <xsl:when test="image-message">
-                                   <xsl:value-of select="image-message"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
                        <xsl:when test="verifynegative-success='false'">
                            <td bgcolor="#FFC000">
                       	   <xsl:choose>
