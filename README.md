@@ -11,3 +11,10 @@ To create a framework for
 * visualing test results
 
 This project does not do anything useful yet.
+
+## Installation
+
+```
+cpan Config::Tiny
+```
+
