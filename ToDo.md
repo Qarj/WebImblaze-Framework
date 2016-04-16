@@ -154,7 +154,8 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 * copy over baselined imageds
 * further styling on Summary.xml
     [ ] click for previous day and next day (if there is a next day) 
-
+* need to fix corruption so overal batch summary message is xml corruption - element-available test does not work...
+    
 <br />
 
 
