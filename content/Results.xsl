@@ -23,13 +23,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
             </h2>
         </div>
 
-      <xsl:text> Ran for </xsl:text>
-      
-      
-
-    <xsl:text> Sum of response times </xsl:text>
-    <xsl:value-of  select="sum(//responsetime)" /> 
-    <xsl:text> s. </xsl:text>
     <br/><A href="http.txt" target="_blank">Full HTTP log (with headers)</A> <xsl:text> </xsl:text> <A href="results.html">Results.html</A>
     <br/>
     <br/>
@@ -40,8 +33,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <xsl:text> </xsl:text> <A href="TransferSize.txt">TransferSize (small tests only) </A>
       </xsl:when>
     </xsl:choose>
+
     <table>
-    <tr>
+
+    <tr class="header_row">
       <th>id</th>
       <th>Test Step</th>
       <th>Result</th>
@@ -51,9 +46,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
           <th align="left">Image Match</th>
         </xsl:when>
       </xsl:choose>
-
-
     </tr>
+
     <xsl:for-each select="results/testcases/testcase">
     <!--	Set a variable to hold the href link -->
     <xsl:variable name="step_number"><xsl:value-of select="@id"/></xsl:variable>
@@ -1129,6 +1123,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
     </tr>
     </xsl:for-each>
+
+    <tr class="footer_row">
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>
+        <xsl:value-of  select='format-number(sum(//responsetime), "###,##0.#")' /> 
+        <xsl:text>s </xsl:text>
+      </th>
+      <xsl:choose>
+        <xsl:when test="sum(//baselinematch)>0">
+          <th align="left">Image Match</th>
+        </xsl:when>
+      </xsl:choose>
+    </tr>
+
     </table>
     <br/>
   </body>

@@ -16,11 +16,19 @@ h1 a:visited { color:SlateGray; }
 h2 a:visited { color:SlateGray; }
 
 div#heading { padding:1em 1em 0 1em; border:1px solid #ddd; background:DarkSlateGray; margin:0 2em 2em 0; }
-div#heading h1 { font-weight:normal; font-size:2.5em; margin-bottom:0.3em; font-family: Verdana, sans-serif; color:#D1E6E7; }
+div#heading h1 { font-weight:normal; font-size:2.5em; margin-bottom:0.3em; font-family: Verdana, sans-serif; color:#D1E6E7;}
 div#heading h2 { font-weight:normal; margin-bottom:0.3em; color:#D1E6E7; }
+div#heading h3 { font-weight:normal; font-size:1.5em; margin-bottom:0.3em; font-family: Verdana, sans-serif; color:#D1E6E7;}
+
+.alignleft {
+  float: left;
+}
+.alignright {
+  float: right;
+}
 
 /* hyperlink styles */
-a { text-decoration:none; font-weight:bolder;}
+a { text-decoration:none; font-weight:bolder;  }
 a:hover { color:#5BAB03; text-decoration: underline;}
 
 div { line-height:1.6em; }
@@ -35,6 +43,7 @@ div { line-height:1.6em; }
 /*              */
 /* END BASE CSS */
 /*              */
+
 
 
 /* results overall styles */

@@ -44,14 +44,9 @@ div { line-height:1.6em; }
 /* END BASE CSS */
 /*              */
 
-/* retry was invoked */
-.retry { color:Orange; }
-
-/* response time */
-.extremeslow { color:Red; }
-.veryslow { color:Orange; }
-.slow { color:Blue; }
-.normal {  }
+/*                      */
+/* BEGIN BASE TABLE CSS */
+/*                      */
 
 table {
     border-collapse: collapse;
@@ -78,11 +73,10 @@ th, td {
 }
 
 td {
-	 color:DarkSlateGray;
+   color:DarkSlateGray;
 }
 
 .run_number { color:SlateGray; font-weight:bolder; }
-
 
 .header_row, .footer_row {
   background: linear-gradient(to bottom, DarkSlateGray, #5B7778);
@@ -90,3 +84,20 @@ td {
   color: #D1E6E7;
   text-decoration: none;
 }
+
+/*                      */
+/* END BASE TABLE CSS */
+/*                      */
+
+/*                      */
+/* RESULTS.CSS SPECIFIC */
+/*                      */
+
+/* retry was invoked */
+.retry { color:Orange; }
+
+/* response time */
+.extremeslow { color:Red; }
+.veryslow { color:Orange; }
+.slow { color:Blue; }
+.normal {  }

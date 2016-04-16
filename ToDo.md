@@ -151,9 +151,9 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             - checkresponsecode
             - sanitycheck
         X Run time in header
-        * Sum of response times in footer row
+        X Sum of response times in footer row
         X remove max response time
-        * start time in header
+        X start time in header
         * Full http log and Results buttons after footer (new tab)
         * pass / fail filter buttons
         * text filter
