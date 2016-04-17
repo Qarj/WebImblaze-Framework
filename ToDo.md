@@ -150,6 +150,9 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             - checknegative
             - checkresponsecode
             - sanitycheck
+        * review colours of
+            - verifypositive failure
+            - verifynegative failure
         X Run time in header
         X Sum of response times in footer row
         X remove max response time
