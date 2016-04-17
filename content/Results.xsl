@@ -273,7 +273,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "verifynegative")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="fail">
+                       <td class="fail_info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -291,7 +291,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "verifypositive")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="fail">
+                       <td class="fail_info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
