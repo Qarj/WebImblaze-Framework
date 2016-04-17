@@ -131,12 +131,12 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X create a testfile with examples of all types of elements
         * make the stylesheet support each multi type
             - searchimage
-            - verifynegative
-            - verifypositive
-            - autoassertion
+            X verifynegative
+            X verifypositive
+            X autoassertion
             - smartassertion
         * make the style sheet support each single type
-            - assertionskips
+            X assertionskips
             - verifyreponsecode
             - result-message
             - responsetime

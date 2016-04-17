@@ -306,78 +306,24 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                    </xsl:choose>
                  </xsl:for-each>
                     
+                 <xsl:for-each select='*[contains(name(), "autoassertion")]'>
+                   <xsl:choose>
+                     <xsl:when test="descendant::success='false'">
+                       <td class="auto_fail_info">
+                         <xsl:text>[auto assertion fail] </xsl:text>
+                         <xsl:choose>
+                           <xsl:when test="descendant::message">
+                             <xsl:value-of select="descendant::message"/>
+                           </xsl:when>
+                           <xsl:otherwise>
+                             <xsl:value-of select="descendant::assert"/>
+                           </xsl:otherwise>
+                         </xsl:choose>
+                       </td>
+                     </xsl:when>
+                   </xsl:choose>
+                 </xsl:for-each>
 
-                  <xsl:choose>
-                     <xsl:when test="verifypositive-success='false'">
-                      <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="verifypositive-message">
-                                <xsl:value-of select="verifypositive-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="verifypositive"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                      </td></xsl:when>
-                  </xsl:choose>
-                  
-                  <xsl:choose>
-                      <xsl:when test="autoassertion1-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="autoassertion1-message">
-                                <xsl:value-of select="autoassertion1-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="autoassertion1"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="autoassertion2-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="autoassertion2-message">
-                                <xsl:value-of select="autoassertion2-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="autoassertion2"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="autoassertion3-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="autoassertion3-message">
-                                <xsl:value-of select="autoassertion3-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="autoassertion3"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="autoassertion4-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="autoassertion4-message">
-                                <xsl:value-of select="autoassertion4-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="autoassertion4"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
                   <xsl:choose>
                       <xsl:when test="smartassertion1-success='false'">
                        <td bgcolor="#CC99FF">
@@ -463,7 +409,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
                 	<xsl:choose>
                      <xsl:when test="assertionskips='true'">
-                      <td bgcolor="#66D4EF">
+                      <td class="skip_info">
                       	 <xsl:choose>
                             <xsl:when test="assertionskips-message">
                                 <xsl:value-of select="assertionskips-message"/>

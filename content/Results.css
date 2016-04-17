@@ -167,11 +167,16 @@ td {
 .normal {  }
 
 table {
-    width: 100%;
+    width: 98%;
 }
 
-.fail_info {
-	background: #FF5940;
+
+.fail_info, .auto_fail_info, .skip_info {
 	color: #D1E6E7;
     font-weight: bold; 
 }
+
+.fail_info { background: #FF5940; }
+.auto_fail_info { background: Maroon; }
+.skip_info { background: Blue; }
+
