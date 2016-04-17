@@ -76,7 +76,7 @@ td {
    color:DarkSlateGray;
 }
 
-.run_number { color:SlateGray; font-weight:bolder; }
+.link_number { color:SlateGray; font-weight:bolder; }
 
 .header_row, .footer_row {
   background: linear-gradient(to bottom, DarkSlateGray, #5B7778);

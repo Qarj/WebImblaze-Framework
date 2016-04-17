@@ -156,7 +156,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X start time in header
         X Full http log and Results links styled as buttons (open in new tab)
         X text filter
-        * fix color of links to test steps
+        X fix color of links to test steps
 
 * split http.log into one html file for each test step
 

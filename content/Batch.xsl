@@ -52,7 +52,7 @@
                             <td> <a class="pend" href="{$pending_href}.html"> <xsl:value-of select="run_number"/></a> </td>
                         </xsl:when>
                         <xsl:otherwise>
-                            <td> <a class="run_number" href="{$href}.xml"> <xsl:value-of select="run_number"/></a> </td>
+                            <td> <a class="link_number" href="{$href}.xml"> <xsl:value-of select="run_number"/></a> </td>
                         </xsl:otherwise>
                     </xsl:choose>
                     <td> <xsl:value-of select="test_parent_folder"/> </td>
