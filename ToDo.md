@@ -130,7 +130,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X research if "image-success" and "image-message" support needed - no it is not
         X create a testfile with examples of all types of elements
         * make the stylesheet support each multi type
-            - searchimage
+            X searchimage
             X verifynegative
             X verifypositive
             X autoassertion

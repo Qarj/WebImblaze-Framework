@@ -189,86 +189,30 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </xsl:choose>
 
                    <xsl:choose>
-                       <xsl:when test="searchimage-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
-                       <xsl:when test="searchimage1-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage1-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage1-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
-                       <xsl:when test="searchimage2-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage2-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage2-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
-                       <xsl:when test="searchimage3-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage3-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage3-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
-                       <xsl:when test="searchimage4-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage4-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage4-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-                   <xsl:choose>
-                       <xsl:when test="searchimage5-success='false'">
-                           <td bgcolor="#FFC0FF">
-                      	   <xsl:choose>
-                               <xsl:when test="searchimage5-name">
-                                   <xsl:text>Not Found: </xsl:text>
-                                   <xsl:value-of select="searchimage5-name"/>
-                               </xsl:when>
-                           </xsl:choose>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
-
- 
-                   <xsl:choose>
                        <xsl:when test="verifyresponsecode-success='false'">
                            <td bgcolor="#FF6633">
                                <xsl:value-of select="verifyresponsecode-message"/>
                            </td>
                        </xsl:when>
                    </xsl:choose>
+
+                 <xsl:for-each select='*[contains(name(), "searchimage")]'>
+                   <xsl:choose>
+                     <xsl:when test="descendant::success='false'">
+                       <td class="fail_info">
+                         <xsl:choose>
+                           <xsl:when test="descendant::message">
+                             <xsl:value-of select="descendant::message"/>
+                           </xsl:when>
+                           <xsl:otherwise>
+                             <xsl:text>IMAGE NOT FOUND: </xsl:text>
+                             <xsl:value-of select="descendant::assert"/>
+                           </xsl:otherwise>
+                         </xsl:choose>
+                       </td>
+                     </xsl:when>
+                   </xsl:choose>
+                 </xsl:for-each>
 
                  <xsl:for-each select='*[contains(name(), "verifynegative")]'>
                    <xsl:choose>
