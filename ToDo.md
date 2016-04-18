@@ -163,7 +163,34 @@ X Remove publish_static_files.pl
         X fix color of links to test steps
 
 * split http.log into one html file for each test step
-
+    - separate parameter to WebInject so it can output the individual test steps directly to the web server location --publish-to
+    - prepend HTML header
+    - output test case number
+    - output description 1
+    - output description 2
+    - link to the next and previous test steps
+    - hard code styles to prevent css overrides
+    - output searchimage section
+    - output <html><body><xmp>$response</xmp></body></html> if logastext
+    - output request header
+    - output response header
+    - request header - show/hide logic
+    - response header - show/hide logic
+    - change all https to http, and :4 to :8 (need a substitutions.config...)
+    - output test step number
+    - s/HTTP-EQUIV="REFRESH"/HTTP-EQUIV="WebInject blocked REFRESH"/igs
+    - s!/sitecore/shell/Applications/!/sitecore/shell/__STOP_REDIRECT__Applications/!g;
+    - s!company.axd!company_DO_NOT_LOAD_THIS_JAVASCRIPT_DO_NOT_REDIRECT.axd!
+    - s!window.location!window__STOP__location!g;
+    - s!form action=!noform action=!g;
+    - for any css/less/js/image files we have, change the hrefs and src links to point to the relative results location
+    - for any image files we have, change the background-image url to point to the relative results location
+    - change href/src/action links to point to target server directly rather than being relative (lines 278 to 320)
+    - show Selenium page grab
+    - link to a downloaded email
+    - link to a downloaded text file
+    - link to a downloaded html file
+    
 * stress test file locking logic
    * 1 - start many instances of wif at the same time - say 20
    * 2 - put first test in loop for 10 mins
@@ -201,7 +228,7 @@ X Remove publish_static_files.pl
 * further styling on Summary.xml
     [ ] click for previous day and next day (if there is a next day) 
 * need to fix corruption so overal batch summary message is xml corruption - element-available test does not work...
-    
+* imagematch - show images in output
 <br />
 
 
