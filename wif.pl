@@ -75,7 +75,7 @@ check_testfile_xml_parses_ok();
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file();
 
 # find out what run number we are up to today for this testcase file
-my $run_number = create_run_number();
+my ($run_number, $this_run_home) = create_run_number();
 
 # indicate that WebInject is running the testfile
 write_pending_result($run_number);
@@ -93,7 +93,7 @@ my $selenium_port = start_selenium_server($testfile_contains_selenium);
 
 display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
 
-call_webinject_with_testfile($testfile_full, $config_file_full, $config_is_automation_controller, $webinject_location, $opt_no_retry, $testfile_contains_selenium, $selenium_port, $proxy_port);
+call_webinject_with_testfile($config_file_full, $testfile_contains_selenium, $selenium_port, $proxy_port, $this_run_home);
 
 shutdown_selenium_server($selenium_port);
 
@@ -119,13 +119,13 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_testfile_full, $_config_file_full, $_is_automation_controller, $_webinject_path, $_no_retry, $_testfile_contains_selenium, $_selenium_port, $_proxy_port) = @_;
+    my ($_config_file_full, $_testfile_contains_selenium, $_selenium_port, $_proxy_port, $_this_run_home) = @_;
 
     my $_temp_folder_name = 'temp/' . $temp_folder_name;
 
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
-    my $_abs_testfile_full = File::Spec->rel2abs( $_testfile_full );
+    my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full );
     my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . q{/};
 
@@ -147,11 +147,11 @@ sub call_webinject_with_testfile {
         push @_args, $_abs_temp_folder;
     }
 
-    if ($_is_automation_controller eq 'true') {
+    if ($config_is_automation_controller eq 'true') {
         push @_args, '--autocontroller';
     }
 
-    if ($_no_retry) {
+    if ($opt_no_retry) {
         push @_args, '--ignoreretry';
     }
 
@@ -174,7 +174,7 @@ sub call_webinject_with_testfile {
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
-    chdir $_webinject_path;
+    chdir $webinject_location;
 
     # we run it like this so you can see test case execution progress "as it happens"
     system 'webinject.pl', @_args;
@@ -1240,9 +1240,10 @@ sub create_run_number {
     _unlock_file($_run_number_full);
 
     # create a folder for this run number
-    _make_dir( "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number" );
+    my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number";
+    _make_dir( $_this_run_home );
 
-    return $_run_number;
+    return $_run_number, $_this_run_home;
 }
 
 #------------------------------------------------------------------
