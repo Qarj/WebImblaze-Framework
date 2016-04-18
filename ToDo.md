@@ -134,7 +134,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             X verifynegative
             X verifypositive
             X autoassertion
-            - smartassertion
+            X smartassertion
         * make the style sheet support each single type
             X assertionskips
             - verifyreponsecode
@@ -163,6 +163,9 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
 
 * split http.log into one html file for each test step
 
+* stress test file locking logic
+   * 1 - start many instances of wif at the same time - say 20
+   * 2 - put first test in loop for 10 mins
 
 ### More later
 

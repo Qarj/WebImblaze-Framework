@@ -310,7 +310,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
                        <td class="auto_fail_info">
-                         <xsl:text>[auto assertion fail] </xsl:text>
+                         <xsl:text>AUTO ASSERTION FAILED: </xsl:text>
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -324,62 +324,25 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                    </xsl:choose>
                  </xsl:for-each>
 
-                  <xsl:choose>
-                      <xsl:when test="smartassertion1-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="smartassertion1-message">
-                                <xsl:value-of select="smartassertion1-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="smartassertion1"/>
-                            </xsl:otherwise>
+                 <xsl:for-each select='*[contains(name(), "smartassertion")]'>
+                   <xsl:choose>
+                     <xsl:when test="descendant::success='false'">
+                       <td class="auto_fail_info">
+                         <xsl:text>SMART ASSERTION FAILED: </xsl:text>
+                         <xsl:choose>
+                           <xsl:when test="descendant::message">
+                             <xsl:value-of select="descendant::message"/>
+                           </xsl:when>
+                           <xsl:otherwise>
+                             <xsl:value-of select="descendant::assert"/>
+                           </xsl:otherwise>
                          </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="smartassertion2-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="smartassertion2-message">
-                                <xsl:value-of select="smartassertion2-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="smartassertion2"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="smartassertion3-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="smartassertion3-message">
-                                <xsl:value-of select="smartassertion3-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="smartassertion3"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
-                  <xsl:choose>
-                      <xsl:when test="smartassertion4-success='false'">
-                       <td bgcolor="#CC99FF">
-                      	 <xsl:choose>
-                            <xsl:when test="smartassertion4-message">
-                                <xsl:value-of select="smartassertion4-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>EXPECTED: </xsl:text>
-                                <xsl:value-of select="smartassertion4"/>
-                            </xsl:otherwise>
-                         </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
+                       </td>
+                     </xsl:when>
+                   </xsl:choose>
+                 </xsl:for-each>
+
+
                   <xsl:choose>
                       <xsl:when test="assertcount-success='false'">
                        <td bgcolor="#FF82F8">
