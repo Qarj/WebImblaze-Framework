@@ -137,6 +137,9 @@ sub call_webinject_with_testfile {
 
     push @_args, $_abs_testfile_full;
 
+    push @_args, '--publish-to';
+    push @_args, $_this_run_home;
+
     if ($_abs_config_file_full) {
         push @_args, '--config';
         push @_args, $_abs_config_file_full;
