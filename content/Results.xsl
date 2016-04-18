@@ -302,7 +302,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                   </xsl:choose>
                   <xsl:choose>
                       <xsl:when test="verifyresponsetime-success='false'">
-                       <td bgcolor="#CC99FF">
+                       <td class="time_info">
                       	 <xsl:choose>
                             <xsl:when test="verifyresponsetime-message">
                                 <xsl:value-of select="verifyresponsetime-message"/>

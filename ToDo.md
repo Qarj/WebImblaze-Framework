@@ -139,13 +139,13 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             X assertionskips
             X verifyreponsecode
             - result-message
-            - responsetime
+            X responsetime
             - baselinematch
             - retry
             - retryfromstep
             - description1, description2
-            - verifyresponsetime
-            - verifyresponsecode
+            X verifyresponsetime
+            X verifyresponsecode
             - checkpositive
             - checknegative
             - checkresponsecode
