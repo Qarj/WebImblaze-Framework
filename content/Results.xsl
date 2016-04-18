@@ -188,13 +188,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         </xsl:when>
       </xsl:choose>
 
-                   <xsl:choose>
-                       <xsl:when test="verifyresponsecode-success='false'">
-                           <td bgcolor="#FF6633">
-                               <xsl:value-of select="verifyresponsecode-message"/>
-                           </td>
-                       </xsl:when>
-                   </xsl:choose>
+                <xsl:choose>
+                  <xsl:when test="verifyresponsecode-success='false'">
+                    <td class="auto_fail_info">
+                      <xsl:value-of select="verifyresponsecode-message"/>
+                    </td>
+                  </xsl:when>
+                </xsl:choose>
 
                  <xsl:for-each select='*[contains(name(), "searchimage")]'>
                    <xsl:choose>

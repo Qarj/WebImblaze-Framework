@@ -137,7 +137,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             X smartassertion
         * make the style sheet support each single type
             X assertionskips
-            - verifyreponsecode
+            X verifyreponsecode
             - result-message
             - responsetime
             - baselinematch
