@@ -431,12 +431,12 @@ sub start_browsermob_proxy {
     # we need two ports, one for the proxy (server) server, and the other for the proxy (server)
     # find free port
     # start proxy server
-    my $_proxy_server_port = _find_available_port(int(rand(999))+9000);
+    my $_proxy_server_port = _find_available_port(int(rand 999)+9000);
     my $_proxy_server_pid = _start_windows_process( "cmd /c $browsermob_proxy_location_full -port $_proxy_server_port" );
     #print "_proxy_server_port:$_proxy_server_port\n";
 
     # start proxy
-    my $_proxy_port = _find_available_port(int(rand(999))+10_000);
+    my $_proxy_port = _find_available_port(int(rand 999)+10_000);
     _http_post ("http://localhost:$_proxy_server_port/proxy", 'port', $_proxy_port);
 
     #print "_proxy_port:$_proxy_port\n";
@@ -476,7 +476,7 @@ sub _http_put {
     {
         $_response = Data::Dumper::Dumper ( $_agent->request($_request) );
 
-        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) { 
+        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) {
             #print {*STDOUT} "WARN: cannot connect to $_url\n";
             sleep 0.1;
             redo ATTEMPT;
@@ -508,7 +508,7 @@ sub _http_post {
     {
         $_response = Data::Dumper::Dumper ( LWP::UserAgent->new->post($_url, \@_body) );
 
-        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) { 
+        if ( ( $_response =~ m/Can[\\]\'t connect to/ ) and $_try++ < $_max ) {
             #print {*STDOUT} "WARN: cannot connect to $_url\n";
             sleep 0.1;
             redo ATTEMPT;
@@ -579,7 +579,7 @@ sub publish_results_on_web_server {
 
     # copy any .7z files over - e.g. har.7z
     _copy ( "temp/$temp_folder_name/*.7z", $_this_run_home);
-    
+
     # copy .htm and .html files over
     _copy ( "temp/$temp_folder_name/*.htm*", $_this_run_home);
 
