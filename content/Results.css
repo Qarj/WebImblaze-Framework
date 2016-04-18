@@ -168,9 +168,9 @@ td {
 .retry { color:Orange; }
 
 /* response time */
-.extremeslow { color:Red; }
-.veryslow { color:Orange; }
-.slow { color:Blue; }
+.extremeslow { background:#C11B17; color: #D1E6E7;}
+.veryslow { background:Orange; color: #D1E6E7; }
+.slow { background:Blue; color: #D1E6E7; }
 .normal {  }
 
 table {

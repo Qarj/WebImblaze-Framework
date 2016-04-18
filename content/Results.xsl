@@ -56,6 +56,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <div id="filter">
             <A class="btn" href="http.txt" target="_blank">Full HTTP Log</A>
             <A class="btn" href="Results.html" target="_blank">HTML Results</A>
+            <xsl:choose>
+              <xsl:when test="sum(//verificationtime)>0">
+                <A class="btn" href="selenium_log.txt" target="_blank">Selenium Log</A>
+              </xsl:when>
+            </xsl:choose>
     
             <form id="live-search" action="" class="inputbox" method="post">
                 <fieldset>
@@ -68,13 +73,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
         <div class="spacer"></div>
 
     <br/>
-    <xsl:choose>
-      <xsl:when test="sum(//verificationtime)>0">
-        <xsl:text> </xsl:text> <A href="selenium_log.txt">selenium_log</A>
-        <xsl:text> </xsl:text> <A href="URLs.txt">URLs</A>
-        <xsl:text> </xsl:text> <A href="TransferSize.txt">TransferSize (small tests only) </A>
-      </xsl:when>
-    </xsl:choose>
 
     <table>
 
