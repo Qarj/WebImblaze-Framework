@@ -124,32 +124,33 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
     X batch.xsl -> Batch.xsl
     * results.xsl -> Results.xsl
         X wildcard match on attribute names possible?
-            - //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
-            - <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
-            - <xsl:template match='*[contains(name(), "Nokia_5.0")]'> - of if it just contains the wanted string
+            X //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
+            X <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
+            X <xsl:template match='*[contains(name(), "Nokia_5.0")]'> - of if it just contains the wanted string
         X research if "image-success" and "image-message" support needed - no it is not
         X create a testfile with examples of all types of elements
-        * make the stylesheet support each multi type
+        X make the stylesheet support each multi type
             X searchimage
             X verifynegative
             X verifypositive
             X autoassertion
             X smartassertion
-        * make the style sheet support each single type
+        X make the style sheet support each single type
             X assertionskips
             X verifyreponsecode
-            - result-message
+            X result-message
             X responsetime
-            - baselinematch
-            - retry
-            - retryfromstep
-            - description1, description2
+            X baselinematch
+            X retry
+            X retryfromstep
+            X description1, description2
             X verifyresponsetime
             X verifyresponsecode
-            - checkpositive
-            - checknegative
-            - checkresponsecode
-            - sanitycheck
+            X checkpositive
+            X checknegative
+            X checkresponsecode
+            X sanitycheck
+        * remove auto assertions from the results.xml when they pass
         X review colours of
             X verifypositive failure
             X verifynegative failure

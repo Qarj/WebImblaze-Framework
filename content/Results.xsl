@@ -155,7 +155,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
           <td class="retry"><xsl:value-of select="result-message"/></td>
         </xsl:when>
         <xsl:otherwise>
-          <td class="sanity"><xsl:value-of select="result-message"/></td>
+          <td class="for_future_expansion"><xsl:value-of select="result-message"/></td>
         </xsl:otherwise>
       </xsl:choose>
      	<xsl:choose>
@@ -331,6 +331,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     </tr>
     </xsl:for-each>
 
+  <xsl:choose>
+    <xsl:when test="results/test-summary/sanity-check-passed='false'">
+        <tr class="sanity_row">
+            <td></td>
+            <td class="sanity_row">SANITY CHECK FAILED - TEST EXECUTION ABORTED</td>
+            <td></td>
+            <td></td>
+            <xsl:choose>
+                <xsl:when test="sum(//baselinematch)>0">
+                    <td></td>
+                </xsl:when>
+            </xsl:choose>
+        </tr>
+    </xsl:when>
+  </xsl:choose>
+
+
     <tr class="footer_row">
       <th></th>
       <th></th>
@@ -341,7 +358,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </th>
       <xsl:choose>
         <xsl:when test="sum(//baselinematch)>0">
-          <th align="left">Image Match</th>
+          <th>Image Match</th>
         </xsl:when>
       </xsl:choose>
     </tr>

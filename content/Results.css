@@ -156,6 +156,13 @@ td {
   text-decoration: none;
 }
 
+.sanity_row {
+  background: #7D1B7E;
+  font-family: Arial;
+  color: White;
+  font-weight: bold; 
+  text-decoration: none;
+}
 
 /* retry was invoked */
 .retry { color:Orange; }
