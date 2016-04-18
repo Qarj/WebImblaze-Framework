@@ -112,7 +112,7 @@ X   X check if error after running WebInject.pl
 X   X check to see if webinject aborted, if so, need dummy result to indicate issue
 X   X check results file to see if it is valid, if not, need dummy result to indicate issue
 
-* Remove publish_static_files.pl
+X Remove publish_static_files.pl
     X Summary.xsl -> Summary.xsl
         X Bug - Only latest?
         X Links to other wif servers
@@ -122,7 +122,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
         X light grey background?
         X CORRUPT
     X batch.xsl -> Batch.xsl
-    * results.xsl -> Results.xsl
+    X results.xsl -> Results.xsl
         X wildcard match on attribute names possible?
             X //*[substring(name(),string-length(name())-1) = 'fu'] - selects all elements in the xml document, whose names end with the string fu
             X <xsl:template match="*[substring(name(), string-length(name()) -8) = 'Nokia_5.0')]"> - selects all elements that end with Nokia_5.0
@@ -150,7 +150,7 @@ X   X check results file to see if it is valid, if not, need dummy result to ind
             X checknegative
             X checkresponsecode
             X sanitycheck
-        * remove auto assertions from the results.xml when they pass
+        X remove auto assertions from the results.xml when they pass
         X review colours of
             X verifypositive failure
             X verifynegative failure
