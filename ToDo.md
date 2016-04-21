@@ -163,21 +163,25 @@ X Remove publish_static_files.pl
         X fix color of links to test steps
 
 * split http.log into one html file for each test step
-    - separate parameter to WebInject so it can output the individual test steps directly to the web server location --publish-to
-    - prepend HTML header
-    - output test case number
-    - output description 1
-    - output description 2
-    - link to the next and previous test steps
-    - hard code styles to prevent css overrides
-    - output searchimage section
-    - output <html><body><xmp>$response</xmp></body></html> if logastext
-    - output request header
-    - output response header
-    - request header - show/hide logic
-    - response header - show/hide logic
+    X separate parameter to WebInject so it can output the individual test steps directly to the web server location --publish-to
+    X refactor http logging to write to in memory string then write to http log in one go
+    X prepend HTML header
+    X output test case number
+    X output description 1
+    X custom div
+    X link to the overall summary http://localhost:9080/DEV/2016/04/21/All_Batches/Summary.xml
+    X link to the batch summary http://localhost:9080/DEV/2016/04/21/All_Batches/demonstration.xml
+    X link to the run results http://localhost:9080/DEV/2016/04/21/examples/get/results_1004/results_1004.xml
+    X deal with direct WebInject run - links to be nulled
+    X link to previous test step http://localhost:9080/DEV/2016/04/21/examples/get/results_1004/10.html
+    X link to the next test step
+    X hard code styles to prevent css overrides
+    X output <html><body><xmp>$response</xmp></body></html> if logastext
+    X output request header
+    X output response header
+    X request header - show/hide logic
+    X response header - show/hide logic
     - change all https to http, and :4 to :8 (need a substitutions.config...)
-    - output test step number
     - s/HTTP-EQUIV="REFRESH"/HTTP-EQUIV="WebInject blocked REFRESH"/igs
     - s!/sitecore/shell/Applications/!/sitecore/shell/__STOP_REDIRECT__Applications/!g;
     - s!company.axd!company_DO_NOT_LOAD_THIS_JAVASCRIPT_DO_NOT_REDIRECT.axd!
@@ -190,6 +194,8 @@ X Remove publish_static_files.pl
     - link to a downloaded email
     - link to a downloaded text file
     - link to a downloaded html file
+
+* get links working over file:/// if possible
     
 * stress test file locking logic
    * 1 - start many instances of wif at the same time - say 20
@@ -225,6 +231,7 @@ X Remove publish_static_files.pl
     - copy over baselined imageds
     - image-success
     - searchimage-success
+    - output searchimage section in step results
 * further styling on Summary.xml
     [ ] click for previous day and next day (if there is a next day) 
 * need to fix corruption so overal batch summary message is xml corruption - element-available test does not work...

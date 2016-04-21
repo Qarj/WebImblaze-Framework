@@ -109,7 +109,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </xsl:choose>
 
     <tr class="step_result">
-      <td><a class="link_number" href="{$step_number}.html" target="_blank"><xsl:value-of select="@id"/></a></td>
+      <td><a class="link_number" href="{$step_number}.html"><xsl:value-of select="@id"/></a></td>
       <td>
         
         <!-- Make any text that appears between square brackets brown bold -->

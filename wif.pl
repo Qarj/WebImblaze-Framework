@@ -71,11 +71,11 @@ $temp_folder_name = create_temp_folder();
 # check the testfile to ensure the XML parses - will die if it doesn't
 check_testfile_xml_parses_ok();
 
-# generate the config file, and find out where it is
-my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file();
-
 # find out what run number we are up to today for this testcase file
 my ($run_number, $this_run_home) = create_run_number();
+
+# generate the config file, and find out where it is
+my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
 
 # indicate that WebInject is running the testfile
 write_pending_result($run_number);
@@ -1378,6 +1378,7 @@ sub _make_dir {
 
 #------------------------------------------------------------------
 sub create_webinject_config_file {
+    my ($_run_number) = @_;
 
     if ( not -e "environment_config/$opt_environment.config" ) {
         die "Could not find environment_config/$opt_environment.config\n";
@@ -1416,6 +1417,7 @@ sub create_webinject_config_file {
     _write_webinject_config('userdefined');
     _write_webinject_config('autoassertions');
     _write_webinject_config('smartassertions');
+    _write_webinject_wif_config($_run_number);
     print {$WEBINJECT_CONFIG} "</root>\n";
     close $WEBINJECT_CONFIG or die "\nCould not close $_config_file_full\n\n";
 
@@ -1475,6 +1477,18 @@ sub _write_webinject_config {
     return;
 }
 
+#------------------------------------------------------------------
+sub _write_webinject_wif_config {
+    my ($_run_number) = @_;
+    
+    print {$WEBINJECT_CONFIG} "    <wif>\n";
+    print {$WEBINJECT_CONFIG} "        <batch>$opt_batch</batch>\n";
+    print {$WEBINJECT_CONFIG} "        <folder>$testfile_parent_folder_name</folder>\n";
+    print {$WEBINJECT_CONFIG} "        <run_number>$_run_number</run_number>\n";
+    print {$WEBINJECT_CONFIG} "    </wif>\n";
+
+    return;
+}
 #------------------------------------------------------------------
 sub get_web_server_location {
 
