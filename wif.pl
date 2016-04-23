@@ -1243,7 +1243,7 @@ sub create_run_number {
     _unlock_file($_run_number_full);
 
     # create a folder for this run number
-    my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number";
+    my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
     _make_dir( $_this_run_home );
 
     return $_run_number, $_this_run_home;
@@ -1480,7 +1480,7 @@ sub _write_webinject_config {
 #------------------------------------------------------------------
 sub _write_webinject_wif_config {
     my ($_run_number) = @_;
-    
+
     print {$WEBINJECT_CONFIG} "    <wif>\n";
     print {$WEBINJECT_CONFIG} "        <batch>$opt_batch</batch>\n";
     print {$WEBINJECT_CONFIG} "        <folder>$testfile_parent_folder_name</folder>\n";
