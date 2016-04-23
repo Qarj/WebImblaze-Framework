@@ -189,7 +189,7 @@ X Remove publish_static_files.pl
     - s!form action=!noform action=!g;
     - for any css/less/js/image files we have, change the hrefs and src links to point to the relative results location
     - for any image files we have, change the background-image url to point to the relative results location
-    - change href/src/action links to point to target server directly rather than being relative (lines 278 to 320)
+    X change href/src/action links to point to target server directly rather than being relative (lines 278 to 320)
     - show Selenium page grab
     - link to a downloaded email
     - link to a downloaded text file

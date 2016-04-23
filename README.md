@@ -1,20 +1,20 @@
-# WebInjectFramework 0.01
-Framework for running WebInject Automated Tests and visualising results
+# WebInject Framework 0.02
 
-## Goal
+Framework for
+* managing WebInject configuration
+* running many WebInject automated tests in parallel
+* organising actual test run results
 
-To create a framework for 
-* organising WebInject tests
-* managing configuration between environments
-* running tests in parallel
-* organising test results
-* visualing test results
+This framework is for those with large suites of automated tests. It helps to quickly
+answer the question "Did all of our regression tests pass?".
 
-This project does not do anything useful yet.
+If the answer is no, you can very quickly drill into what went wrong. Since an organised history of previous run results are kept, you can compare a failed result easily against a previous successful run.
 
 ## Installation
 
+Install WebInject. (refer to https://github.com/Qarj/WebInject)
+
+From a command prompt:
 ```
 cpan Config::Tiny
 ```
-
