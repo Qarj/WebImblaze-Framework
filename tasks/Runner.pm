@@ -77,7 +77,7 @@ sub random {
     my $_random = int rand $_max;
     $_random = sprintf '%05d', $_random; # add some leading zeros
 
-    return $_random;
+    return '_'.$_random;
 }
 
 #------------------------------------------------------------------
