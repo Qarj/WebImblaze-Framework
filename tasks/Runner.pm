@@ -39,6 +39,8 @@ sub start_test {
 
     push @_args, '--no-update-config';
 
+    push @_args, '--capture-stdout';
+
     # wif.pl expects the current working directory to be where wif.pl is located
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;

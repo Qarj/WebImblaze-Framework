@@ -44,7 +44,7 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep, $opt_capture_stdout);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $web_server_address, $selenium_location_full, $webinject_location, $browsermob_proxy_location_full );
@@ -54,6 +54,7 @@ my $target_config = Config::Tiny->new;
 my $global_config = Config::Tiny->new;
 my $environment_config = Config::Tiny->new;
 my $WEBINJECT_CONFIG;
+my ( $std_fh );
 # end globally read/write variables
 
 # start globally read variables  - will only be written to from the main script
@@ -73,6 +74,8 @@ check_testfile_xml_parses_ok();
 
 # find out what run number we are up to today for this testcase file
 my ($run_number, $this_run_home) = create_run_number();
+
+capture_stdout($this_run_home);
 
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
@@ -116,6 +119,7 @@ publish_static_files($run_number);
 # tear down
 remove_temp_folder($temp_folder_name, $opt_keep);
 
+restore_stdout();
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -179,14 +183,43 @@ sub call_webinject_with_testfile {
     my $_orig_cwd = cwd;
     chdir $webinject_location;
 
-    # we run it like this so you can see test case execution progress "as it happens"
-    system 'webinject.pl', @_args;
+    my $_stdout;
+    if (defined $opt_capture_stdout) {
+        #capture
+        eval { $_stdout = `webinject.pl @_args 2>&1`; };
+        _write_file ($_this_run_home.'webinject_stdout.txt', $_stdout);
+    } else {
+        # we run it like this so you can see test case execution progress "as it happens"
+        system 'webinject.pl', @_args;
+    }
 
     chdir $_orig_cwd;
 
     return;
 }
 
+#------------------------------------------------------------------
+sub capture_stdout {
+    my ($_output_location) = @_;
+
+    *OLD_STDOUT = *STDOUT;
+    *OLD_STDERR = *STDERR;
+
+    open $std_fh, '>>', $_output_location.'wif_stdout.txt';
+    *STDOUT = $std_fh;
+    *STDERR = $std_fh;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub restore_stdout {
+
+    *STDOUT = *OLD_STDOUT;
+    *STDERR = *OLD_STDERR;   
+
+    return;
+}
 
 #------------------------------------------------------------------
 sub get_date {
@@ -1278,7 +1311,7 @@ sub _increment_run_number {
 sub _unlock_file {
     my ($_file_to_unlock_full) = @_;
 
-    my $_unlocked_file_indicator = _prepend_to_filename('Unlocked_', $_file_to_unlock_full);
+    my $_unlocked_file_indicator = $_file_to_unlock_full.'_Unlocked';
     my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_unlock_full);
     #print "    move\n$_locked_file_indicator".'_'."$temp_folder_name\n".$_unlocked_file_indicator."\n\n";
     move $_locked_file_indicator."_$temp_folder_name", $_unlocked_file_indicator; 
@@ -1291,13 +1324,13 @@ sub _lock_file {
     my ($_file_to_lock_full) = @_;
 
     # first the file we want to lock may not even exist, in which case we create it
-    my $_unlocked_file_indicator = _prepend_to_filename('Unlocked_', $_file_to_lock_full);
+    my $_unlocked_file_indicator = $_file_to_lock_full.'_Unlocked';
     my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_lock_full);
     if (not -e "$_unlocked_file_indicator" ) {
-        ###print "$_unlocked_file_indicator\n";
+        #print "file is not unlocked: $_unlocked_file_indicator\n";
         # file is not unlocked
         if (not glob("$_locked_file_indicator".'_*') ) {
-            ###print "$_locked_file_indicator".'_*';
+            #print "file is not locked either: $_locked_file_indicator".'_*'."\n";
             # file is not locked either, so it must not exist
             # so we can create a file indicating that the file is unlocked
             _touch($_unlocked_file_indicator);
@@ -1319,10 +1352,10 @@ sub _lock_file {
         # if we failed to lock the file but there are attempts remaining
         if ( $@ and $_try++ < $_max ) {
             # only write a message to STDOUT every 25 attempts
-#            if ( ($_try / 25) == int($_try / 25) ) {
-                print {*STDOUT} "WARN: $@ Failed try $_try to lock $_file_to_lock_full\n";
-#            }
-            sleep 0.1;
+            #if ( ($_try / 25) == int($_try / 25) ) {
+                print {*STDOUT} "WARN: $@    Failed try $_try to lock $_file_to_lock_full\n    Lock file: $_locked_file_indicator".q{_}."$temp_folder_name\n";
+            #}
+            sleep rand 0.3;
             redo ATTEMPT;
         }
     }
@@ -1337,6 +1370,8 @@ sub _lock_file {
         _touch($_locked_file_indicator.'_'.$temp_folder_name);
         # this might screw things up a little, but it prevents things being screwed up a lot (i.e. no more test results for the rest of the day)
         # people just have to rerun their most recent tests and all should be fine
+    } else {
+        #print "Successfully locked: $_file_to_lock_full\n\n\n";
     }
 
     # now we have locked the file by fair means or by foul
@@ -1629,6 +1664,7 @@ sub get_options_and_config {  #shell options
         'p|use-browsermob-proxy=s'  => \$opt_use_browsermob_proxy,
         'n|no-retry'                => \$opt_no_retry,
         'u|no-update-config'        => \$_opt_no_update_config,
+        'c|capture-stdout'          => \$opt_capture_stdout,
         'k|keep'                    => \$opt_keep,
         'v|V|version'               => \$opt_version,
         'h|help'                    => \$opt_help,
