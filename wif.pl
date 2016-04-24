@@ -1279,10 +1279,9 @@ sub _unlock_file {
     my ($_file_to_unlock_full) = @_;
 
     my $_unlocked_file_indicator = _prepend_to_filename('Unlocked_', $_file_to_unlock_full);
-    unlink $_unlocked_file_indicator;
-
     my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_unlock_full);
-    unlink $_locked_file_indicator."_$temp_folder_name";
+    #print "    move\n$_locked_file_indicator".'_'."$temp_folder_name\n".$_unlocked_file_indicator."\n\n";
+    move $_locked_file_indicator."_$temp_folder_name", $_unlocked_file_indicator; 
 
     return;
 }
@@ -1313,15 +1312,16 @@ sub _lock_file {
     ATTEMPT:
     {
         eval {
+            #print "move\n$_unlocked_file_indicator\n"."$_locked_file_indicator".'_'."$temp_folder_name\n\n";
             move $_unlocked_file_indicator, $_locked_file_indicator.'_'.$temp_folder_name or die "Cannot lock file\n";
         }; # eval needs a semicolon
 
         # if we failed to lock the file but there are attempts remaining
         if ( $@ and $_try++ < $_max ) {
             # only write a message to STDOUT every 25 attempts
-            if ( ($_try / 25) == int($_try / 25) ) {
+#            if ( ($_try / 25) == int($_try / 25) ) {
                 print {*STDOUT} "WARN: $@ Failed try $_try to lock $_file_to_lock_full\n";
-            }
+#            }
             sleep 0.1;
             redo ATTEMPT;
         }
