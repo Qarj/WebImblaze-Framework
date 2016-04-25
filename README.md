@@ -1,4 +1,4 @@
-# WebInject Framework 0.02
+# WebInject Framework 0.03
 
 Framework for
 * managing WebInject configuration
