@@ -35,10 +35,10 @@ div { line-height:1.6em; }
 
 /* different colours for the results based on status */
 .pass { color:#5BAB03; font-weight:bold;}
-.fail { color:#FF5940; }
-.sanity { color:Fuchsia; }
-.corrupt { color:Black; }
-.pend { color:SteelBlue; font-weight:bold; }
+.fail { color:#FF5940; font-weight:bold;}
+.sanity { color:Fuchsia; font-weight:bold;}
+.corrupt { color:Black; font-weight:bold;}
+.pend { color:SteelBlue; font-weight:bold;}
 
 /*              */
 /* END BASE CSS */

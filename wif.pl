@@ -802,7 +802,7 @@ sub _write_corrupt_record {
     $_record .= qq|      <start_seconds>$seconds</start_seconds>\n|;
     $_record .= qq|      <end_seconds>$_seconds</end_seconds>\n|;
     $_record .= qq|      <status>CORRUPT</status>\n|;
-    $_record .= qq|      <status_message>$_message</status_message>\n|;
+    $_record .= qq|      <status_message>[$testfile_parent_folder_name/$testfile_name results.xml] $_message</status_message>\n|;
     $_record .= qq|   </run>\n|;
 
     _write_file ($_file_full, $_record);

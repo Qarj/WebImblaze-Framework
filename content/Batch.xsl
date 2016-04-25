@@ -71,25 +71,25 @@
                         <xsl:otherwise>
                             <td> <xsl:value-of select="translate(end_time,'T',' ')"/> </td>
                             <td> <xsl:value-of select="total_run_time"/> </td>
-                            <td> <xsl:value-of select="test_steps_run"/> </td>
+                            <td> <a href="{$wi_stdout}"> <xsl:value-of select="test_steps_run"/> </a></td>
                             <xsl:choose>
                                 <xsl:when test="status='NORMAL'">
                                     <xsl:choose>
                                         <xsl:when test="test_steps_failed>0">
                                             <xsl:choose>
                                                 <xsl:when test="sanity_check_passed='true'">
-                                                    <td class="fail"> <a href="{$wi_stdout}"> <xsl:value-of select="test_steps_failed"/> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :-(</a></td>
+                                                    <td class="fail"> <xsl:value-of select="test_steps_failed"/> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; :-(</td>
                                                 </xsl:when>
                                                 <xsl:otherwise>
-                                                    <td class="sanity"><a href="{$wi_stdout}"> <xsl:value-of select="test_steps_failed"/> <xsl:text> sanity fail &#160;&#160; O.o</xsl:text> </a></td>
+                                                    <td class="sanity"> <xsl:value-of select="test_steps_failed"/> <xsl:text> sanity fail &#160;&#160; O.o</xsl:text> </td>
                                                 </xsl:otherwise>
                                             </xsl:choose>
                                         </xsl:when>
                                         <xsl:when test="test_steps_failed=0">
-                                            <td class="pass"><a href="{$wi_stdout}"> <xsl:value-of select="test_steps_failed"/> </a></td>
+                                            <td class="pass"> <xsl:value-of select="test_steps_failed"/> </td>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <td class="fail"><a href="{$wi_stdout}"> <xsl:value-of select="test_steps_failed"/> </a></td>
+                                            <td class="fail"> <xsl:value-of select="test_steps_failed"/> </td>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:when>

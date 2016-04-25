@@ -38,3 +38,11 @@ sub start {
 
     return;
 }
+
+sub call {
+    my ($_test) = @_;
+
+    Runner::call_test($_test, $config_target, $config_batch, $config_environment, $config_wif_location);
+
+    return;
+}
