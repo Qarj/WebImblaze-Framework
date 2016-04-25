@@ -19,6 +19,40 @@ use File::Spec;
 sub start_test {
     my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
 
+    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
+
+    # wif.pl expects the current working directory to be where wif.pl is located
+    my $_orig_cwd = cwd;
+    chdir $_config_wif_location;
+
+    _start_windows_process('wif.pl '."@_args");
+
+    chdir $_orig_cwd;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub call_test {
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
+
+    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
+
+    # wif.pl expects the current working directory to be where wif.pl is located
+    my $_orig_cwd = cwd;
+    chdir $_config_wif_location;
+
+    system('wif.pl '."@_args");
+
+    chdir $_orig_cwd;
+
+    return;
+}
+
+#------------------------------------------------------------------
+sub _build_wif_args {
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
+
     my $_abs_test_file_full = File::Spec->rel2abs( $_test_file_full );
 
     my @_args;
@@ -41,15 +75,7 @@ sub start_test {
 
     push @_args, '--capture-stdout';
 
-    # wif.pl expects the current working directory to be where wif.pl is located
-    my $_orig_cwd = cwd;
-    chdir $_config_wif_location;
-
-    _start_windows_process('wif.pl '."@_args");
-
-    chdir $_orig_cwd;
-
-    return;
+    return @_args;
 }
 
 #------------------------------------------------------------------
