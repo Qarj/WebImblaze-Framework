@@ -154,6 +154,11 @@ td {
   color: DarkSlateGray;
   font-weight: bold; 
   text-decoration: none;
+  border-top-style: solid;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  border-color: DarkSlateGray;
 }
 
 .sanity_row {
