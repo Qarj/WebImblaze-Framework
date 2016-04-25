@@ -75,7 +75,7 @@ check_testfile_xml_parses_ok();
 # find out what run number we are up to today for this testcase file
 my ($run_number, $this_run_home) = create_run_number();
 
-capture_stdout($this_run_home);
+#capture_stdout($this_run_home);
 
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
@@ -119,7 +119,7 @@ publish_static_files($run_number);
 # tear down
 remove_temp_folder($temp_folder_name, $opt_keep);
 
-restore_stdout();
+#restore_stdout();
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -185,11 +185,12 @@ sub call_webinject_with_testfile {
 
     my $_stdout;
     if (defined $opt_capture_stdout) {
-        #capture
+        print {*STDOUT} "Capturing WebInject STDOUT...\n";
         eval { $_stdout = `webinject.pl @_args 2>&1`; };
         _write_file ($_this_run_home.'webinject_stdout.txt', $_stdout);
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
+        print {*STDOUT} "Running WebInject Inline...\n";
         system 'webinject.pl', @_args;
     }
 
@@ -205,9 +206,11 @@ sub capture_stdout {
     *OLD_STDOUT = *STDOUT;
     *OLD_STDERR = *STDERR;
 
-    open $std_fh, '>>', $_output_location.'wif_stdout.txt';
-    *STDOUT = $std_fh;
-    *STDERR = $std_fh;
+    if (defined $opt_capture_stdout) {
+        open $std_fh, '>>', $_output_location.'wif_stdout.txt';
+        *STDOUT = $std_fh;
+        *STDERR = $std_fh;
+    }
 
     return;
 }
@@ -215,8 +218,10 @@ sub capture_stdout {
 #------------------------------------------------------------------
 sub restore_stdout {
 
-    *STDOUT = *OLD_STDOUT;
-    *STDERR = *OLD_STDERR;   
+    if (defined $opt_capture_stdout) {
+        *STDOUT = *OLD_STDOUT;
+        *STDERR = *OLD_STDERR;
+    }
 
     return;
 }
@@ -1647,6 +1652,8 @@ sub _write_config {
 
 #------------------------------------------------------------------
 sub get_options_and_config {  #shell options
+
+    print "Reading config and options\n";
 
     _read_config();
 
