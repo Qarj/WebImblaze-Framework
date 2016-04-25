@@ -34,7 +34,7 @@ a:hover { color:#5BAB03; text-decoration: underline;}
 div { line-height:1.6em; }
 
 /* different colours for the results based on status */
-.pass { color:#5BAB03; }
+.pass { color:#5BAB03; font-weight:bold;}
 .fail { color:#FF5940; }
 .sanity { color:Fuchsia; }
 .corrupt { color:Black; }
@@ -81,7 +81,7 @@ td {
 
 .header_row, .footer_row {
   background: linear-gradient(to bottom, DarkSlateGray, #5B7778);
-  font-family: Arial;
+  font-family: Verdana;
   color: #D1E6E7;
   text-decoration: none;
 }
@@ -89,3 +89,8 @@ td {
 /*                      */
 /* END BASE TABLE CSS */
 /*                      */
+
+a:link { color:SlateGray; }
+
+/* visited link */
+a:visited { color:SlateGray; }

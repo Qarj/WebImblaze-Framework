@@ -34,7 +34,7 @@ a:hover { color:#5BAB03; text-decoration: underline;}
 div { line-height:1.6em; }
 
 /* different colours for the results based on status */
-.pass { color:#5BAB03; }
+.pass { color:#5BAB03; font-weight:bold;}
 .fail { color:#FF5940; }
 .sanity { color:Fuchsia; }
 .corrupt { color:Black; }
@@ -116,5 +116,5 @@ li { margin-bottom:0.4em; }
 li a { font-weight:bold;}
 
 /* do not want bullet points to appear */
-ul { list-style-type: none; padding:0; margin:0; }
+ul { list-style-type: none; padding:0; margin:0; font-size:1.3em; }
 

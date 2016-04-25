@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ use File::Copy qw(copy), qw(move);
 use Config::Tiny;
 use XML::Simple;
 use XML::Twig;
+require Data::Dumper;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -69,13 +70,13 @@ $today_home = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd";
 # generate a random folder for the temporary files
 $temp_folder_name = create_temp_folder();
 
-# check the testfile to ensure the XML parses - will die if it doesn't
-check_testfile_xml_parses_ok();
-
 # find out what run number we are up to today for this testcase file
 my ($run_number, $this_run_home) = create_run_number();
 
-#capture_stdout($this_run_home);
+capture_stdout($this_run_home);
+
+# check the testfile to ensure the XML parses - will die if it doesn't
+check_testfile_xml_parses_ok();
 
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
@@ -119,7 +120,7 @@ publish_static_files($run_number);
 # tear down
 remove_temp_folder($temp_folder_name, $opt_keep);
 
-#restore_stdout();
+restore_stdout();
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -185,12 +186,13 @@ sub call_webinject_with_testfile {
 
     my $_stdout;
     if (defined $opt_capture_stdout) {
-        print {*STDOUT} "Capturing WebInject STDOUT...\n";
+        print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_this_run_home"."webinject_stdout.txt\n";
+        print {*STDOUT} "    webinject.pl @_args\n";
         eval { $_stdout = `webinject.pl @_args 2>&1`; };
         _write_file ($_this_run_home.'webinject_stdout.txt', $_stdout);
+        print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
-        print {*STDOUT} "Running WebInject Inline...\n";
         system 'webinject.pl', @_args;
     }
 
@@ -203,6 +205,7 @@ sub call_webinject_with_testfile {
 sub capture_stdout {
     my ($_output_location) = @_;
 
+
     *OLD_STDOUT = *STDOUT;
     *OLD_STDERR = *STDERR;
 
@@ -210,6 +213,9 @@ sub capture_stdout {
         open $std_fh, '>>', $_output_location.'wif_stdout.txt';
         *STDOUT = $std_fh;
         *STDERR = $std_fh;
+
+        print {*STDOUT} "\nWebInject Framework Config:\n";
+        print {*STDOUT} Data::Dumper::Dumper ( $config );
     }
 
     return;
@@ -451,7 +457,6 @@ sub start_browsermob_proxy {
     my ($_testfile_contains_selenium) = @_;
 
     require LWP::UserAgent;
-    #require Data::Dumper;
 
     if (not defined $opt_use_browsermob_proxy) {
         return;
@@ -501,7 +506,6 @@ sub _http_put {
     my ($_url, $_body) = @_;
 
     require HTTP::Request;
-    require Data::Dumper;
 
     my $_agent = LWP::UserAgent->new;
     my $_request = HTTP::Request->new('PUT', $_url);
@@ -538,8 +542,6 @@ sub _http_put {
 #------------------------------------------------------------------
 sub _http_post {
     my ($_url, @_body) = @_;
-
-    require Data::Dumper;
 
     my $_response;
 
@@ -1653,8 +1655,6 @@ sub _write_config {
 #------------------------------------------------------------------
 sub get_options_and_config {  #shell options
 
-    print "Reading config and options\n";
-
     _read_config();
 
     # config file definition wins over hard coded defaults
@@ -1736,10 +1736,11 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 
 -t|--target                 target environment handle           --target skynet
 -b|--batch                  batch name for grouping results     --batch SmokeTests
--e|--env                    high level environment DEV, LIVE    --env UAT
+-e|--env                    high level environment DEV, LIVE    --env DEV
 -p|--use-browsermob-proxy   use browsermob-proxy                --use-browsermob-proxy true
 -n|--no-retry               do not invoke retries
 -u|--no-update-config       do not update config to reflect options
+-c|--capture-stdout         capture wif.pl and webinject.pl STDOUT
 -k|--keep                   keep temporary files
 
 wif.pl -v|--version
