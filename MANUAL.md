@@ -136,39 +136,39 @@ a .config file in the same folder.
 
 # wif.pl command line options
 
-`wif.pl --version`
+## `wif.pl --version`
 
-`wif.pl --help`
+## `wif.pl --help`
 
-`wif.pl tests/mytest.xml`
+## `wif.pl tests/mytest.xml`
 Runs the tests in mytest.xml.
 
-`wif.pl --target my_team`
+## `wif.pl --target my_team`
 Sets the 'mini-environment' to `my_team` and runs the last test with the saved options.
 
-`wif.pl --batch Priority_1_Tests`
+## `wif.pl --batch Priority_1_Tests`
 Sets the batch to `Priority_1_Tests` and runs the last test with the saved options.
 
-`wif.pl --env PROD`
+## `wif.pl --env PROD`
 Sets the environment to PROD and runs the last test with the saved options.
 
-`--use_browsermob_proxy`
+## `--use_browsermob_proxy`
 Starts BrowserMob Proxy, passes to WebInject the proxy port, then shuts down BrowserMob Proxy
 when the test is complete.
 
-`--no-retry`
+## `--no-retry`
 Tells WebInject to ignore the `retry` and `retryfromstep` parameters.
 
-`--no-update-config`
+## `--no-update-config`
 Tells wif.pl not to update wif.config with the current options. Important for running
 many tests in parallel - otherwise competing instances of wif.pl will try to update the
 wif.config file at the same time - and cause unknown problems.
 
-`--capture-stdout`
+## `--capture-stdout`
 When running through the command line, you'll see webinject.pl and wif.pl go straight
 to the command prompt. However when running a large set of tests from a service account,
 you will want the STDOUT output to be captured.
 
-`--keep`
+## `--keep`
 Tells wif.pl not to delete the temporary folder it created for WebInject's temporary files.
 For debug purposes.
