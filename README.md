@@ -70,3 +70,9 @@ wif.pl examples/post.xml --batch my_results
 You can view and drill into the results from this url:
 
 http://localhost/DEV/Summary.xml
+
+# The WebInject Framework Manual
+
+The manual contains full details on how to setup WebInject Framework.
+
+[WebInject Framework Manual - MANUAL.md](MANUAL.md)
