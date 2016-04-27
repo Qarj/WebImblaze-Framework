@@ -32,10 +32,11 @@ $VERSION = '0.03';
 use Getopt::Long;
 use File::Basename;
 use File::Spec;
-use Cwd;
-use Time::HiRes 'time','sleep';
 use File::Slurp;
 use File::Copy qw(copy), qw(move);
+use File::Path qw(make_path remove_tree);;
+use Cwd;
+use Time::HiRes 'time','sleep';
 use Config::Tiny;
 use XML::Simple;
 use XML::Twig;
@@ -1562,9 +1563,9 @@ sub remove_temp_folder {
         return;
     }
 
-    if (-e "temp/$_remove_folder") {
-        unlink glob 'temp/' . $_remove_folder . q{/*} or die "Could not delete temporary files in folder temp/$_remove_folder\n";
-    }
+    #if (-e "temp/$_remove_folder") {
+    #    unlink glob 'temp/' . $_remove_folder . q{/*} or die "Could not delete temporary files in folder temp/$_remove_folder\n";
+    #}
 
     my $_max = 30;
     my $_try = 0;
@@ -1573,7 +1574,7 @@ sub remove_temp_folder {
     {
         eval
         {
-            rmdir 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
+            remove_tree 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
         };
 
         if ( $@ and $_try++ < $_max )
