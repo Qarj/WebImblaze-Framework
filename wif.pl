@@ -1459,6 +1459,8 @@ sub create_webinject_config_file {
     _write_webinject_config('userdefined');
     _write_webinject_config('autoassertions');
     _write_webinject_config('smartassertions');
+    _write_webinject_config('baseurl_subs');
+    _write_webinject_config('content_subs');
     _write_webinject_wif_config($_run_number);
     print {$WEBINJECT_CONFIG} "</root>\n";
     close $WEBINJECT_CONFIG or die "\nCould not close $_config_file_full\n\n";
