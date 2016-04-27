@@ -185,12 +185,11 @@ sub call_webinject_with_testfile {
     my $_orig_cwd = cwd;
     chdir $webinject_location;
 
-    my $_stdout;
     if (defined $opt_capture_stdout) {
-        print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_this_run_home"."webinject_stdout.txt\n";
+        my $_wi_stdout_file_full = $_this_run_home."webinject_stdout.txt";
+        print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
         print {*STDOUT} "    webinject.pl @_args\n";
-        eval { $_stdout = `webinject.pl @_args 2>&1`; };
-        _write_file ($_this_run_home.'webinject_stdout.txt', $_stdout);
+        system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
