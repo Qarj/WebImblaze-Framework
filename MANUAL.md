@@ -126,6 +126,31 @@ Refer to the WebInject Manual, Configuration section.
 
 There examples in the example config - you can just delete them if you do not want them.
 
+### [baseurl_subs]
+WebInject creates an html file for every step result. WebInject will remap the http references in the html source
+back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example,
+change https references to http to get around test environment ssl certificate issues.
+
+Here is an example substitution:
+```
+https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
+```
+
+On the LHS of the three bars, we have the LHS of the regex. On the RHS we have the RHS of the regex substitution
+in the form of a Perl expression.
+
+### [content_subs]
+To change the step html response content, you can specify regular expressions in this section. They work
+in the same way as described in [baseurl_subs].
+
+Why would you want to do this? Some pages will try to redirect to somewhere else. Obviously this is not
+desirable since we want to see the actual result. So we do a substitution to break the redirect.
+
+Here is a very common example:
+```
+stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
+```
+
 ## DEV, PAT, PROD/_alias.config
 
 In each of the example environment config folders, there is an example _alias.config file containing
@@ -172,3 +197,37 @@ you will want the STDOUT output to be captured.
 ## `--keep`
 Tells wif.pl not to delete the temporary folder it created for WebInject's temporary files.
 For debug purposes.
+
+# tasks
+The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
+
+`Regression.pl` is another example showing how you can "start" a test, or "call" a test.
+
+If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
+parallel.
+
+If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script
+proceeds.
+
+For each tasks script file you create, you need to have a .config file with the same name.
+
+## .config [main] section
+
+### batch
+The batch name all tests kicked off by the task file will be organised under.
+
+A random number is appended to the batch name for each tasks file instantiation. This ensures you can tell
+the different test runs apart.
+
+### environment
+The target high level environment for all the tests in the batch.
+
+Examples: `DEV`, `PAT`, `UAT`, `PROD`
+
+### target
+The target 'mini-environment' - this could be a team name for example.
+
+## .config [path] section
+
+### wif_location
+The relative path to wif.pl.
