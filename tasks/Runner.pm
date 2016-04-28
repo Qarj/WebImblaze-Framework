@@ -115,14 +115,25 @@ sub read_config {
     my $_config = Config::Tiny->read( $_config_file_full );
 
     # main
-    my $_config_target = $_config->{main}->{target};
     my $_config_batch = $_config->{main}->{batch};
-    my $_config_environment = $_config->{main}->{environment};
 
     # path
     my $_config_wif_location = $_config->{path}->{wif_location};
 
-    return ($_config_target, $_config_batch, $_config_environment, $_config_wif_location);
+    return ($_config_batch, $_config_wif_location);
+}
+
+#------------------------------------------------------------------
+sub read_wif_config {
+    my ($_config_file_full) = @_;
+
+    my $_config = Config::Tiny->read( $_config_file_full );
+
+    # main
+    my $_config_target = $_config->{main}->{target};
+    my $_config_environment = $_config->{main}->{environment};
+
+    return ($_config_target, $_config_environment);
 }
 
 1;
