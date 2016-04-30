@@ -116,5 +116,5 @@ li { margin-bottom:0.4em; }
 li a { font-weight:bold;}
 
 /* do not want bullet points to appear */
-ul { list-style-type: none; padding:0; margin:0; font-size:1.3em; }
+ul { list-style-type: none; padding:0; margin:0; font-size:1.0em; }
 
