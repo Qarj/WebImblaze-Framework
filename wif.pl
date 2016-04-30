@@ -128,16 +128,16 @@ sub call_webinject_with_testfile {
     my ($_config_file_full, $_testfile_contains_selenium, $_selenium_port, $_proxy_port, $_this_run_home) = @_;
 
     my $_temp_folder_name = 'temp/' . $temp_folder_name;
-
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full );
     my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . q{/};
+    $_abs_temp_folder =~ s{/}{\\};
 
     #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
     #print {*STDOUT} "_abs_config_file_full: [$_abs_config_file_full]\n";
-    #print {*SDDOUT} "_abs_temp_folder: [$_abs_temp_folder]\n";
+    #print {*STDOUT} "_abs_temp_folder: [$_abs_temp_folder]\n";
 
     my @_args;
 
@@ -390,7 +390,7 @@ sub start_selenium_server {
     copy 'C:/selenium-server/chromedriver.exe', "temp/$temp_folder_name/chromedriver.eXe";
 
     # find free port
-    my $_selenium_port = _find_available_port(9001);
+    my $_selenium_port = _find_available_port(int(rand 999)+11_000);
     #print "_selenium_port:$_selenium_port\n";
 
     my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\chromedriver.eXe" );
