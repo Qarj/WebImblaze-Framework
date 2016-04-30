@@ -1196,9 +1196,9 @@ sub _build_batch_summary {
 sub _write_file {
     my ($_file_full, $_file_content) = @_;
 
-    open my $_FILE, '>', "$_file_full" or warn "\nWARN: Failed to create $_file_full\n\n";
+    open my $_FILE, '>', "$_file_full" or warn "\nWARN: Failed to open $_file_full for writing\n\n";
     print {$_FILE} $_file_content;
-    close $_FILE or die "\nWARN: Failed to close $_file_full\n\n";
+    close $_FILE or warn "\nWARN: Failed to close $_file_full\n\n";
 
     return;
 }
@@ -1363,7 +1363,7 @@ sub _lock_file {
             #if ( ($_try / 25) == int($_try / 25) ) {
                 print {*STDOUT} "WARN: $@    Failed try $_try to lock $_file_to_lock_full\n    Lock file: $_locked_file_indicator".q{_}."$temp_folder_name\n";
             #}
-            sleep rand 0.3;
+            sleep rand 1;
             redo ATTEMPT;
         }
     }
