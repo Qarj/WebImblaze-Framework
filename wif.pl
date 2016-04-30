@@ -186,7 +186,7 @@ sub call_webinject_with_testfile {
     chdir $webinject_location;
 
     if (defined $opt_capture_stdout) {
-        my $_wi_stdout_file_full = $_this_run_home."webinject_stdout.txt";
+        my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
         print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
         print {*STDOUT} "    webinject.pl @_args\n";
         system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
@@ -210,9 +210,9 @@ sub capture_stdout {
     *OLD_STDERR = *STDERR;
 
     if (defined $opt_capture_stdout) {
-        open $std_fh, '>>', $_output_location.'wif_stdout.txt';
-        *STDOUT = $std_fh;
-        *STDERR = $std_fh;
+        open $std_fh, '>>', $_output_location.'wif_stdout.txt' or warn "Could not create a file for WIF STDOUT\n"; ## no critic(InputOutput::RequireBriefOpen)
+        *STDOUT = $std_fh; ## no critic(Variables::RequireLocalizedPunctuationVars)
+        *STDERR = $std_fh; ## no critic(Variables::RequireLocalizedPunctuationVars)
 
         print {*STDOUT} "\nWebInject Framework Config:\n";
         print {*STDOUT} Data::Dumper::Dumper ( $config );
@@ -225,8 +225,8 @@ sub capture_stdout {
 sub restore_stdout {
 
     if (defined $opt_capture_stdout) {
-        *STDOUT = *OLD_STDOUT;
-        *STDERR = *OLD_STDERR;
+        *STDOUT = *OLD_STDOUT; ## no critic(Variables::RequireLocalizedPunctuationVars)
+        *STDERR = *OLD_STDERR; ## no critic(Variables::RequireLocalizedPunctuationVars)
     }
 
     return;
@@ -813,9 +813,12 @@ sub _write_corrupt_record {
 #------------------------------------------------------------------
 sub build_summary_of_batches {
 
-    my $_batch_summary_record_full = "$today_home/All_Batches/$opt_batch".'_summary.record';
+    # multiple batches could be running at the same time
+    my $_overall_summary_full = "$today_home/All_Batches/Summary.xml";
+    _lock_file( $_overall_summary_full );
 
-    _lock_file( $_batch_summary_record_full );
+    my $_batch_summary_record_full = "$today_home/All_Batches/$opt_batch".'_summary.record';
+    _lock_file( $_batch_summary_record_full ); # possibly unecessary to do this since a higher level file already has a lock
 
     _write_summary_record( $_batch_summary_record_full );
 
@@ -840,15 +843,13 @@ sub build_summary_of_batches {
     $_summary .= qq|    </channel>\n|;
     $_summary .= qq|</summary>\n|;
 
-    # dump summary xml file from memory into file system
-    my $_overall_summary_full = "$today_home/All_Batches/Summary.xml";
-
     # save the file to todays area, and a copy to environment root
     _write_file ( $_overall_summary_full, $_summary );
     _write_file ( $web_server_location_full."/$opt_environment/Summary.xml", $_summary );
 
-    # unlock batch xml file
+    # unlock the locked files
     _unlock_file( $_batch_summary_record_full );
+    _unlock_file( $_overall_summary_full );
 
     return;
 }
@@ -1195,9 +1196,9 @@ sub _build_batch_summary {
 sub _write_file {
     my ($_file_full, $_file_content) = @_;
 
-    open my $_FILE, '>', "$_file_full" or die "\nERROR: Failed to create $_file_full\n\n";
+    open my $_FILE, '>', "$_file_full" or warn "\nWARN: Failed to create $_file_full\n\n";
     print {$_FILE} $_file_content;
-    close $_FILE or die "\nERROR: Failed to close $_file_full\n\n";
+    close $_FILE or die "\nWARN: Failed to close $_file_full\n\n";
 
     return;
 }
@@ -1321,7 +1322,7 @@ sub _unlock_file {
     my $_unlocked_file_indicator = $_file_to_unlock_full.'_Unlocked';
     my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_unlock_full);
     #print "    move\n$_locked_file_indicator".'_'."$temp_folder_name\n".$_unlocked_file_indicator."\n\n";
-    move $_locked_file_indicator."_$temp_folder_name", $_unlocked_file_indicator; 
+    move $_locked_file_indicator."_$temp_folder_name", $_unlocked_file_indicator;
 
     return;
 }
@@ -1391,8 +1392,8 @@ sub _lock_file {
 sub _touch {
     my ($_file_full) = @_;
 
-    open my $TOUCHFILE, '>', "$_file_full" or die "\nERROR: Failed to create $_file_full\n\n";
-    close $TOUCHFILE or die "\nERROR: Failed to close $_file_full\n\n";
+    open my $TOUCHFILE, '>', "$_file_full" or warn "\nERROR: Failed to create $_file_full\n\n";
+    close $TOUCHFILE or warn "\nERROR: Failed to close $_file_full\n\n";
 
     return;
 }
@@ -1452,7 +1453,7 @@ sub create_webinject_config_file {
         $global_config = Config::Tiny->read( 'environment_config/_global.config' );
     }
 
-    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
+    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml"; ## no critic(InputOutput::RequireBriefOpen)
     open $WEBINJECT_CONFIG, '>' ,"$_config_file_full" or die "\nERROR: Failed to open $_config_file_full for writing\n\n";
     print {$WEBINJECT_CONFIG} "<root>\n";
     _write_webinject_config('main');
