@@ -826,7 +826,7 @@ sub build_summary_of_batches {
     my @_summary_records = glob("$today_home/All_Batches/".'*.record');
 
     # sort by date created, ascending
-    my @_sorted_summary = reverse sort { -C $a <=> -C $b } @_summary_records;
+    my @_sorted_summary = sort { -C $a <=> -C $b } @_summary_records;
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
