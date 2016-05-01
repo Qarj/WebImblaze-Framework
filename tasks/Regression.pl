@@ -9,7 +9,10 @@ use warnings;
 use vars qw/ $VERSION /;
 use File::Basename;
 
-$VERSION = '0.02';
+$VERSION = '0.03';
+
+my $this_script_folder_full = dirname(__FILE__);
+chdir $this_script_folder_full;
 
 require Runner;
 
@@ -17,7 +20,8 @@ local $| = 1; # don't buffer output to STDOUT
 
 my ($script_name, $script_path) = fileparse($0,'.pl');
 
-my ($config_batch, $config_wif_location) = Runner::read_config($script_name.'.config');
+my $config_wif_location = "../";
+my $config_batch = $script_name;
 my ($config_target, $config_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
 
 # add a random number to the batch name so this run will have a different name to a previous run
