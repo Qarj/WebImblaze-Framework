@@ -208,26 +208,3 @@ parallel.
 
 If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script
 proceeds.
-
-For each tasks script file you create, you need to have a .config file with the same name.
-
-## .config [main] section
-
-### batch
-The batch name all tests kicked off by the task file will be organised under.
-
-A random number is appended to the batch name for each tasks file instantiation. This ensures you can tell
-the different test runs apart.
-
-### environment
-The target high level environment for all the tests in the batch.
-
-Examples: `DEV`, `PAT`, `UAT`, `PROD`
-
-### target
-The target 'mini-environment' - this could be a team name for example.
-
-## .config [path] section
-
-### wif_location
-The relative path to wif.pl.
