@@ -1568,7 +1568,7 @@ sub create_temp_folder {
     $_random = sprintf '%05d', $_random; # add some leading zeros
 
     my $_random_folder = $opt_target . '_' . $testfile_name . '_' . $_random;
-    mkdir 'temp/' . $_random_folder or die "\n\nCould not create temporary folder temp/$_random_folder\n";
+    make_path 'temp/' . $_random_folder or die "\n\nCould not create temporary folder temp/$_random_folder\n";
 
     return $_random_folder;
 }
