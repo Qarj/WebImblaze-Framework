@@ -1674,7 +1674,31 @@ sub _write_config {
 }
 
 #------------------------------------------------------------------
-sub get_options_and_config {  #shell options
+sub _locate_file {
+    my ($_file) = @_;
+
+    require File::Find::Rule;
+
+    my ($_file_name, $_file_path) = fileparse($_file,'.xml');
+    if ($_file_name eq $_file) { $_file .= '.xml'; }
+
+    my @_folders = ('tests', '../WebInject/examples', '../WebInject/selftest', q{.});
+
+    my @_files = File::Find::Rule->file()
+                                 ->name( $_file )
+                                 ->in( @_folders );
+
+    if (@_files) {
+        $_file = $_files[0];
+        print "Test case file [$_file]\n";
+    }
+    #foreach (@_files) { print "file:$_\n"; }
+
+    return $_file;
+}
+
+#------------------------------------------------------------------
+sub get_options_and_config {
 
     _read_config();
 
@@ -1712,7 +1736,7 @@ sub get_options_and_config {  #shell options
         exit;
     }
 
-    # read the testfile name, and ensure it exists
+    # ensure we were supplied with a test case file - either from command line, or wif.config
     if (($#ARGV + 1) < 1) {
         if (not defined $testfile_full) {
             print {*STDOUT} "\nERROR: No test file name specified at command line or found in wif.config\n";
@@ -1722,15 +1746,20 @@ sub get_options_and_config {  #shell options
     } else {
         $testfile_full = $ARGV[0];
     }
+
+    if (not -e $testfile_full) {
+        $testfile_full = _locate_file($testfile_full);
+        if (not -e $testfile_full) {
+            die "\n\nERROR: no such test file found $testfile_full\n";
+        }
+    }
+
     ($testfile_name, $testfile_path) = fileparse($testfile_full,'.xml');
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     $testfile_parent_folder_name =  basename ( dirname($_abs_testfile_full) );
     # done like this in case we were told the test file is in "./" - we need the complete name for reporting purposes
 
-    if (not -e $testfile_full) {
-        die "\n\nERROR: no such test file found $testfile_full\n";
-    }
 
     if (not defined $opt_target) {
         print {*STDOUT} "\n\nERROR: Target sub environment name must be specified\n";
