@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.03';
+$VERSION = '1.00';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

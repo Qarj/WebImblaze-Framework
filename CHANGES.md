@@ -5,6 +5,13 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.00 - May 2, 2016
+* fixed a bug with file unlocking
+* STDOUT and STDERR for wif.pl and webinject.pl can be captured and linked to from the results
+* workaround for Selenium server port 
+* auto creates temp/ folder if needed
+* tasks like Regression.pl do not need config files any more
+
 ### Version 0.03 - Apr 25, 2016
 * improved file locking logic
 * improved css styles

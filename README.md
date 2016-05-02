@@ -1,4 +1,4 @@
-# WebInject Framework 0.03
+# WebInject Framework 1.00
 
 Automated regression testing framework for
 * managing WebInject configuration
