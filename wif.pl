@@ -1733,6 +1733,9 @@ sub get_options_and_config {
     if ($opt_help) {
         print_version();
         print_usage();
+        print "\nTest case file $testfile_full\n";
+        print "Target         [$opt_environment] $opt_target\n";
+        print "Batch          $opt_batch\n";
         exit;
     }
 
