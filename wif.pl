@@ -42,6 +42,9 @@ use XML::Simple;
 use XML::Twig;
 require Data::Dumper;
 
+my $this_script_folder_full = dirname(__FILE__);
+chdir $this_script_folder_full;
+
 local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
