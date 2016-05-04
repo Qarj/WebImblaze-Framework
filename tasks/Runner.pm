@@ -10,8 +10,9 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.01';
+$VERSION = '0.03';
 
+use Getopt::Long;
 use Cwd;
 use Config::Tiny;
 use File::Spec;
@@ -83,7 +84,7 @@ sub _start_windows_process {
     my ($_command) = @_;
 
     my $_cwd = cwd;
-    my $_wmic = "wmic process call create 'cmd /c cd $_cwd & $_command'"; #
+    my $_wmic = "wmic process call create 'cmd /c cd /D $_cwd & $_command'"; #
 
     my $_result;
     $_result = `$_wmic`;
@@ -135,5 +136,60 @@ sub read_wif_config {
 
     return ($_config_target, $_config_environment);
 }
+
+#------------------------------------------------------------------
+sub get_options {
+    my ($_opt_target, $_opt_batch, $_config_environment) = @_;
+
+    my ($_opt_version, $_opt_help);
+
+    Getopt::Long::Configure('bundling');
+    GetOptions(
+        't|target=s'                => \$_opt_target,
+        'b|batch=s'                 => \$_opt_batch,
+        'v|V|version'               => \$_opt_version,
+        'h|help'                    => \$_opt_help,
+        )
+        or do {
+            print_usage();
+            exit;
+        };
+
+    if ($_opt_version) {
+        print_version();
+        exit;
+    }
+
+    if ($_opt_help) {
+        print_version();
+        print_usage();
+        print "\nTarget         [$_config_environment] $_opt_target\n";
+        print "Batch          $_opt_batch\n";
+        exit;
+    }
+
+    return $_opt_target, $_opt_batch;
+}
+
+sub print_version {
+    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n";
+    return;
+}
+
+sub print_usage {
+    print <<'EOB'
+
+Usage: <task_name>.pl tests\testfilename.xml <<options>>
+
+-t|--target                 target "mini-environment"           --target skynet
+-b|--batch                  batch name for grouping results     --batch Smoke
+
+Smoke.pl -v|--version
+Smoke.pl -h|--help
+EOB
+;
+return;
+}
+#------------------------------------------------------------------
 
 1;

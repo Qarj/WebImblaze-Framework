@@ -21,11 +21,13 @@ local $| = 1; # don't buffer output to STDOUT
 my ($script_name, $script_path) = fileparse($0,'.pl');
 
 my $config_wif_location = "../";
-my $config_batch = $script_name;
-my ($config_target, $config_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
+my $opt_batch = $script_name;
+my ($opt_target, $config_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
+
+($opt_target, $opt_batch) = Runner::get_options($opt_target, $opt_batch, $config_environment);
 
 # add a random number to the batch name so this run will have a different name to a previous run
-$config_batch .= Runner::random(99_999);
+$opt_batch .= Runner::random(99_999);
 
 # specify the location of the test files relative to this script
 start('../../WebInject/examples/command.xml');
@@ -42,7 +44,7 @@ start('../../WebInject/examples/command.xml');
 sub start {
     my ($_test) = @_;
 
-    Runner::start_test($_test, $config_target, $config_batch, $config_environment, $config_wif_location);
+    Runner::start_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
 
     return;
 }
@@ -50,7 +52,7 @@ sub start {
 sub call {
     my ($_test) = @_;
 
-    Runner::call_test($_test, $config_target, $config_batch, $config_environment, $config_wif_location);
+    Runner::call_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
 
     return;
 }
