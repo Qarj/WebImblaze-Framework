@@ -9,7 +9,7 @@ use warnings;
 use vars qw/ $VERSION /;
 use File::Basename;
 
-$VERSION = '0.03';
+$VERSION = '1.01';
 
 my $this_script_folder_full = dirname(__FILE__);
 chdir $this_script_folder_full;

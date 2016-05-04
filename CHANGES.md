@@ -5,6 +5,11 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.01 - May 4, 2016
+* find test case file when folder not specified, and also without xml extension
+* command line options now accepted for tasks --target and --batch
+* tweaks to robustness with many parallel instances of wif.pl
+
 ### Version 1.00 - May 2, 2016
 * fixed a bug with file unlocking
 * STDOUT and STDERR for wif.pl and webinject.pl can be captured and linked to from the results

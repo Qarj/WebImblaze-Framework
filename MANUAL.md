@@ -1,4 +1,4 @@
-# WebInject Framework 1.00 Manual
+# WebInject Framework 1.01 Manual
 
 # wif.config
 
@@ -167,6 +167,9 @@ a .config file in the same folder.
 
 ## `wif.pl tests/mytest.xml`
 Runs the tests in mytest.xml.
+
+## `wif.pl mytest`
+Will search sub folders of ./ for mytest.xml and will run the first one found.
 
 ## `wif.pl --target my_team`
 Sets the 'mini-environment' to `my_team` and runs the last test with the saved options.
