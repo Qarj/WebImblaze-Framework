@@ -1376,7 +1376,7 @@ sub _lock_file {
     # now to actually lock the file
     # we do this by renaming the Unlocked indicator file to the name Locked_filename.filesufix_tempfoldername
     # the temp folder name is unique to this process
-    my $_max = 200;
+    my $_max = 6;
     my $_try = 0;
     ATTEMPT:
     {
@@ -1391,7 +1391,7 @@ sub _lock_file {
             #if ( ($_try / 25) == int($_try / 25) ) {
                 print {*STDOUT} "WARN: $@    Failed try $_try to lock $_file_to_lock_full\n    Lock file: $_locked_file_indicator".q{_}."$temp_folder_name\n";
             #}
-            sleep rand 1;
+            sleep rand $_try;
             redo ATTEMPT;
         }
     }
