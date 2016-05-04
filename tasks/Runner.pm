@@ -22,7 +22,7 @@ sub start_test {
 
     my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
 
-    # wif.pl expects the current working directory to be where wif.pl is located
+    # change dir to wif.pl location
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
@@ -39,7 +39,7 @@ sub call_test {
 
     my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
 
-    # wif.pl expects the current working directory to be where wif.pl is located
+    # change dir to wif.pl location
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
