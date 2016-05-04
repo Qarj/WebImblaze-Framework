@@ -1624,6 +1624,11 @@ sub remove_temp_folder {
 
 #------------------------------------------------------------------
 sub _read_config {
+
+    if (not -e 'wif.config') {
+        die "\nERROR: ./wif.config not found\n";
+    }
+
     $config = Config::Tiny->read( 'wif.config' );
 
     # main
