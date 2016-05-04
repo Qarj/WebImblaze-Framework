@@ -859,7 +859,22 @@ sub _write_summary_record {
     my ($_file_full) = @_;
 
     my $_twig = XML::Twig->new();
-    $_twig->parsefile( "$today_home/All_Batches/$opt_batch".'.xml' );
+
+    my $_max = 5;
+    my $_try = 0;
+    ATTEMPT:
+    {
+        eval {
+            $_twig->parsefile( "$today_home/All_Batches/$opt_batch".'.xml' );
+        }; # eval needs a semicolon
+
+        if ( $@ and $_try++ < $_max ) {
+            print {*STDOUT} "WARN: $@    Failed try $_try to parse"."$today_home/All_Batches/$opt_batch".".xml\n";
+            sleep rand $_try;
+            redo ATTEMPT;
+        }
+    }
+
     my $_root = $_twig->root;
 
     my $_start_time = _get_earliest_start_time($_root);
@@ -1201,19 +1216,14 @@ sub _write_file {
     ATTEMPT:
     {
         eval {
-            #print "move\n$_unlocked_file_indicator\n"."$_locked_file_indicator".'_'."$temp_folder_name\n\n";
             open my $_FILE, '>', "$_file_full" or die "\nWARN: Failed to open $_file_full for writing\n\n";
             print {$_FILE} $_file_content;
             close $_FILE or die "\nWARN: Failed to close $_file_full\n\n";
         }; # eval needs a semicolon
 
-        # if we failed to lock the file but there are attempts remaining
         if ( $@ and $_try++ < $_max ) {
-            # only write a message to STDOUT every 25 attempts
-            #if ( ($_try / 25) == int($_try / 25) ) {
-                print {*STDOUT} "WARN: $@    Failed try $_try to write file\n";
-            #}
-            sleep rand 5;
+            print {*STDOUT} "WARN: $@    Failed try $_try to write file\n";
+            sleep rand $_try;
             redo ATTEMPT;
         }
     }
