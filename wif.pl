@@ -674,6 +674,9 @@ sub _copy {
     my @_source_files = glob $_source;
 
     foreach my $_source_file (@_source_files) {
+        if (defined $opt_capture_stdout) {
+            print "copy $_source_file, $_dest\n";
+        }
         copy $_source_file, $_dest;
     }
 
