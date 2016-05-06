@@ -1398,10 +1398,16 @@ sub _lock_file {
 
         # if we failed to lock the file but there are attempts remaining
         if ( $@ and $_try++ < $_max ) {
-            # only write a message to STDOUT every 25 attempts
-            #if ( ($_try / 25) == int($_try / 25) ) {
-                print {*STDOUT} "WARN: $@    Failed try $_try to lock $_file_to_lock_full\n    Lock file: $_locked_file_indicator".q{_}."$temp_folder_name\n";
-            #}
+            print {*STDOUT} "WARN: $@    Failed try $_try to lock $_file_to_lock_full\n    Want lock :$_locked_file_indicator".q{_}."$temp_folder_name\n";
+            my @_locked = glob $_locked_file_indicator.'_*';
+            foreach (@_locked) {
+                print '    found lock:'.$_."\n";
+            }
+            if (not -e $_unlocked_file_indicator) {
+                print '    no unlock :'.$_unlocked_file_indicator."\n";
+            } else {
+                print '    unlocked!!:'.$_unlocked_file_indicator."\n";
+            }
             sleep rand $_try;
             redo ATTEMPT;
         }
