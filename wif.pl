@@ -1232,6 +1232,11 @@ sub _write_file {
             sleep rand $_try;
             redo ATTEMPT;
         }
+
+        if ( $@ ) {
+            print {*STDOUT} "ERROR: Failed $_max attempts to write file $_file_full, gave up.\n";
+        }
+
     }
 
     return;
