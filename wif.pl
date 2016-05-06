@@ -864,12 +864,13 @@ sub build_summary_of_batches {
 sub _write_summary_record {
     my ($_file_full) = @_;
 
-    my $_twig = XML::Twig->new();
+    my $_twig;
 
     my $_max = 5;
     my $_try = 0;
     ATTEMPT:
     {
+        $_twig = XML::Twig->new();
         eval {
             $_twig->parsefile( "$today_home/All_Batches/$opt_batch".'.xml' );
         }; # eval needs a semicolon
