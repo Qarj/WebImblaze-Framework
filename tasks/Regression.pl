@@ -30,15 +30,10 @@ my ($opt_target, $config_environment) = Runner::read_wif_config($config_wif_loca
 $opt_batch .= Runner::random(99_999);
 
 # specify the location of the test files relative to this script
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
-start('../../WebInject/examples/command.xml');
+
+for (1..40) {
+    start('../../WebInject/examples/command.xml');
+}
 
 
 sub start {
