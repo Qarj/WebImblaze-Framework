@@ -1361,7 +1361,9 @@ sub _unlock_file {
 
     my $_unlocked_file_indicator = $_file_to_unlock_full.'_Unlocked';
     my $_locked_file_indicator = _prepend_to_filename('Locked_', $_file_to_unlock_full);
-    #print "    move\n$_locked_file_indicator".'_'."$temp_folder_name\n".$_unlocked_file_indicator."\n\n";
+    if (defined $opt_capture_stdout) {
+        print "    move\n        $_locked_file_indicator".'_'."$temp_folder_name\n        ".$_unlocked_file_indicator."\n\n";
+    }
     move $_locked_file_indicator."_$temp_folder_name", $_unlocked_file_indicator;
 
     return;
