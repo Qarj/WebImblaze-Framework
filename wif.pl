@@ -1526,7 +1526,7 @@ sub _write_webinject_config {
     }
 
     foreach my $_parameter (sort keys %{$environment_config->{$_section}}) {
-        if ( $target_config->{$_section}->{$_parameter} ) {
+        if ( defined $target_config->{$_section}->{$_parameter} ) {
             # _target_config takes priority - parameter has already been written
             next;
         }
@@ -1537,12 +1537,12 @@ sub _write_webinject_config {
     }
 
     foreach my $_parameter (sort keys %{$global_config->{$_section}}) {
-        if ( $target_config->{$_section}->{$_parameter} ) {
+        if ( defined $target_config->{$_section}->{$_parameter} ) {
             # _target_config takes priority - parameter has already been written
             next;
         }
 
-        if ( $environment_config->{$_section}->{$_parameter} ) {
+        if ( defined $environment_config->{$_section}->{$_parameter} ) {
             # _environment_config takes priority - parameter has already been written
             next;
         }
