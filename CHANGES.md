@@ -5,6 +5,9 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.03 - May 11, 2016
+* automatically switch environment if target not found but can be found an another environment
+
 ### Version 1.02 - May 11, 2016
 * no longer have to cd to wif.pl folder before starting it
 * use make_path to make folders, will not die if folder already exists
