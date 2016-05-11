@@ -5,6 +5,12 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.02 - May 11, 2016
+* no longer have to cd to wif.pl folder before starting it
+* use make_path to make folders, will not die if folder already exists
+* fixed write batch summary record retry
+* fixed a rare bug with processing the environment config
+
 ### Version 1.01 - May 4, 2016
 * find test case file when folder not specified, and also without xml extension
 * command line options now accepted for tasks --target and --batch
