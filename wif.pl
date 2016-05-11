@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.02';
+$VERSION = '1.03';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -1460,28 +1460,6 @@ sub _prepend_to_filename {
 sub create_webinject_config_file {
     my ($_run_number) = @_;
 
-    if ( not -e "environment_config/$opt_environment.config" ) {
-        die "Could not find environment_config/$opt_environment.config\n";
-    }
-
-    if ( not -e "environment_config/$opt_environment" ) {
-        die "Could not find folder environment_config/$opt_environment\n";
-    }
-
-    # if $opt_target contains an alias, change it to the real value
-    my $_alias = Config::Tiny->new;
-    if (-e "environment_config/$opt_environment/_alias.config") {
-        $_alias = Config::Tiny->read( "environment_config/$opt_environment/_alias.config" );
-
-        if (defined $_alias->{_}->{$opt_target}) {
-            $opt_target = $_alias->{_}->{$opt_target};
-        }
-    }
-
-    if (not -e "environment_config/$opt_environment/$opt_target.config") {
-        die "Could not find environment_config/$opt_environment/$opt_target.config\n";
-    }
-
     $target_config = Config::Tiny->read( "environment_config/$opt_environment/$opt_target.config" );
 
     $environment_config = Config::Tiny->read( "environment_config/$opt_environment.config" );
@@ -1506,6 +1484,73 @@ sub create_webinject_config_file {
     my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'.xml');
 
     return $_config_file_full, $_config_file_name, $_config_file_path;
+}
+
+#------------------------------------------------------------------
+sub _check_target {
+    my ($_env, $_orig_target) = @_;
+
+    # if the target exists for the environment, then we are done
+    if (-e "environment_config/$_env/$_orig_target.config") {
+        return $_env, $_orig_target;
+    }
+
+    # perhaps the target is an alias within the current environment
+    my $_target = _get_alias($_env, $_orig_target);
+    if (-e "environment_config/$_env/$_target.config") {
+        return $_env, $_target;
+    }
+
+    # ok, maybe the target is for another environment, lets check them all and switch to that environment if found
+    my @_files = glob 'environment_config/*';
+    foreach (@_files) {
+        if (-d $_) {
+            my $_candidate = $_;
+            $_candidate =~ s{.*/}{}; # remove environment_config/
+            if (-e "environment_config/$_candidate/$_orig_target.config") {
+                print {*STDOUT} "Switched Environment [$_env] to [$_candidate]\n";
+                return $_candidate, $_orig_target;
+            }
+            $_target = _get_alias($_candidate, $_orig_target);
+            if (-e "environment_config/$_candidate/$_target.config") {
+                print {*STDOUT} "Switched Environment [$_env] to [$_candidate]\n";
+                return $_candidate, $_target;
+            }
+        }
+    }
+
+    if ( not -e "environment_config/$opt_environment.config" ) {
+        die "Could not find environment_config/$opt_environment.config\n";
+    }
+
+    if ( not -e "environment_config/$opt_environment" ) {
+        die "Could not find folder environment_config/$opt_environment\n";
+    }
+
+    if (not -e "environment_config/$opt_environment/$opt_target.config") {
+        die "Could not find environment_config/$opt_environment/$opt_target.config\n";
+    }
+
+    return $_env, $_orig_target;
+}
+
+#------------------------------------------------------------------
+sub _get_alias {
+    my ($_env, $_orig_target) = @_;
+
+    my $_target = $_orig_target;
+    # if $opt_target contains an alias, change it to the real value
+    my $_alias = Config::Tiny->new;
+    if (-e "environment_config/$_env/_alias.config") {
+        $_alias = Config::Tiny->read( "environment_config/$_env/_alias.config" );
+
+        if (defined $_alias->{_}->{$_orig_target}) {
+            $_target = $_alias->{_}->{$_orig_target};
+            print {*STDOUT} "[$_orig_target] is alias for [$_target]\n";
+        }
+    }
+
+    return $_target;
 }
 
 #------------------------------------------------------------------
@@ -1792,6 +1837,8 @@ sub get_options_and_config {
         print {*STDOUT} "\n\nERROR: Target sub environment name must be specified\n";
         exit;
     }
+
+    ($opt_environment, $opt_target) = _check_target($opt_environment, $opt_target);
 
     # now we know what the preferred settings are, save them for next time
     if ( not defined $_opt_no_update_config ) {
