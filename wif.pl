@@ -58,7 +58,6 @@ my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
 my $global_config = Config::Tiny->new;
 my $environment_config = Config::Tiny->new;
-my $WEBINJECT_CONFIG;
 my ( $std_fh );
 # end globally read/write variables
 
@@ -1468,18 +1467,18 @@ sub create_webinject_config_file {
         $global_config = Config::Tiny->read( 'environment_config/_global.config' );
     }
 
-    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml"; ## no critic(InputOutput::RequireBriefOpen)
-    open $WEBINJECT_CONFIG, '>' ,"$_config_file_full" or die "\nERROR: Failed to open $_config_file_full for writing\n\n";
-    print {$WEBINJECT_CONFIG} "<root>\n";
-    _write_webinject_config('main');
-    _write_webinject_config('userdefined');
-    _write_webinject_config('autoassertions');
-    _write_webinject_config('smartassertions');
-    _write_webinject_config('baseurl_subs');
-    _write_webinject_config('content_subs');
-    _write_webinject_wif_config($_run_number);
-    print {$WEBINJECT_CONFIG} "</root>\n";
-    close $WEBINJECT_CONFIG or die "\nCould not close $_config_file_full\n\n";
+    my $_webinject_config = "<root>\n";
+    $_webinject_config .= _write_webinject_config('main');
+    $_webinject_config .= _write_webinject_config('userdefined');
+    $_webinject_config .= _write_webinject_config('autoassertions');
+    $_webinject_config .= _write_webinject_config('smartassertions');
+    $_webinject_config .= _write_webinject_config('baseurl_subs');
+    $_webinject_config .= _write_webinject_config('content_subs');
+    $_webinject_config .= _write_webinject_wif_config($_run_number);
+    $_webinject_config .=  "</root>\n";
+
+    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
+    _write_file($_config_file_full, $_webinject_config);
 
     my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'.xml');
 
@@ -1557,17 +1556,19 @@ sub _get_alias {
 sub _write_webinject_config {
     my ($_section) = @_;
 
+    my $_config;
+
     # config parameters defined under [main] will be written at the root level of the WebInject config
     my $_indent = q{};
     if (not $_section eq 'main') {
         $_indent = q{    };
-        print {$WEBINJECT_CONFIG} "    <$_section>\n";
+        $_config .= "    <$_section>\n";
     }
 
     foreach my $_parameter (sort keys %{$target_config->{$_section}}) {
-        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
-        print {$WEBINJECT_CONFIG} "$target_config->{$_section}->{$_parameter}";
-        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+        $_config .= "    $_indent<$_parameter>";
+        $_config .= "$target_config->{$_section}->{$_parameter}";
+        $_config .= "</$_parameter>\n";
     }
 
     foreach my $_parameter (sort keys %{$environment_config->{$_section}}) {
@@ -1576,9 +1577,9 @@ sub _write_webinject_config {
             next;
         }
 
-        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
-        print {$WEBINJECT_CONFIG} "$environment_config->{$_section}->{$_parameter}";
-        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+        $_config .= "    $_indent<$_parameter>";
+        $_config .= "$environment_config->{$_section}->{$_parameter}";
+        $_config .= "</$_parameter>\n";
     }
 
     foreach my $_parameter (sort keys %{$global_config->{$_section}}) {
@@ -1592,29 +1593,31 @@ sub _write_webinject_config {
             next;
         }
 
-        print {$WEBINJECT_CONFIG} "    $_indent<$_parameter>";
-        print {$WEBINJECT_CONFIG} "$global_config->{$_section}->{$_parameter}";
-        print {$WEBINJECT_CONFIG} "</$_parameter>\n";
+        $_config .= "    $_indent<$_parameter>";
+        $_config .= "$global_config->{$_section}->{$_parameter}";
+        $_config .= "</$_parameter>\n";
     }
 
     if (not $_section eq 'main') {
-        print {$WEBINJECT_CONFIG} "    </$_section>\n";
+        $_config .= "    </$_section>\n";
     }
 
-    return;
+    return $_config;
 }
 
 #------------------------------------------------------------------
 sub _write_webinject_wif_config {
     my ($_run_number) = @_;
 
-    print {$WEBINJECT_CONFIG} "    <wif>\n";
-    print {$WEBINJECT_CONFIG} "        <batch>$opt_batch</batch>\n";
-    print {$WEBINJECT_CONFIG} "        <folder>$testfile_parent_folder_name</folder>\n";
-    print {$WEBINJECT_CONFIG} "        <run_number>$_run_number</run_number>\n";
-    print {$WEBINJECT_CONFIG} "    </wif>\n";
+    my $_config;
 
-    return;
+    $_config .= "    <wif>\n";
+    $_config .= "        <batch>$opt_batch</batch>\n";
+    $_config .= "        <folder>$testfile_parent_folder_name</folder>\n";
+    $_config .= "        <run_number>$_run_number</run_number>\n";
+    $_config .= "    </wif>\n";
+
+    return $_config;
 }
 #------------------------------------------------------------------
 sub get_web_server_location {
