@@ -32,9 +32,6 @@ start('../../WebInject/selftest/addheader.xml');
 start('../../WebInject/selftest/assertcount.xml');
 start('../../WebInject/selftest/assertionskips.xml');
 start('../../WebInject/selftest/autocontrolleronly.xml');
-start('../../WebInject/selftest/checknegative.xml');
-start('../../WebInject/selftest/checkpositive.xml');
-start('../../WebInject/selftest/checkresponsecode.xml');
 start('../../WebInject/selftest/commandonerror.xml');
 start('../../WebInject/selftest/decodequotedprintable.xml');
 start('../../WebInject/selftest/errormessage.xml');
@@ -73,6 +70,7 @@ start('../../WebInject/selftest/verifynegative.xml');
 start('../../WebInject/selftest/verifypositive.xml');
 start('../../WebInject/selftest/verifyresponsecode.xml');
 start('../../WebInject/selftest/verifyresponsetime.xml');
+start('../../WebInject/selftest/include.xml');
 
 
 
