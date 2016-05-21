@@ -1286,7 +1286,8 @@ sub check_testfile_xml_parses_ok {
 
     # for convenience, WebInject allows ampersand and less than to appear in xml data, so this needs to be masked
     $_xml =~ s/&/{AMPERSAND}/g;
-    $_xml =~ s/\\</{LESSTHAN}/g;
+    $_xml =~ s/\w\s*=\s*"[^"]*\K<([^"]*")/{LESSTHAN}$1/sg;
+    $_xml =~ s/\w\s*=\s*'[^']*\K<([^']*')/{LESSTHAN}$1/sg;
 
     # here we parse the xml file in an eval, and capture any error returned (in $@)
     my $_message;
