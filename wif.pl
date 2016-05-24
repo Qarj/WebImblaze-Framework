@@ -607,7 +607,7 @@ sub publish_results_on_web_server {
 
     # put a reference to the stylesheet in the results file
     my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
-    $_results .= '<?xml-stylesheet type="text/xsl" href="/content/Results.xsl"?>'."\n";
+    $_results .= '<?xml-stylesheet type="text/xsl" href="../../../../../../../content/Results.xsl"?>'."\n";
     $_results .= $results_content;
 
     # insert info from wif into the results
@@ -835,7 +835,7 @@ sub build_summary_of_batches {
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="/content/Summary.xsl"?>\n|;
+    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="http://$web_server_address/content/Summary.xsl"?>\n|;
     $_summary .= qq|<summary version="2.0">\n|;
     $_summary .= qq|    <channel>\n|;
 
@@ -1192,7 +1192,7 @@ sub _build_batch_summary {
 
     # write the header
     my $_batch = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="/content/Batch.xsl"?>\n|;
+    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="../../../../../content/Batch.xsl"?>\n|;
     $_batch .= qq|<batch>\n|;
 
     # write all the run records

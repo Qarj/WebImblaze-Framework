@@ -4,9 +4,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     <head>
         <title>Batch Summary</title>
         <style type="text/css">
-        @import url(/content/Results.css);
+        @import url(../../../../../../../content/Results.css);
         </style>
-    	<script type="text/javascript" src="/scripts/jquery-2.2.3.min.js"></script>
+    	<script type="text/javascript" src="../../../../../../../scripts/jquery-2.2.3.min.js"></script>
     	<script type="text/javascript">
 <![CDATA[
     $(document).ready(function() {
@@ -47,8 +47,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
             <div style="clear: both;"></div>
             <br />
             <h2>
-                <xsl:variable name="environment_link">/<xsl:value-of select="results/wif/environment"/>/<xsl:value-of select="results/wif/yyyy"/>/<xsl:value-of select="results/wif/mm"/>/<xsl:value-of select="results/wif/dd"/>/All_Batches/Summary.xml</xsl:variable>
-                <xsl:variable name="batch_link">/<xsl:value-of select="results/wif/environment"/>/<xsl:value-of select="results/wif/yyyy"/>/<xsl:value-of select="results/wif/mm"/>/<xsl:value-of select="results/wif/dd"/>/All_Batches/<xsl:value-of select="results/wif/batch"/>.xml</xsl:variable>
+                <xsl:variable name="environment_link">../../../All_Batches/Summary.xml</xsl:variable>
+                <xsl:variable name="batch_link">../../../All_Batches/<xsl:value-of select="results/wif/batch"/>.xml</xsl:variable>
                 <a href="{$environment_link}"> Summary </a> -&gt; <a href="{$batch_link}"> Batch Summary </a> -&gt; Run Results
             </h2>
         </div>
