@@ -10,6 +10,8 @@ answer the question "Did all of our regression tests pass?".
 
 If the answer is no, you can very quickly drill into what went wrong. Since an organised history of previous run results are kept, you can compare a failed result easily against a previous successful run.
 
+You can see WebInject example output here: http://qarj.github.io/WebInject-Example/
+
 # Quick Start Guide - 5 minutes to install and use!
 
 ## Windows Installation
