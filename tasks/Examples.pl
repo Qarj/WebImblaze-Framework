@@ -24,6 +24,8 @@ my $config_wif_location = "../";
 my $opt_batch = $script_name;
 my ($opt_target, $config_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
 
+($opt_target, $opt_batch) = Runner::get_options($opt_target, $opt_batch, $config_environment);
+
 # add a random number to the batch name so this run will have a different name to a previous run
 $opt_batch .= Runner::random(99_999);
 
