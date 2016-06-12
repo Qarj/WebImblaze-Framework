@@ -1613,6 +1613,7 @@ sub _write_webinject_wif_config {
     my $_config;
 
     $_config .= "    <wif>\n";
+    $_config .= "        <environment>$opt_environment</environment>\n";
     $_config .= "        <batch>$opt_batch</batch>\n";
     $_config .= "        <folder>$testfile_parent_folder_name</folder>\n";
     $_config .= "        <run_number>$_run_number</run_number>\n";
