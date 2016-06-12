@@ -1,4 +1,4 @@
-# WebInject Framework 1.04 Manual
+# WebInject Framework 1.05 Manual
 
 # wif.config
 
@@ -110,7 +110,6 @@ In this section you can specify values for:
 * timeout
 * globalretry
 * globaljumpbacks
-* testonly
 * autocontrolleronly
 
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebInject may try to use a null value and fail.

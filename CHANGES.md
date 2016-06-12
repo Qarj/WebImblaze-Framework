@@ -5,6 +5,10 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.05 - Jun 12, 2016
+* testonly and liveonly was replaced by runon in webinject, wif.pl needs to write out the environment to the webinject config to support this
+* selenium server location was using a hard coded value rather than the config value
+
 ### Version 1.04 - May 30, 2016
 * webinject.pl no longer requires less than character to be escaped, needed to update wif.pl as a result
 * made many of the results output internal links relative
