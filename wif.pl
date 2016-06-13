@@ -601,20 +601,21 @@ sub publish_static_files {
 sub publish_results_on_web_server {
     my ($_run_number) = @_;
 
-    $results_content = read_file("temp/$temp_folder_name/results.xml");
+#    $results_content = read_file("temp/$temp_folder_name/results.xml");
+    $results_content = read_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml");
 
     my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
 
     # put a reference to the stylesheet in the results file
-    my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
-    $_results .= '<?xml-stylesheet type="text/xsl" href="../../../../../../../content/Results.xsl"?>'."\n";
-    $_results .= $results_content;
+#    my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
+#    $_results .= '<?xml-stylesheet type="text/xsl" href="../../../../../../../content/Results.xsl"?>'."\n";
+#    $_results .= $results_content;
 
     # insert info from wif into the results
-    my $_wif_content = _build_results_wif_content($_run_number);
-    $_results =~ s{</test-summary>}{</test-summary>$_wif_content}s;
+#    my $_wif_content = _build_results_wif_content($_run_number);
+#    $_results =~ s{</test-summary>}{</test-summary>$_wif_content}s;
 
-    _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results);
+#   _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results);
 
     # copy captured email files to web server 
     _copy ( "temp/$temp_folder_name/*.eml", $_this_run_home);
@@ -724,7 +725,8 @@ sub _write_final_record {
 
     my $_twig = XML::Twig->new();
 
-    $_twig->parsefile("temp/$temp_folder_name/results.xml");
+#    $_twig->parsefile("temp/$temp_folder_name/results.xml");
+    $_twig->parse($results_content);
     my $_root = $_twig->root;
 
     my $_start_time = $_root->first_child('test-summary')->first_child_text('start-time');
@@ -1617,6 +1619,9 @@ sub _write_webinject_wif_config {
     $_config .= "        <batch>$opt_batch</batch>\n";
     $_config .= "        <folder>$testfile_parent_folder_name</folder>\n";
     $_config .= "        <run_number>$_run_number</run_number>\n";
+    $_config .= "        <yyyy>$yyyy</yyyy>\n";
+    $_config .= "        <mm>$mm</mm>\n";
+    $_config .= "        <dd>$dd</dd>\n";
     $_config .= "    </wif>\n";
 
     return $_config;
