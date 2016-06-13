@@ -601,21 +601,7 @@ sub publish_static_files {
 sub publish_results_on_web_server {
     my ($_run_number) = @_;
 
-#    $results_content = read_file("temp/$temp_folder_name/results.xml");
-    $results_content = read_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml");
-
     my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
-
-    # put a reference to the stylesheet in the results file
-#    my $_results = '<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
-#    $_results .= '<?xml-stylesheet type="text/xsl" href="../../../../../../../content/Results.xsl"?>'."\n";
-#    $_results .= $results_content;
-
-    # insert info from wif into the results
-#    my $_wif_content = _build_results_wif_content($_run_number);
-#    $_results =~ s{</test-summary>}{</test-summary>$_wif_content}s;
-
-#   _write_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml", $_results);
 
     # copy captured email files to web server 
     _copy ( "temp/$temp_folder_name/*.eml", $_this_run_home);
@@ -652,22 +638,6 @@ sub publish_results_on_web_server {
 }
 
 #------------------------------------------------------------------
-sub _build_results_wif_content {
-    my ($_run_number) = @_;
-
-    my $_content = "\n\n";
-    $_content .= "    <wif>\n";
-    $_content .= "        <environment>$opt_environment</environment>\n";
-    $_content .= "        <yyyy>$yyyy</yyyy>\n";
-    $_content .= "        <mm>$mm</mm>\n";
-    $_content .= "        <dd>$dd</dd>\n";
-    $_content .= "        <batch>$opt_batch</batch>\n";
-    $_content .= "    </wif>\n";
-
-    return $_content;
-}
-
-#------------------------------------------------------------------
 sub _copy {
     my ($_source, $_dest) = @_;
 
@@ -697,6 +667,8 @@ sub write_final_result {
 #------------------------------------------------------------------
 sub _write_final_record {
     my ($_file_full, $_run_number) = @_;
+
+    $results_content = read_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml");
 
     if ( $results_content =~ m{</test-summary>}i ) {
         # WebInject ran to completion - all ok
