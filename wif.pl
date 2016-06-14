@@ -692,24 +692,18 @@ sub _write_final_record {
         return;
     }
 
-    my $_twig = XML::Twig->new();
-
-#    $_twig->parsefile("temp/$temp_folder_name/results.xml");
-    $_twig->parse($results_content);
-    my $_root = $_twig->root;
-
-    my $_start_time = $_root->first_child('test-summary')->first_child_text('start-time');
-    my $_start_seconds = $_root->first_child('test-summary')->first_child_text('start-seconds');
-    my $_start_date_time = $_root->first_child('test-summary')->first_child_text('start-date-time');
-    my $_total_run_time = $_root->first_child('test-summary')->first_child_text('total-run-time');
-    my $_max_response_time = $_root->first_child('test-summary')->first_child_text('max-response-time'); $_max_response_time = sprintf '%.1f', $_max_response_time;
-    my $_test_cases_run = $_root->first_child('test-summary')->first_child_text('test-cases-run');
-    #my $_test_cases_passed = $_root->first_child('test-summary')->first_child_text('test-cases-passed');
-    my $_test_cases_failed = $_root->first_child('test-summary')->first_child_text('test-cases-failed');
-    my $_assertion_skips = $_root->first_child('test-summary')->first_child_text('assertion-skips');
-    #my $_verifications_passed = $_root->first_child('test-summary')->first_child_text('verifications-passed');
-    #my $_verifications_failed = $_root->first_child('test-summary')->first_child_text('verifications-failed');
-    my $_sanity_check_passed = $_root->first_child('test-summary')->first_child_text('sanity-check-passed');
+    my $_start_time = $_result->{'test-summary'}->{'start-time'};
+    my $_start_seconds = $_result->{'test-summary'}->{'start-seconds'};
+    my $_start_date_time = $_result->{'test-summary'}->{'start-date-time'};
+    my $_total_run_time = $_result->{'test-summary'}->{'total-run-time'};
+    my $_max_response_time = $_result->{'test-summary'}->{'max-response-time'}; $_max_response_time = sprintf '%.1f', $_max_response_time;
+    my $_test_cases_run = $_result->{'test-summary'}->{'test-cases-run'};
+    #my $_test_cases_passed = $_result->{'test-summary'}->{'test-cases-passed'};
+    my $_test_cases_failed = $_result->{'test-summary'}->{'test-cases-failed'};
+    my $_assertion_skips = $_result->{'test-summary'}->{'assertion-skips'};
+    #my $_verifications_passed = $_result->{'test-summary'}->{'verifications-passed'};
+    #my $_verifications_failed = $_result->{'test-summary'}->{'verifications-failed'};
+    my $_sanity_check_passed = $_result->{'test-summary'}->{'sanity-check-passed'};
 
     my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_date(0);
     my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
