@@ -95,7 +95,7 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 
 my ($proxy_server_pid, $proxy_server_port, $proxy_port) = start_browsermob_proxy($testfile_contains_selenium);
 
-my $selenium_port = start_selenium_server($testfile_contains_selenium);
+my $selenium_port = start_selenium_server($testfile_contains_selenium, $this_run_home);
 #print "selenium_port:$selenium_port\n";
 
 display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
@@ -385,7 +385,7 @@ sub shutdown_selenium_server {
 
 #------------------------------------------------------------------
 sub start_selenium_server {
-    my ($_testfile_contains_selenium) = @_;
+    my ($_testfile_contains_selenium, $_output_location) = @_;
 
     if (not defined $_testfile_contains_selenium) {
         return;
@@ -399,7 +399,7 @@ sub start_selenium_server {
     #print "_selenium_port:$_selenium_port\n";
 
     my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\chromedriver.eXe" );
-    my $_abs_selenium_log_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\selenium_log.txt" );
+    my $_abs_selenium_log_full = File::Spec->rel2abs( $_output_location.'selenium_log.txt' );
 
     my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $selenium_location_full -port $_selenium_port -trustAllSSLCertificates});
 
