@@ -631,12 +631,6 @@ sub publish_results_on_web_server {
     # copy chromedriver.log file over as chromedriver.txt so we do not need another MIME type
     _copy ( "temp/$temp_folder_name/chromedriver.log", "$_this_run_home".'chromedriver.txt');
 
-    # copy http.log file over as http.txt so we do not need another MIME type
-    _copy ( "temp/$temp_folder_name/http.log", "$_this_run_home".'http.txt');
-
-    # split the http.log into a file for each step
-    # perhaps WebInject can do this, and write the log at the same time
-
     return;
 }
 
