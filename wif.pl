@@ -187,14 +187,15 @@ sub call_webinject_with_testfile {
     my $_orig_cwd = cwd;
     chdir $webinject_location;
 
+    my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
     if (defined $opt_capture_stdout) {
-        my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
         print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
         print {*STDOUT} "    webinject.pl @_args\n";
         system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
+        write_file($_wi_stdout_file_full, 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out');
         system 'webinject.pl', @_args;
     }
 
@@ -218,6 +219,8 @@ sub capture_stdout {
 
         print {*STDOUT} "\nWebInject Framework Config:\n";
         print {*STDOUT} Data::Dumper::Dumper ( $config );
+    } else {
+        write_file($_output_location.'wif_stdout.txt', 'Start wif.pl with --capture-stdout flag to capture wif.pl standard out');
     }
 
     return;
