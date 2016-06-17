@@ -44,7 +44,7 @@ call('../../WebInject/examples/command20.xml');
 if ($failed_test_files) {
     my $_files = 'files';
     if ($failed_test_files == 1) { $_files = 'file'; }
-    print "There were errors. $failed_test_files test $_files returned an error status.\n";
+    print "\nThere were errors. $failed_test_files test $_files returned an error status.\n";
     exit 1;
 } else {
     exit 0;

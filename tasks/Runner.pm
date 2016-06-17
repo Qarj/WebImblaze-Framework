@@ -43,7 +43,15 @@ sub call_test {
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
+    printf "%-69s ", $_test_file_full;
+    print "...";
+
     my $_status = system('wif.pl '."@_args");
+    if ($_status) {
+        print " failed\n";
+    } else {
+        print " ok\n";
+    }
 
     chdir $_orig_cwd;
 
