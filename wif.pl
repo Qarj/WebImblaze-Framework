@@ -100,7 +100,7 @@ my $selenium_port = start_selenium_server($testfile_contains_selenium, $this_run
 
 display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
 
-call_webinject_with_testfile($config_file_full, $testfile_contains_selenium, $selenium_port, $proxy_port, $this_run_home);
+my $status = call_webinject_with_testfile($config_file_full, $testfile_contains_selenium, $selenium_port, $proxy_port, $this_run_home);
 
 shutdown_selenium_server($selenium_port);
 
@@ -124,6 +124,8 @@ publish_static_files($run_number);
 remove_temp_folder($temp_folder_name, $opt_keep);
 
 restore_stdout();
+
+if ($status) { exit 1; } else { exit 0; }
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
@@ -187,21 +189,22 @@ sub call_webinject_with_testfile {
     my $_orig_cwd = cwd;
     chdir $webinject_location;
 
+    my $_status;
     my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
     if (defined $opt_capture_stdout) {
         print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
         print {*STDOUT} "    webinject.pl @_args\n";
-        system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
+        $_status = system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
         write_file($_wi_stdout_file_full, 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out');
-        system 'webinject.pl', @_args;
+        $_status = system 'webinject.pl', @_args;
     }
 
     chdir $_orig_cwd;
 
-    return;
+    return $_status;
 }
 
 #------------------------------------------------------------------

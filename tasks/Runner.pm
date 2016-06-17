@@ -43,11 +43,11 @@ sub call_test {
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
-    system('wif.pl '."@_args");
+    my $_status = system('wif.pl '."@_args");
 
     chdir $_orig_cwd;
 
-    return;
+    return $_status;
 }
 
 #------------------------------------------------------------------

@@ -31,10 +31,24 @@ $opt_batch .= Runner::random(99_999);
 
 # specify the location of the test files relative to this script
 
-for (1..40) {
-    start('../../WebInject/examples/command.xml');
-}
+my $failed_test_files = 0;
 
+#capturing return status only works with call for now, start is much more complicated
+#for (1..2) {
+#    start('../../WebInject/examples/command.xml');
+#}
+call('../../WebInject/examples/command.xml');
+call('../../WebInject/examples/assertcount.xml');
+call('../../WebInject/examples/command20.xml');
+
+if ($failed_test_files) {
+    my $_files = 'files';
+    if ($failed_test_files == 1) { $_files = 'file'; }
+    print "There were errors. $failed_test_files test $_files returned an error status.\n";
+    exit 1;
+} else {
+    exit 0;
+}
 
 sub start {
     my ($_test) = @_;
@@ -47,7 +61,11 @@ sub start {
 sub call {
     my ($_test) = @_;
 
-    Runner::call_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
+    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
+
+    if ($_status) {
+        $failed_test_files++;
+    }
 
     return;
 }
