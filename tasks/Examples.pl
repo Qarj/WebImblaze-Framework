@@ -34,9 +34,6 @@ start('../../WebInject/examples/addcookie.xml');
 start('../../WebInject/examples/addheader.xml');
 start('../../WebInject/examples/assertcount.xml');
 start('../../WebInject/examples/assertionskipsmessage.xml');
-start('../../WebInject/examples/checknegative.xml');
-start('../../WebInject/examples/checkpositive.xml');
-start('../../WebInject/examples/checkresponsecode.xml');
 start('../../WebInject/examples/command.xml');
 start('../../WebInject/examples/command20.xml');
 
