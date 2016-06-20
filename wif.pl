@@ -34,7 +34,7 @@ use File::Basename;
 use File::Spec;
 use File::Slurp;
 use File::Copy qw(copy), qw(move);
-use File::Path qw(make_path remove_tree);;
+use File::Path qw(make_path remove_tree);
 use Cwd;
 use Time::HiRes 'time','sleep';
 use Config::Tiny;
