@@ -1653,10 +1653,43 @@ sub remove_temp_folder {
 }
 
 #------------------------------------------------------------------
+sub _create_default_config {
+
+    my $_config;
+    $_config .= '[main]'."\n";
+    $_config .= 'batch=example_batch'."\n";
+    $_config .= 'environment=DEV'."\n";
+    $_config .= 'is_automation_controller=false'."\n";
+    $_config .= 'target=webinject_examples'."\n";
+    $_config .= 'use_browsermob_proxy=false'."\n";
+    $_config .= ''."\n";
+    $_config .= '[path]'."\n";
+    $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
+    $_config .= 'selenium_location_full=C:\selenium-server\selenium-server-standalone-2.53.0.jar'."\n";
+    $_config .= 'testfile_full=../webinject/examples/get.xml'."\n";
+    $_config .= 'web_server_address=localhost'."\n";
+    $_config .= 'web_server_location_full=C:\inetpub\wwwroot'."\n";
+    $_config .= 'webinject_location=../WebInject'."\n";
+
+    write_file('wif.config', $_config);
+
+    return;
+}
+
+#------------------------------------------------------------------
 sub _read_config {
 
+    if (defined $ARGV[0]) {
+        if (lc $ARGV[0] eq '--create-config') {
+            _create_default_config();
+            die "\nDefault wif.config created.\n\nPlease review the config and refer to the manual for correct settings.\n";
+        }
+    }
+
     if (not -e 'wif.config') {
-        die "\nERROR: ./wif.config not found\n";
+        my $_message = "\nERROR: ./wif.config not found\n";
+        $_message .= "\nTo create default config file, use: wif.pl --create-config\n";
+        die $_message;
     }
 
     $config = Config::Tiny->read( 'wif.config' );
