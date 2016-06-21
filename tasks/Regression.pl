@@ -29,9 +29,9 @@ my ($opt_target, $config_environment) = Runner::read_wif_config($config_wif_loca
 # add a random number to the batch name so this run will have a different name to a previous run
 $opt_batch .= Runner::random(99_999);
 
-# specify the location of the test files relative to this script
-
 my $failed_test_files = 0;
+
+# specify the location of the test files relative to this script
 
 #capturing return status only works with call for now, start is much more complicated
 #for (1..2) {
