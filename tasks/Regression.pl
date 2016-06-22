@@ -22,9 +22,9 @@ my ($script_name, $script_path) = fileparse($0,'.pl');
 
 my $config_wif_location = "../";
 my $opt_batch = $script_name;
-my ($opt_target, $config_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
+my ($opt_target, $opt_environment) = Runner::read_wif_config($config_wif_location.'wif.config');
 
-($opt_target, $opt_batch) = Runner::get_options($opt_target, $opt_batch, $config_environment);
+($opt_target, $opt_batch, $opt_environment) = Runner::get_options($opt_target, $opt_batch, $opt_environment);
 
 # add a random number to the batch name so this run will have a different name to a previous run
 $opt_batch .= Runner::random(99_999);
@@ -53,7 +53,7 @@ if ($failed_test_files) {
 sub start {
     my ($_test) = @_;
 
-    Runner::start_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
+    Runner::start_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
 
     return;
 }
@@ -61,7 +61,7 @@ sub start {
 sub call {
     my ($_test) = @_;
 
-    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $config_environment, $config_wif_location);
+    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
 
     if ($_status) {
         $failed_test_files++;

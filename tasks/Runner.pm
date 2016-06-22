@@ -147,7 +147,7 @@ sub read_wif_config {
 
 #------------------------------------------------------------------
 sub get_options {
-    my ($_opt_target, $_opt_batch, $_config_environment) = @_;
+    my ($_opt_target, $_opt_batch, $_opt_environment) = @_;
 
     my ($_opt_version, $_opt_help);
 
@@ -155,6 +155,7 @@ sub get_options {
     GetOptions(
         't|target=s'                => \$_opt_target,
         'b|batch=s'                 => \$_opt_batch,
+        'e|env=s'                   => \$_opt_environment,
         'v|V|version'               => \$_opt_version,
         'h|help'                    => \$_opt_help,
         )
@@ -171,12 +172,12 @@ sub get_options {
     if ($_opt_help) {
         print_version();
         print_usage();
-        print "\nTarget         [$_config_environment] $_opt_target\n";
+        print "\nTarget         [$_opt_environment] $_opt_target\n";
         print "Batch          $_opt_batch\n";
         exit;
     }
 
-    return $_opt_target, $_opt_batch;
+    return $_opt_target, $_opt_batch, $_opt_environment;
 }
 
 sub print_version {
