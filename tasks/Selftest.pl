@@ -65,6 +65,7 @@ start('../../WebInject/selftest/sanitycheck.xml');
 start('../../WebInject/selftest/section.xml');
 start('../../WebInject/selftest/substitutions.xml');
 start('../../WebInject/selftest/runon.xml');
+start('../../WebInject/selftest/donotrunon.xml');
 start('../../WebInject/selftest/useragent.xml');
 start('../../WebInject/selftest/var.xml');
 start('../../WebInject/selftest/verifynegative.xml');
@@ -73,6 +74,7 @@ start('../../WebInject/selftest/verifyresponsecode.xml');
 start('../../WebInject/selftest/verifyresponsetime.xml');
 start('../../WebInject/selftest/include.xml');
 start('../../WebInject/selftest/specialcharacters.xml');
+start('../../WebInject/selftest/xml-parse-fail.xml');
 
 
 
