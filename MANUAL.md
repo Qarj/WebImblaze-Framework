@@ -37,6 +37,9 @@ Where to find `browsermob-proxy.bat`. If you are not using BrowserMob Proxy, it 
 ### selenium_location_full
 Where to find the Selenium Standalone Server JAR file. If you are not using Selenium WebDriver it is safe to leave this option at the default, even if is not installed.
 
+### chromedriver_location_full
+Where to find chromedriver. If you are not using Selenium WebDriver, just leave this at the default since it will not be referred to.
+
 ### testfile_full
 The last test case file that was run. Updated by wif.pl.
 

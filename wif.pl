@@ -52,7 +52,7 @@ my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_no_retry, $opt_help, $opt_keep, $opt_capture_stdout);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $webinject_location, $browsermob_proxy_location_full );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webinject_location, $browsermob_proxy_location_full );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -397,7 +397,7 @@ sub start_selenium_server {
     }
 
     # copy chromedriver - source location hardcoded for now
-    copy 'C:/selenium-server/chromedriver.exe', "temp/$temp_folder_name/chromedriver.eXe";
+    copy $chromedriver_location_full, "temp/$temp_folder_name/";
 
     # find free port
     my $_selenium_port = _find_available_port(int(rand 999)+11_000);
@@ -1668,6 +1668,7 @@ sub _create_default_config {
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
     $_config .= 'selenium_location_full=C:\selenium-server\selenium-server-standalone-2.53.0.jar'."\n";
+    $_config .= 'chromedriver_location_full=C:\selenium-server\chromedriver.exe'."\n";
     $_config .= 'testfile_full=../webinject/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
     $_config .= 'web_server_location_full=C:\inetpub\wwwroot'."\n";
@@ -1706,6 +1707,7 @@ sub _read_config {
     # path
     $testfile_full = $config->{path}->{testfile_full};
     $selenium_location_full = $config->{path}->{selenium_location_full};
+    $chromedriver_location_full = $config->{path}->{chromedriver_location_full};
     $web_server_location_full = $config->{path}->{web_server_location_full};
     $web_server_address = $config->{path}->{web_server_address};
     $webinject_location = $config->{path}->{webinject_location};
@@ -1743,6 +1745,7 @@ sub _write_config {
     # path
     $config->{path}->{testfile_full} = $testfile_full;
     $config->{path}->{selenium_location_full} = $selenium_location_full;
+    $config->{path}->{chromedriver_location_full} = $chromedriver_location_full;
     $config->{path}->{web_server_location_full} = $web_server_location_full;
     $config->{path}->{web_server_address} = $web_server_address;
     $config->{path}->{webinject_location} = $webinject_location;
