@@ -60,6 +60,13 @@
 
 	});
 
+function submitFilter() {
+    var url = location.protocol + '//' + location.host + location.pathname;
+    var urlFilter = url + '?filter=' + $('#live-filter').val();
+    window.location = urlFilter;
+    return false;
+}
+
 function getParameterByName(name, url) { //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -100,7 +107,7 @@ function getParameterByName(name, url) { //http://stackoverflow.com/questions/90
         <button class="btn" data-filter="fail">Failed</button>
         <button class="btn" data-filter="sanity">Sanity Failed</button>
 
-        <form id="live-search" action="" class="inputbox" method="post">
+        <form id="live-search" action="" class="inputbox" onsubmit="return submitFilter()">
             <fieldset>
                 <input type="text" class="text-input" id="live-filter" value="" />
             </fieldset>
