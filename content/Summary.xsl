@@ -27,12 +27,22 @@
 
         });
    		
+   		var queryfilter = getParameterByName('filter');
+   		if (queryfilter) {
+       		$("#live-filter").val(queryfilter);
+            updateFilter(queryfilter);
+        }
 
         $("#live-filter").keyup(function(){
      
             // Retrieve the input field text
             var filter = $(this).val();
+
+            updateFilter(filter);
      
+        });
+
+        function updateFilter(filter) {
             // Loop through the article list
             $(".article li").each(function(){
      
@@ -45,11 +55,20 @@
                     $(this).show();
                 }
             });
-     
-        });
+        }
 
 
 	});
+
+function getParameterByName(name, url) { //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
 ]]>
 	</script>
