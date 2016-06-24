@@ -1265,8 +1265,7 @@ sub check_testfile_xml_parses_ok {
 
     if ($@) {
         $_message = $@;
-        $_message =~ s{ at C:.*}{}g; # remove misleading reference Parser.pm
-        $_message =~ s{\n}{}g; # remove line feeds
+        $_message =~ s{XML::Simple.*\n}{}g; # remove misleading line number reference
         die "\n".$_message." in $testfile_full\n";
     }
 
