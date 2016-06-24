@@ -62,7 +62,11 @@
 
 function submitFilter() {
     var url = location.protocol + '//' + location.host + location.pathname;
-    var urlFilter = url + '?filter=' + $('#live-filter').val();
+    var filter = $('#live-filter').val();
+    var urlFilter = url;
+    if (filter) {
+        urlFilter = urlFilter.concat('?filter=' + filter);
+    }
     window.location = urlFilter;
     return false;
 }
