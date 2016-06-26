@@ -34,6 +34,10 @@ cpan Config::Tiny
 
 That's it! You are now ready to run your first WebInject test using the WebInject Framework.
 
+## Linux
+
+Linux is not yet supported.
+
 ## running wif.pl - minimal example
 
 To run an automated test, wif.pl needs to know the:
