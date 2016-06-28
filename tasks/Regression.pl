@@ -9,12 +9,13 @@ use warnings;
 use vars qw/ $VERSION /;
 use File::Basename;
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 my $this_script_folder_full = dirname(__FILE__);
 chdir $this_script_folder_full;
 
 require Runner;
+require Alerter;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -29,7 +30,9 @@ my ($opt_target, $opt_environment) = Runner::read_wif_config($config_wif_locatio
 # add a random number to the batch name so this run will have a different name to a previous run
 $opt_batch .= Runner::random(99_999);
 
-my $failed_test_files = 0;
+my $failed_test_files_count = 0;
+my $passed_test_files_count = 0;
+my @failed_test_files;
 
 # specify the location of the test files relative to this script
 
@@ -41,10 +44,15 @@ call('../../WebInject/examples/command.xml');
 call('../../WebInject/examples/assertcount.xml');
 call('../../WebInject/examples/command20.xml');
 
-if ($failed_test_files) {
+if ($failed_test_files_count) {
     my $_files = 'files';
-    if ($failed_test_files == 1) { $_files = 'file'; }
-    print "\nThere were errors. $failed_test_files test $_files returned an error status.\n";
+    if ($failed_test_files_count == 1) { $_files = 'file'; }
+    my $_message = "\n<!channel> There were errors in $script_name. $failed_test_files_count test $_files returned an error status:\n";
+    foreach (@failed_test_files) {
+        $_message .= '    ['.$_.']'."\n";
+    }
+    print $_message;
+    #Alerter::slack_alert($_message, 'https://hooks.slack.com/services/X025XXX4X/X1XX2X38X/uXXXq9XXzX6XXhXXXnXx3XqX'); # Slack hook url
     exit 1;
 } else {
     exit 0;
