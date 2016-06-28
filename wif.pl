@@ -125,7 +125,9 @@ remove_temp_folder($temp_folder_name, $opt_keep);
 
 restore_stdout();
 
-print "Results at: http://$web_server_address/$opt_environment/Summary.xml\n";
+if (not $opt_capture_stdout) {
+    print "Results at: http://$web_server_address/$opt_environment/Summary.xml\n";
+}
 
 if ($status) { exit 1; } else { exit 0; }
 
