@@ -28,7 +28,7 @@ sub slack_alert {
 
     my $_post_type = 'application/json';
     my $_post_body = '{"text": "'.$_message.'"}';
-    my $_url = 'https://hooks.slack.com/services/'.$_hook;
+    my $_url = $_hook;
 
     my $_request = HTTP::Request->new('POST',"$_url");
     $_request->content_type("$_post_type");
