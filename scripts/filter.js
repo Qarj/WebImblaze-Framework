@@ -32,7 +32,7 @@
 
         function updateFilter(filter) {
             // Loop through the article list
-            $(".article > .row").each(function(){
+            $(".row").each(function(){
      
                 // If the list item does not contain the text phrase fade it out
                 if ($(this).text().search(new RegExp(filter, "i")) < 0) {
