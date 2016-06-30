@@ -8,6 +8,8 @@
             <style type="text/css">
             @import url(../../../../../content/Batch.css);
             </style>
+        	<script type="text/javascript" src="/scripts/jquery-2.2.3.min.js"></script>
+        	<script type="text/javascript" src="/scripts/filter.js"></script>
         </head>
     <body>
         <div id="heading">
@@ -21,6 +23,16 @@
             </h2>
         </div>
 
+        <div id="filter">
+            <form id="live-search" action="" class="inputbox" onsubmit="return submitFilter()">
+                <fieldset>
+                    <input type="text" class="text-input" id="live-filter" value="" />
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="spacer"></div>
+
 		<xsl:variable name="corrupt_status">
 			<xsl:for-each select="batch/run/status[contains(.,'CORRUPT')]">
 				<xsl:if test="position()=1">
@@ -31,6 +43,7 @@
 
 
         <table>
+            <div class="article">
             <tr class="header_row">
                 <th>Run</th>
                 <th>Folder</th>
@@ -44,7 +57,7 @@
             </tr>
 
             <xsl:for-each select="batch/run">
-                <tr>
+                <tr class="row">
                     <xsl:variable name="results_xml">../<xsl:value-of select="test_parent_folder"/>/<xsl:value-of select="test_name"/>/results_<xsl:value-of select="run_number"/>/results_<xsl:value-of select="run_number"/></xsl:variable>
                     <td> <a class="link_number" href="{$results_xml}.xml"> <xsl:value-of select="run_number"/></a> </td>
                     <xsl:variable name="webinject_stdout">../<xsl:value-of select="test_parent_folder"/>/<xsl:value-of select="test_name"/>/results_<xsl:value-of select="run_number"/>/webinject_stdout.txt</xsl:variable>
@@ -133,6 +146,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
              </tr>
+        </div>
         </table>
 
 		<xsl:variable name="lastfails">
