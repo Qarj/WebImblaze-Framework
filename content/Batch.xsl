@@ -65,7 +65,8 @@
                     <xsl:variable name="wif_stdout">../<xsl:value-of select="test_parent_folder"/>/<xsl:value-of select="test_name"/>/results_<xsl:value-of select="run_number"/>/wif_stdout.txt</xsl:variable>
                     <td> <a class="link_number" href="{$wif_stdout}"> <xsl:value-of select="test_name"/> </a></td>
                     <td> <xsl:value-of select="target"/> </td>
-                    <td> <xsl:value-of select="translate(start_date_time,'T',' ')"/> </td>
+                    <xsl:variable name="webinject_html">../<xsl:value-of select="test_parent_folder"/>/<xsl:value-of select="test_name"/>/results_<xsl:value-of select="run_number"/>/Results.html</xsl:variable>
+                    <td> <a class="link_number" href="{$webinject_html}"> <xsl:value-of select="translate(start_date_time,'T',' ')"/> </a> </td>
                     <xsl:choose>
                         <xsl:when test="end_time='PENDING'">
                             <td class="pend"> <xsl:text> PENDING </xsl:text> </td>
