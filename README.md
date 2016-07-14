@@ -30,7 +30,7 @@ at the root level, you will have the following files available:
 cpan Config::Tiny
 ```
 
-4. Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`. Ensure `Internet Information Services` is turned on.
+4. Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`. Ensure `Internet Information Services` (IIS) is turned on.
 
 That's it! You are now ready to run your first WebInject test using the WebInject Framework.
 
