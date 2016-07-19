@@ -52,6 +52,7 @@ start('../../WebInject/selftest/lastlooponly.xml');
 start('../../WebInject/selftest/logastext.xml');
 start('../../WebInject/selftest/logresponseasfile.xml');
 start('../../WebInject/selftest/name_data.xml');
+start('../../WebInject/selftest/nagios.xml');
 start('../../WebInject/selftest/parms.xml');
 start('../../WebInject/selftest/parseresponse.xml');
 start('../../WebInject/selftest/random.xml');
