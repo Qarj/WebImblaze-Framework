@@ -76,6 +76,7 @@ start('../../WebInject/selftest/verifyresponsetime.xml');
 start('../../WebInject/selftest/include.xml');
 start('../../WebInject/selftest/specialcharacters.xml');
 start('../../WebInject/selftest/xml-parse-fail.xml');
+start('../../WebInject/selftest/result_files.xml');
 
 
 
