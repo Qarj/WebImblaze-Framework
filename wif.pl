@@ -914,7 +914,7 @@ sub _write_summary_record {
     $_record .= '         <title>';
 
     if ($_status eq 'CORRUPT' ) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message</title>\n|;
+        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message *$opt_target*</title>\n|;
     } elsif ($_number_of_sanity_failures > 0) {
         $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     } else {
