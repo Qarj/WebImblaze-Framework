@@ -61,7 +61,6 @@ start('../../WebInject/selftest/restartbrowser.xml');
 start('../../WebInject/selftest/restartbrowseronfail.xml');
 start('../../WebInject/selftest/retry.xml');
 start('../../WebInject/selftest/retryfromstep.xml');
-start('../../WebInject/selftest/retryresponsecode.xml');
 start('../../WebInject/selftest/sanitycheck.xml');
 start('../../WebInject/selftest/section.xml');
 start('../../WebInject/selftest/substitutions.xml');
