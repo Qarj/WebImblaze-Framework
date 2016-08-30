@@ -398,6 +398,14 @@ sub start_selenium_server {
         return;
     }
 
+    if (not -e $chromedriver_location_full) {
+        die "\nCannot find ChromeDriver at $chromedriver_location_full\n";
+    }
+
+    if (not -e $selenium_location_full) {
+        die "\nCannot find Selenium Server at $selenium_location_full\n";
+    }
+
     # copy chromedriver - source location hardcoded for now
     copy $chromedriver_location_full, "temp/$temp_folder_name/";
 
