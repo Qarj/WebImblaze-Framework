@@ -95,14 +95,9 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 
 my ($proxy_server_pid, $proxy_server_port, $proxy_port) = start_browsermob_proxy($testfile_contains_selenium);
 
-my $selenium_port = start_selenium_server($testfile_contains_selenium, $this_run_home);
-#print "selenium_port:$selenium_port\n";
+display_title_info($testfile_name, $run_number, $config_file_name, $proxy_port);
 
-display_title_info($testfile_name, $run_number, $config_file_name, $selenium_port, $proxy_port);
-
-my $status = call_webinject_with_testfile($config_file_full, $testfile_contains_selenium, $selenium_port, $proxy_port, $this_run_home);
-
-shutdown_selenium_server($selenium_port);
+my $status = call_webinject_with_testfile($config_file_full, $proxy_port, $this_run_home);
 
 #write_har_file($proxy_port);
 
@@ -133,7 +128,7 @@ if ($status) { exit 1; } else { exit 0; }
 
 #------------------------------------------------------------------
 sub call_webinject_with_testfile {
-    my ($_config_file_full, $_testfile_contains_selenium, $_selenium_port, $_proxy_port, $_this_run_home) = @_;
+    my ($_config_file_full, $_proxy_port, $_this_run_home) = @_;
 
     my $_temp_folder_name = 'temp/' . $temp_folder_name;
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
@@ -172,22 +167,24 @@ sub call_webinject_with_testfile {
         push @_args, '--ignoreretry';
     }
 
-    # Selenium only options
-    if ($_testfile_contains_selenium) {
-
-        if ($_proxy_port) {
-            push @_args, '--proxy';
-            push @_args, 'localhost:' . $_proxy_port;
-        }
-
-        push @_args, '--port';
-        push @_args, $_selenium_port;
-
-        # for now we hardcode the browser to Chrome
-        push @_args, '--driver';
-        push @_args, 'chrome';
-
+    if ($_proxy_port) {
+        push @_args, '--proxy';
+        push @_args, 'localhost:' . $_proxy_port;
     }
+
+    if ($selenium_location_full) {
+        push @_args, '--selenium-binary';
+        push @_args, $selenium_location_full;
+    }
+
+    if ($chromedriver_location_full) {
+        push @_args, '--chromedriver-binary';
+        push @_args, $chromedriver_location_full;
+    }
+
+    # for now we hardcode the browser to Chrome
+    push @_args, '--driver';
+    push @_args, 'chrome';
 
     # WebInject test cases expect the current working directory to be where webinject.pl is
     my $_orig_cwd = cwd;
@@ -197,13 +194,13 @@ sub call_webinject_with_testfile {
     my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
     if (defined $opt_capture_stdout) {
         print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
-        print {*STDOUT} "    webinject.pl @_args\n";
-        $_status = system "webinject.pl @_args > $_wi_stdout_file_full 2>&1";
+        print {*STDOUT} '    .\webinject.pl '."@_args\n";
+        $_status = system '.\webinject.pl '."@_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
         write_file($_wi_stdout_file_full, 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out');
-        $_status = system 'webinject.pl', @_args;
+        $_status = system '.\webinject.pl', @_args;
     }
 
     chdir $_orig_cwd;
@@ -266,19 +263,14 @@ sub get_date {
 
 #------------------------------------------------------------------
 sub display_title_info {
-    my ($_testfile_name, $_run_number, $_config_file_name, $_selenium_port, $_proxy_port) = @_;
-
-    my $_selenium_port_info = q{};
-    if (defined $_selenium_port) {
-        $_selenium_port_info = " [Selenium Port:$_selenium_port]";
-    }
+    my ($_testfile_name, $_run_number, $_config_file_name, $_proxy_port) = @_;
 
     my $_proxy_port_info = q{};
     if (defined $_proxy_port) {
         $_proxy_port_info = " [Proxy Port:$_proxy_port]";
     }
 
-    my $_result = `title temp\\$temp_folder_name $_config_file_name $_run_number:$_testfile_name$_selenium_port_info$_proxy_port_info`;
+    my $_result = `title temp\\$temp_folder_name $_config_file_name $_run_number:$_testfile_name$_proxy_port_info`;
 
     return;
 }
@@ -371,54 +363,6 @@ sub shutdown_browsermob_proxy {
     }
 
     return;
-}
-
-#------------------------------------------------------------------
-sub shutdown_selenium_server {
-    my ($_selenium_port) = @_;
-
-    if (not defined $_selenium_port) {
-        return;
-    }
-
-    require LWP::Simple;
-
-    my $_url = "http://localhost:$_selenium_port/selenium-server/driver/?cmd=shutDownSeleniumServer";
-    my $_content = LWP::Simple::get $_url;
-    #print {*STDOUT} "Shutdown Server:$_content\n";
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub start_selenium_server {
-    my ($_testfile_contains_selenium, $_output_location) = @_;
-
-    if (not defined $_testfile_contains_selenium) {
-        return;
-    }
-
-    if (not -e $chromedriver_location_full) {
-        die "\nCannot find ChromeDriver at $chromedriver_location_full\n";
-    }
-
-    if (not -e $selenium_location_full) {
-        die "\nCannot find Selenium Server at $selenium_location_full\n";
-    }
-
-    # copy chromedriver - source location hardcoded for now
-    copy $chromedriver_location_full, "temp/$temp_folder_name/";
-
-    # find free port
-    my $_selenium_port = _find_available_port(int(rand 999)+11_000);
-    #print "_selenium_port:$_selenium_port\n";
-
-    my $_abs_chromedriver_full = File::Spec->rel2abs( "temp\\$temp_folder_name\\chromedriver.eXe" );
-    my $_abs_selenium_log_full = File::Spec->rel2abs( $_output_location.'selenium_log.txt' );
-
-    my $_pid = _start_windows_process(qq{cmd /c java -Dwebdriver.chrome.driver="$_abs_chromedriver_full" -Dwebdriver.chrome.logfile="$_abs_selenium_log_full" -jar $selenium_location_full -port $_selenium_port -trustAllSSLCertificates});
-
-    return $_selenium_port;
 }
 
 #------------------------------------------------------------------
@@ -1676,8 +1620,8 @@ sub _create_default_config {
     $_config .= ''."\n";
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
-    $_config .= 'selenium_location_full=C:\selenium-server\selenium-server-standalone-2.53.1.jar'."\n";
-    $_config .= 'chromedriver_location_full=C:\selenium-server\chromedriver.exe'."\n";
+    $_config .= 'selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar'."\n";
+    $_config .= 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
     $_config .= 'testfile_full=../webinject/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
     $_config .= 'web_server_location_full=C:\inetpub\wwwroot'."\n";
