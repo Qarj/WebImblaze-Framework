@@ -754,8 +754,8 @@ sub build_summary_of_batches {
     # create an array containing all files representing summary records for all of todays batches
     my @_summary_records = glob("$today_home/All_Batches/".'*.record');
 
-    # sort by date created, ascending
-    my @_sorted_summary = sort { -C $a <=> -C $b } @_summary_records;
+    # sort by date modified, ascending (-C would be date created)
+    my @_sorted_summary = sort { -M $a <=> -M $b } @_summary_records;
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
