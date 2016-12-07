@@ -258,20 +258,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                    </xsl:choose>
                  </xsl:for-each>
 
-
-                  <xsl:choose>
-                      <xsl:when test="assertcount-success='false'">
-                       <td bgcolor="#FF82F8">
-                      	 <xsl:choose>
-                            <xsl:when test="assertcount-message">
-                                <xsl:value-of select="assertcount-message"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:text>assertcount failed</xsl:text>
-                            </xsl:otherwise>
+                 <xsl:for-each select='*[contains(name(), "assertcount")]'>
+                   <xsl:choose>
+                     <xsl:when test="descendant::success='false'">
+                       <td class="auto_fail_info">
+                         <xsl:choose>
+                           <xsl:when test="descendant::message">
+                             <xsl:value-of select="descendant::message"/>
+                           </xsl:when>
+                           <xsl:otherwise>
+                             <xsl:text>ASSERT COUNT FAILED</xsl:text>
+                           </xsl:otherwise>
                          </xsl:choose>
-                       </td></xsl:when>
-                  </xsl:choose>
+                       </td>
+                     </xsl:when>
+                   </xsl:choose>
+                 </xsl:for-each>
+
                   <xsl:choose>
                       <xsl:when test="verifyresponsetime-success='false'">
                        <td class="time_info">
