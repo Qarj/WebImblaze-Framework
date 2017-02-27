@@ -206,7 +206,7 @@ For debug purposes.
 # tasks
 The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
 
-`Regression.pl` is another example showing how you can "start" a test, or "call" a test.
+`Selftest.pl` is another example showing how you can "start" a test, or "call" a test.
 
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
 parallel.
