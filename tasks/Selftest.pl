@@ -41,6 +41,13 @@ my $failed_test_files_count = 0;
 my $passed_test_files_count = 0;
 my @failed_test_files;
 
+# start the Selenium based tests first since they are slower
+start('../../WebInject-Selenium/selftest/substeps/helper_click.xml');
+start('../../WebInject-Selenium/selftest/substeps/helper_keys_to_element.xml');
+start('../../WebInject-Selenium/selftest/substeps/helper_move_to.xml');
+start('../../WebInject-Selenium/selftest/substeps/helper_wait_visible.xml');
+start('../../WebInject-Selenium/selftest/selenium_core.xml');
+
 # specify the location of the test files relative to this script
 start('../../WebInject/selftest/addheader.xml');
 start('../../WebInject/selftest/assertcount.xml');
@@ -54,10 +61,6 @@ start('../../WebInject/selftest/firstlooponly.xml');
 start('../../WebInject/selftest/getbackgroundimages.xml');
 start('../../WebInject/selftest/gethrefs.xml');
 start('../../WebInject/selftest/getsrcs.xml');
-start('../../WebInject/selftest/helper_click.xml');
-start('../../WebInject/selftest/helper_keys_to_element.xml');
-start('../../WebInject/selftest/helper_move_to.xml');
-start('../../WebInject/selftest/helper_wait_visible.xml');
 start('../../WebInject/selftest/httpauth.xml');
 start('../../WebInject/selftest/httppost.xml');
 start('../../WebInject/selftest/httppost_form-data.xml');
@@ -83,7 +86,6 @@ start('../../WebInject/selftest/retryfromstep.xml');
 start('../../WebInject/selftest/runon.xml');
 start('../../WebInject/selftest/sanitycheck.xml');
 start('../../WebInject/selftest/section.xml');
-start('../../WebInject/selftest/selenium_core.xml');
 start('../../WebInject/selftest/specialcharacters.xml');
 start('../../WebInject/selftest/substitutions.xml');
 start('../../WebInject/selftest/useragent.xml');
