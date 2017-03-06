@@ -41,6 +41,10 @@ my $failed_test_files_count = 0;
 my $passed_test_files_count = 0;
 my @failed_test_files;
 
+
+#SELFTEST ONLY:
+my $update = system('..\..\WebInject-Selenium\plugins\update.pl');
+
 # start the Selenium based tests first since they are slower
 start('../../WebInject-Selenium/selftest/substeps/helper_click.xml');
 start('../../WebInject-Selenium/selftest/substeps/helper_keys_to_element.xml');
