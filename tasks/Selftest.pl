@@ -57,6 +57,7 @@ start('../../WebInject/selftest/addheader.xml');
 start('../../WebInject/selftest/assertcount.xml');
 start('../../WebInject/selftest/assertionskips.xml');
 start('../../WebInject/selftest/autocontrolleronly.xml');
+start('../../WebInject/selftest/autoretry.xml');
 start('../../WebInject/selftest/commandonerror.xml');
 start('../../WebInject/selftest/decodequotedprintable.xml');
 start('../../WebInject/selftest/donotrunon.xml');
