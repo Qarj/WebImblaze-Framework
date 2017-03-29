@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.06';
+$VERSION = '1.07';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -854,6 +854,7 @@ sub _write_summary_record {
     if ($_number_of_failures > 0) { $_overall = 'FAIL'; }
     if ($_number_of_sanity_failures > 0) { $_overall = 'SANITY CHECK FAILED'; $_concurrency_text = q{}; }
     if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
+    $_concurrency_text = q{}; # blank out concurrency text totally now, it is very low value information
 
     # get date for yesterday
     my ( $_yesterday_yyyy, $_yesterday_mm, $_yesterday_dd ) = get_date( - 86_400);
