@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.05';
+$VERSION = '1.06';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -821,6 +821,7 @@ sub _write_summary_record {
     my $_number_of_sanity_failures = _get_number_of_sanity_failures($_root);
 
     my $_number_of_failures = _get_number_of_failures($_root);
+    my $_number_of_failed_runs = _get_number_of_failed_runs($_root);
 
     my $_total_run_time_seconds = _get_total_run_time_seconds($_root);
 
@@ -868,10 +869,10 @@ sub _write_summary_record {
     if ($_status eq 'CORRUPT' ) {
         $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message *$opt_target*</title>\n|;
     } elsif ($_number_of_sanity_failures > 0) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     } else {
     	if ($_number_of_failures > 0) {
-            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_failures/$_total_steps_run FAILED, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     	} else {
             $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: ALL $_total_steps_run steps OK, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     	}
@@ -996,6 +997,23 @@ sub _get_total_run_time_seconds {
 
     # format to 0 decimal places
     return sprintf '%.0f', $_total_run_time;
+}
+
+#------------------------------------------------------------------
+sub _get_number_of_failed_runs {
+    my ($_root) = @_;
+
+    # assume we do not have any sanity failures
+    my $_num_failed_runs = 0;
+
+    my $_elt = $_root;
+    while ( $_elt = $_elt->next_elt( $_root,'test_steps_failed') ) {
+        if ($_elt->field() > 0) {
+            $_num_failed_runs += 1;
+        }
+    }
+
+    return $_num_failed_runs;
 }
 
 #------------------------------------------------------------------
