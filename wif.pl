@@ -1853,6 +1853,9 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -c|--capture-stdout         capture wif.pl and webinject.pl STDOUT
 -k|--keep                   keep temporary files
 
+   --create-config          create a wif.config file with default values
+                            WARNING! Will overwrite the current wif.config
+
 wif.pl -v|--version
 wif.pl -h|--help
 EOB

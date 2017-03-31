@@ -1,10 +1,16 @@
-# WebInject Framework 1.05 Manual
+# WebInject Framework 1.07 Manual
 
 # wif.config
 
 This configuration file tells wif.pl where to find various components that it needs.
 
-It also used by wif.pl to store some of the command line options you chose the last time you
+You can create a config file with default values to get you started as follows:
+
+```
+wif.pl --create-config
+```
+
+The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you
 invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
 ## [main] config
@@ -34,26 +40,30 @@ You should ensure this option is set to `false` in most circumstances.
 ### browsermob_proxy_location_full
 Where to find `browsermob-proxy.bat`. If you are not using BrowserMob Proxy, it is safe to leave this option at the default, even if is not installed.
 
+```
+browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat
+```
+
+### chromedriver_location_full
+Where to find the chromedriver binary. If you do not have Selenium tests, this value does not matter.
+
+```
+chromedriver_location_full=C:\selenium\chromedriver.exe
+```
+
 ### selenium_location_full
 Where to find the Selenium Standalone Server JAR file. If you are not using Selenium WebDriver it is safe to leave this option at the default, even if is not installed.
 
-### chromedriver_location_full
-Where to find chromedriver. If you are not using Selenium WebDriver, just leave this at the default since it will not be referred to.
+```
+selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
+```
 
 ### testfile_full
 The last test case file that was run. Updated by wif.pl.
 
-### web_server_location_full
-
-Since wif.pl publishes the test run results to a web server for viewing, you need to
-specify the root folder location.
-
-On Windows, the default IIS server location is at 'C:\inetpub\wwwroot'
-
-### webinject_location
-
-Where to find webinject.pl, relative to where wif.pl is located. If you have placed them
-in the same folder, you can simply specify `./`
+```
+testfile_full=tests/totaljobs/mytotaljobs.xml
+```
 
 ### web_server_address
 
@@ -63,6 +73,30 @@ through a web browser.
 For testing wif.pl on your own machine, you can simply put in `localhost`
 
 If you are running the web server on a port other than 80, it can be specified like this `localhost:8080`
+
+```
+web_server_address=my-server.example.com
+```
+
+### web_server_location_full
+
+Since wif.pl publishes the test run results to a web server for viewing, you need to
+specify the root folder location.
+
+On Windows, the default IIS server location is at 'C:\inetpub\wwwroot'
+
+```
+web_server_location_full=C:\inetpub\wwwroot
+```
+
+### webinject_location
+
+Where to find webinject.pl, relative to where wif.pl is located. If you have placed them
+in the same folder, you can simply specify `.`
+
+```
+webinject_location=.
+```
 
 # environment_config
 
@@ -114,6 +148,7 @@ In this section you can specify values for:
 * globalretry
 * globaljumpbacks
 * autocontrolleronly
+* autoretry
 
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebInject may try to use a null value and fail.
 
@@ -203,10 +238,13 @@ you will want the STDOUT output to be captured.
 Tells wif.pl not to delete the temporary folder it created for WebInject's temporary files.
 For debug purposes.
 
+## `--create-config`
+Creates (or overwrites) the wif.config with default values to get you started.
+
 # tasks
 The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
 
-`Selftest.pl` is another example showing how you can "start" a test, or "call" a test.
+`Regression.pl` is another example showing how you can "start" a test, or "call" a test.
 
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
 parallel.
