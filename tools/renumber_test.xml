@@ -1,0 +1,99 @@
+<testcases repeat="1">
+
+<case
+    section="My Totaljobs Signin"
+    id="10"
+    description1="My Totaljobs Signin Page:{CONCURRENCY}:{NOW}"
+    description2="Business Error File \errorlogs\Totaljobs\{YEAR}.{MONTH}.{WEEKOFMONTH}\bus_{YEAR}{MONTH}{DAY}.htm"
+    method="get"
+    url="https://{TOTALJOBS_JOBSEEKER_HOST}/Authenticated/Login.aspx?ReturnUrl=%2fAuthenticated%2fDefault.aspx&retry={RETRY}"
+    verifypositive="Existing User"
+    verifypositive20="^((?!jobseeker 500 error).)*$|||A jobseeker error has occurred"
+    parseresponse='__VIEWSTATE" value="|"|escape'
+    parseresponse3="Showcase | to thousands|escape"
+    parseresponseCUSTOM="Be | to the latest|escape"
+    assertcount="headhunted|||0"
+    verifyresponsetime="10.101"
+/>
+
+<case
+    id="15"
+    description1="Info - CUSTOM is {CUSTOM}"
+    description2="3 is [{3}] - same as [{3}]"
+    method="cmd"
+    command1="echo {}"
+    command2="echo one two three four"
+    logastext="true"
+    parseresponseFRED="echo one | four|escape"
+    retryfromstep="10"
+/>
+
+<case
+    id="20"
+    description1="Sign In - Post User Name and Password, FRED is [{FRED}]"
+    description2="Length is {LENGTH} characters for previous step response"
+    method="post"
+    url="https://{TOTALJOBS_JOBSEEKER_HOST}/Authenticated/Login.aspx?ReturnUrl=%2fAuthenticated%2fDefault.aspx"
+    postbody="__VIEWSTATE={DATA}&__VIEWSTATEGENERATOR={DATA}&tx{NAME}mail=ops-support@totaljobsgroup.com&txtPassword=test1ng&chkRememberMe=on&btnLogin=Submit"
+    verifypositive="REFRESH"
+    verifypositive20="^((?!jobseeker 500 error).)*$|||A jobseeker error has occurred"
+    logastext="true"
+    addcookie="JBM_COOKIE=4830075"
+    retryfromstep="15"
+/>
+
+<!-- verifypostive1 demonstrates a verification with an or - so long as it finds one of those words, the test will pass  -->
+<case
+    section="Give me more"
+    id="30"
+    description1="Verify that we can access the My Totaljobs Homepage"
+    description2="Length is {LENGTH} characters for previous step response"
+    method="get"
+    url="https://{TOTALJOBS_JOBSEEKER_HOST}/Authenticated/Default.aspx"
+    verifypositive="Your last visit was|||This is a special message"
+    verifypositive1="superman|batman|My account|goaway"
+    verifynegative8="cookie monster|||Special Verify Negative message"
+    retryfromstep="15"
+/>
+
+<case
+    id="32"
+    description1="Get the my jobseeker profile"
+    description2="Date and Time is {FORMATDATETIME}"
+    method="get"
+    url="https://{TOTALJOBS_JOBSEEKER_HOST}/Authenticated/Profile.aspx"
+    verifypositive1="ops-support"
+    verifypositive20="^((?!jobseeker 500 error).)*$|||A jobseeker error has occurred"
+    verifynegative2="make your profile searchable to recruiters from here|||User should not have a profile"
+    parseresponse='__VIEWSTATE" value="|"|'    
+    addcookie="JBM_COOKIE=4830075"
+/>
+
+<case
+    section="Command Testing [{ELAPSED_SECONDS} elapsed seconds till now, {ELAPSED_MINUTES} elapsed minutes]"
+    id="100"
+    description1="Echo Time - TEST, Unique Num is {DATETIME}"
+    description2="Length is {LENGTH} characters for previous step response"
+    method="cmd"
+    command="echo hey  _ST_%time%_ED_ _DS_%date%_DE_"
+    runon="DEV|PAT"
+    parseresponse24="_ST_|_ED_|"
+    parseresponse25="_DS_|_DE_|"
+    retryfromstep="32"
+/>
+
+<case
+    id="110"
+    description1="Show the size of the job basket manager content"
+    description2="Length is {LENGTH} characters, time is {HH}:{MM}:{SS}"
+    method="cmd"
+    command="echo The length of the JavaScript is {LENGTH} or so characters"
+    command1="dir"
+    command2="echo %computername%"
+    command4='echo "%2fRecruitment%2fError.aspx%3fcode%3d2013-01-10-04-01-16-01V-TOTALJOBS-RZ"'
+    verifypositive20="JavaScript"
+    commandonerror="echo Something terrible"
+    ignoreautoassertions="true"
+/>
+
+</testcases>
