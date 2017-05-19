@@ -244,10 +244,19 @@ Creates (or overwrites) the wif.config with default values to get you started.
 # tasks
 The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
 
-`Regression.pl` is another example showing how you can "start" a test, or "call" a test.
-
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
 parallel.
 
 If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script
 proceeds.
+
+## Example
+
+```
+tasks\Examples.pl --env DEV --target WebInject_examples --batch WebInject_Example_Tests --check-alive http://www.example.com
+```
+
+All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`,
+the target is `environment_config/DEV/WebInject_examples.config`, the batch name is `WebInject_Examples`.
+Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned.
+If there is no response, no tests will be run.
