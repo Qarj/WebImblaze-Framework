@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.01';
+$VERSION = '1.03';
 
 use Getopt::Long;
 use Cwd;
@@ -146,8 +146,45 @@ sub read_wif_config {
 }
 
 #------------------------------------------------------------------
+sub is_available {
+    my ($_url) = @_;
+    
+    my $useragent = LWP::UserAgent->new(keep_alive=>1);
+    
+    $useragent->agent('WebGet');
+    $useragent->timeout(20); # default timeout of 360 seconds
+    
+    $useragent->max_redirect('0');  #don't follow redirects for GET's (POST's already don't follow, by default)
+    eval
+    {
+       $useragent->ssl_opts(verify_hostname=>0); ## stop SSL Certs from being validated - only works on newer versions of of LWP so in an eval
+       $useragent->ssl_opts(SSL_verify_mode=>'SSL_VERIFY_NONE'); ## from Perl 5.16.3 need this to prevent ugly warnings
+    };
+    
+    my $request = HTTP::Request->new('GET',"$_url");
+    
+    my $response = $useragent->request($request);
+    
+    #print $response->as_string;
+    
+    if (($response->as_string() =~ /HTTP\/1.(0|1) (1|2|3)/i)) {
+        #print "\nRESPONSE CODE IS NORMAL\n";
+    } else {
+        $response->as_string() =~ /(HTTP\/1.)(.*)/i;
+        if ($1) {  #this is true if an HTTP response returned
+            #print "\nERROR RESPONSE CODE: ($1$2)\n";
+        } else {
+            print "\nERROR - NO RESPONSE, URL IS NOT REACHABLE\n";
+            return; # return falsey
+        }
+    }
+    
+    return 'true';
+}
+
+#------------------------------------------------------------------
 sub get_options {
-    my ($_opt_target, $_opt_batch, $_opt_environment) = @_;
+    my ($_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive) = @_;
 
     my ($_opt_version, $_opt_help);
 
@@ -156,6 +193,7 @@ sub get_options {
         't|target=s'                => \$_opt_target,
         'b|batch=s'                 => \$_opt_batch,
         'e|env=s'                   => \$_opt_environment,
+        'c|check-alive=s'           => \$_opt_check_alive,
         'v|V|version'               => \$_opt_version,
         'h|help'                    => \$_opt_help,
         )
@@ -177,7 +215,7 @@ sub get_options {
         exit;
     }
 
-    return $_opt_target, $_opt_batch, $_opt_environment;
+    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive;
 }
 
 sub print_version {
