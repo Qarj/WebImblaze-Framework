@@ -7,15 +7,101 @@
 package Runner;
 
 use strict;
-use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.03';
+$VERSION = '1.04';
 
 use Getopt::Long;
 use Cwd;
 use Config::Tiny;
 use File::Spec;
+use File::Basename;
+use LWP;
+use HTTP::Request::Common;
+use IO::Socket::SSL;
+local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 'false';
+local $| = 1; # don't buffer output to STDOUT
+
+require Alerter;
+
+my ($script_name, $script_path) = fileparse($0,'.pl');
+
+my $config_wif_location = "../";
+my $opt_batch = $script_name; # default the batch name to the script name
+our ($opt_target, $opt_environment) = read_wif_config($config_wif_location.'wif.config');
+my ($opt_check_alive, $opt_slack_alert);
+
+my $failed_test_files_count = 0;
+my $passed_test_files_count = 0;
+my @failed_test_files;
+
+sub start_runner {
+    
+    ($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert) = get_options($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert);
+    $opt_target = lc $opt_target;
+    $opt_environment = uc $opt_environment;
+    
+    if ($opt_check_alive) {
+        if ( is_available($opt_check_alive) ) {
+            # all systems go
+        } else {
+            # check-alive url returned no response, target server is down, do not run tests 
+            exit;
+        }
+    }
+    
+    # add a random number to the batch name so this run will have a different name to a previous run
+    $opt_batch .= random(99_999);
+}
+
+sub stop_runner {
+    if ($failed_test_files_count && $opt_slack_alert) {
+        my $_files = 'files';
+        if ($failed_test_files_count == 1) { $_files = 'file'; }
+        my $_message = "There were errors in $script_name. $failed_test_files_count test $_files returned an error status:\n";
+        foreach (@failed_test_files) {
+            $_message .= '    ['.$_.']'."\n";
+        }
+        print "\n".$_message;
+        Alerter::slack_alert('<!channel> '.$_message, $opt_slack_alert);
+        exit 1;
+    } else {
+        exit 0;
+    }
+}
+
+sub start {
+    my ($_test) = @_;
+
+    start_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
+
+    return;
+}
+
+sub call {
+    my ($_test) = @_;
+
+    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
+
+    my ($_test_name, undef) = fileparse($_test,'.xml');
+
+    if ($_status) {
+        $failed_test_files_count++;
+        push @failed_test_files, $_test_name;
+    } else {
+        $passed_test_files_count++;
+    }
+
+    return;
+}
+
+sub repeat {
+    my ($_test, $_repeats) = @_;
+
+    for my $_idx (1..$_repeats) {
+        call($_test);
+    }
+}
 
 sub start_test {
     my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
@@ -184,7 +270,7 @@ sub is_available {
 
 #------------------------------------------------------------------
 sub get_options {
-    my ($_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive) = @_;
+    my ($_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert) = @_;
 
     my ($_opt_version, $_opt_help);
 
@@ -194,6 +280,7 @@ sub get_options {
         'b|batch=s'                 => \$_opt_batch,
         'e|env=s'                   => \$_opt_environment,
         'c|check-alive=s'           => \$_opt_check_alive,
+        's|slack-alert=s'           => \$_opt_slack_alert,
         'v|V|version'               => \$_opt_version,
         'h|help'                    => \$_opt_help,
         )
@@ -215,7 +302,7 @@ sub get_options {
         exit;
     }
 
-    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive;
+    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert;
 }
 
 sub print_version {
