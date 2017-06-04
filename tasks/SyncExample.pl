@@ -26,5 +26,4 @@ Runner::start('../../WebInject/examples/myaccount.xml');
 Runner::start('../../WebInject/examples/myaccount.xml');
 Runner::start('../../WebInject/examples/myaccount.xml');
 
-
 Runner::stop_runner();
