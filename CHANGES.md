@@ -5,6 +5,14 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.08 - Jun 8, 2017
+* optimisations - create less temporary files
+* exit 1 if webinject.pl exits 1
+* example wif.config removed from project, but wif.pl can now create a default one if missing
+* example on how to alert in Slack channel if regression batch fails
+* moved some functionality to webinject.pl for performance reasons
+* alert if user account does not have appropriate write permissions
+
 ### Version 1.05 - Jun 12, 2016
 * testonly and liveonly was replaced by runon in webinject, wif.pl needs to write out the environment to the webinject config to support this
 * selenium server location was using a hard coded value rather than the config value
