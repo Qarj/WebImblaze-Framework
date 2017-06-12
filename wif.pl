@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.07';
+$VERSION = '1.08';
 
 #    WebInjectFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -547,13 +547,13 @@ sub publish_static_files {
     _copy ( 'content/root/*', $web_server_location_full);
 
     # xsl and css stylesheets plus images
-    make_path ( $web_server_location_full.'/content/' ) ;
+    _make_path ( $web_server_location_full.'/content/' ) ;
     _copy ( 'content/*.css', $web_server_location_full.'/content/' );
     _copy ( 'content/*.xsl', $web_server_location_full.'/content/' );
     _copy ( 'content/*.jpg', $web_server_location_full.'/content/' );
 
     # javascripts
-    make_path ( $web_server_location_full.'/scripts/' ) ;
+    _make_path ( $web_server_location_full.'/scripts/' ) ;
     _copy ( 'scripts/*.js', $web_server_location_full.'/scripts/' );
 
     return;
@@ -1109,9 +1109,7 @@ sub _get_largest_end_time {
 sub write_pending_result {
     my ($_run_number) = @_;
 
-    make_path( "$today_home/All_Batches" );
-
-    make_path( "$today_home/All_Batches/$opt_batch" );
+    _make_path( "$today_home/All_Batches/$opt_batch" );
 
     _write_pending_record( "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name".'_'."$testfile_name".'_'."$_run_number".'.txt', $_run_number );
 
@@ -1246,19 +1244,27 @@ sub check_testfile_xml_parses_ok {
 }
 
 #------------------------------------------------------------------
+sub _make_path {
+
+    my ($_path) = @_;
+
+    make_path( "$_path", {error => \my $err} );
+
+    if (@$err) { die "\nThis user account needs permission to create $_path\n" };
+
+    return;
+}
+
+#------------------------------------------------------------------
 sub create_run_number {
 
     if (not -e "$web_server_location_full" ) {
-        die "Web server location of $web_server_location_full does not exist\n";
+        die "\nWeb server location of $web_server_location_full does not exist\n";
     }
 
     # if they do not exist already, folders are created for this test file for todays date
-    make_path( "$web_server_location_full/$opt_environment" );
-    make_path( "$web_server_location_full/$opt_environment/$yyyy" );
-    make_path( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
-    make_path( "$today_home" );
-    make_path( "$today_home/$testfile_parent_folder_name" );
-    make_path( "$today_home/$testfile_parent_folder_name/$testfile_name" );
+    _make_path( "$web_server_location_full/$opt_environment/$yyyy/$mm" );
+    _make_path( "$today_home/$testfile_parent_folder_name/$testfile_name" );
 
     my $_run_number_full = "$today_home/$testfile_parent_folder_name/$testfile_name/Run_Number.txt";
     _lock_file($_run_number_full);
@@ -1267,7 +1273,7 @@ sub create_run_number {
 
     # create a folder for this run number
     my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
-    make_path( $_this_run_home );
+    _make_path( $_this_run_home );
 
     return $_run_number, $_this_run_home;
 }
@@ -1582,7 +1588,7 @@ sub create_temp_folder {
     $_random = sprintf '%05d', $_random; # add some leading zeros
 
     my $_random_folder = $opt_target . '_' . $testfile_name . '_' . $_random;
-    make_path 'temp/' . $_random_folder or die "\n\nCould not create temporary folder temp/$_random_folder\n";
+    _make_path ('temp/' . $_random_folder);
 
     return $_random_folder;
 }

@@ -1,4 +1,4 @@
-# WebInject Framework 1.07 Manual
+# WebInject Framework 1.08 Manual
 
 # wif.config
 
