@@ -759,7 +759,8 @@ sub build_summary_of_batches {
 
     # write the header
     my $_summary = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="http://$web_server_address/content/Summary.xsl"?>\n|;
+#    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="http://$web_server_address/content/Summary.xsl"?>\n|;
+    $_summary .= qq|<?xml-stylesheet type="text/xsl" href="/content/Summary.xsl"?>\n|; ##trial domain relative url for Summary.xsl
     $_summary .= qq|<summary version="2.0">\n|;
     $_summary .= qq|    <channel>\n|;
 
