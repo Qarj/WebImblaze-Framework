@@ -1134,7 +1134,7 @@ sub _build_batch_summary {
 
     # write the header
     my $_batch = qq|<?xml version="1.0" encoding="ISO-8859-1"?>\n|;
-    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="../../../../../content/Batch.xsl"?>\n|;
+    $_batch .= qq|<?xml-stylesheet type="text/xsl" href="/content/Batch.xsl"?>\n|;
     $_batch .= qq|<batch>\n|;
 
     # write all the run records
