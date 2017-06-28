@@ -63,6 +63,8 @@ my ( $std_fh );
 
 # start globally read variables  - will only be written to from the main script
 my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) = get_date(0); ## no critic(NamingConventions::ProhibitAmbiguousNames)
+# get date for yesterday - needs to be calculated at script start, not at script end where it is used since it may run past midnight
+my ( $yesterday_yyyy, $yesterday_mm, $yesterday_dd ) = get_date( - 86_400);
 my $today_home;
 my $results_content;
 # end globally read variables
@@ -857,13 +859,10 @@ sub _write_summary_record {
     if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
     $_concurrency_text = q{}; # blank out concurrency text totally now, it is very low value information
 
-    # get date for yesterday
-    my ( $_yesterday_yyyy, $_yesterday_mm, $_yesterday_dd ) = get_date( - 86_400);
-
     my $_record;
 
     $_record .= qq|      <title>$opt_environment Summary</title>\n|;
-    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$_yesterday_yyyy/$_yesterday_mm/$_yesterday_dd/All_Batches/Summary.xml</link>\n|;
+    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yesterday_yyyy/$yesterday_mm/$yesterday_dd/All_Batches/Summary.xml</link>\n|;
     $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
     $_record .= '         <title>';
@@ -880,7 +879,7 @@ sub _write_summary_record {
     	}
     }
 
-    $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch.xml</link>\n|;
+    $_record .= qq|         <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch.xml</link>\n|;
     $_record .= qq|         <description></description>\n|;
     $_record .= qq|         <pubDate>$dd/$mm/$yyyy $hour:$minute</pubDate>\n|;
     $_record .= qq|      </item>\n|;
