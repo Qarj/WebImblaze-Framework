@@ -49,7 +49,7 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_no_retry, $opt_help, $opt_keep, $opt_capture_stdout);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_capture_stdout);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webinject_location, $browsermob_proxy_location_full );
@@ -192,6 +192,10 @@ sub call_webinject_with_testfile {
     if ($opt_selenium_port) {
         push @_args, '--selenium-port';
         push @_args, $opt_selenium_port;
+    }
+
+    if ($opt_headless) {
+        push @_args, '--headless';
     }
 
     # for now we hardcode the browser to Chrome
@@ -1787,6 +1791,7 @@ sub get_options_and_config {
         'p|use-browsermob-proxy=s'  => \$opt_use_browsermob_proxy,
         'g|selenium-host=s'         => \$opt_selenium_host,
         'o|selenium-port=s'         => \$opt_selenium_port,
+        'l|headless'                => \$opt_headless,
         'n|no-retry'                => \$opt_no_retry,
         'u|no-update-config'        => \$_opt_no_update_config,
         'c|capture-stdout'          => \$opt_capture_stdout,
@@ -1867,7 +1872,8 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -e|--env                    high level environment DEV, LIVE    --env DEV
 -p|--use-browsermob-proxy   use browsermob-proxy                --use-browsermob-proxy true
 -g|--selenium-host          use selenium (grid) host at         --selenium-host 10.44.1.2
--o|--selneium-port          selenium (grid) port                --selenium-port 4444
+-o|--selenium-port          selenium (grid) port                --selenium-port 4444
+-l|--headless               start chrome in headless mode       --headless
 -n|--no-retry               do not invoke retries
 -u|--no-update-config       do not update config to reflect options
 -c|--capture-stdout         capture wif.pl and webinject.pl STDOUT
