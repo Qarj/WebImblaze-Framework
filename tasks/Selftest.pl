@@ -30,6 +30,7 @@ Runner::start('../../WebInject-Selenium/selftest/substeps/helper_wait_visible.xm
 Runner::start('../../WebInject-Selenium/selftest/selenium_core.xml');
 
 # specify the location of the test files relative to this script
+Runner::start('../../WebInject/selftest/abort.xml');
 Runner::start('../../WebInject/selftest/addheader.xml');
 Runner::start('../../WebInject/selftest/assertcount.xml');
 Runner::start('../../WebInject/selftest/assertionskips.xml');
@@ -67,7 +68,6 @@ Runner::start('../../WebInject/selftest/retry.xml');
 Runner::start('../../WebInject/selftest/retryfromstep.xml');
 Runner::start('../../WebInject/selftest/runif.xml');
 Runner::start('../../WebInject/selftest/runon.xml');
-Runner::start('../../WebInject/selftest/sanitycheck.xml');
 Runner::start('../../WebInject/selftest/section.xml');
 Runner::start('../../WebInject/selftest/setcookie.xml');
 Runner::start('../../WebInject/selftest/sharedvar.xml');

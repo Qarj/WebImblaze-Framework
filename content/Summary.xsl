@@ -35,7 +35,7 @@
         <button class="btn" data-filter="pass">Passed</button>
         <button class="btn" data-filter="pend">Pending</button>
         <button class="btn" data-filter="fail">Failed</button>
-        <button class="btn" data-filter="sanity">Sanity Failed</button>
+        <button class="btn" data-filter="abort">Execution Aborted</button>
 
         <form id="live-search" action="" class="inputbox" onsubmit="return submitFilter()">
             <fieldset>
@@ -63,8 +63,8 @@
         </xsl:if>        
         <xsl:if test="contains(title, 'FAILED')">
             <xsl:choose>
-                <xsl:when test="contains(title, 'SANITY FAILURE')">
-                    <li class="row"><a class="result sanity" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
+                <xsl:when test="contains(title, 'EXECUTION ABORTION')">
+                    <li class="row"><a class="result abort" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>
                 </xsl:when>        
                 <xsl:otherwise>        
                     <li class="row"><a class="result fail" href="{link}" rel="bookmark"><xsl:value-of select="title"/></a></li>

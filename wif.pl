@@ -23,7 +23,7 @@ $VERSION = '1.08';
 #    Example: 
 #              wif.pl ../WebInject/examples/demo.xml --target skynet --batch demonstration
 #              wif.pl ../WebInject/examples/command.xml --target skynet --batch allgood
-#              wif.pl ../WebInject/examples/sanitycheck.xml --target skynet --batch veryverybad
+#              wif.pl ../WebInject/examples/abort.xml --target skynet --batch veryverybad
 #              wif.pl ../WebInject/examples/errormessage.xml --target skynet --batch notgood
 #              wif.pl ../WebInject/examples/corrupt.xml --target skynet --batch worstpossible
 #              wif.pl ../WebInject/examples/sleep.xml --target skynet --batch tired
@@ -678,7 +678,7 @@ sub _write_final_record {
     my $_assertion_skips = $_result->{'test-summary'}->{'assertion-skips'};
     #my $_verifications_passed = $_result->{'test-summary'}->{'verifications-passed'};
     #my $_verifications_failed = $_result->{'test-summary'}->{'verifications-failed'};
-    my $_sanity_check_passed = $_result->{'test-summary'}->{'sanity-check-passed'};
+    my $_execution_aborted = $_result->{'test-summary'}->{'execution-aborted'};
 
     my ( $_yyyy, $_mm, $_dd, $_hour, $_minute, $_second, $_seconds ) = get_date(0);
     my $_end_date_time = "$_yyyy-$_mm-$_dd".'T'."$_hour:$_minute:$_second";
@@ -694,7 +694,7 @@ sub _write_final_record {
     $_record .= qq|      <test_steps_failed>$_test_cases_failed</test_steps_failed>\n|;
     $_record .= qq|      <test_steps_run>$_test_cases_run</test_steps_run>\n|;
     $_record .= qq|      <assertion_skips>$_assertion_skips</assertion_skips>\n|;
-    $_record .= qq|      <sanity_check_passed>$_sanity_check_passed</sanity_check_passed>\n|;
+    $_record .= qq|      <execution_aborted>$_execution_aborted</execution_aborted>\n|;
     $_record .= qq|      <max_response_time>$_max_response_time</max_response_time>\n|;
     $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
@@ -734,7 +734,7 @@ sub _write_corrupt_record {
     $_record .= qq|      <test_steps_failed>0</test_steps_failed>\n|;
     $_record .= qq|      <test_steps_run>0</test_steps_run>\n|;
     $_record .= qq|      <assertion_skips></assertion_skips>\n|;
-    $_record .= qq|      <sanity_check_passed>true</sanity_check_passed>\n|;
+    $_record .= qq|      <execution_aborted>false</execution_aborted>\n|;
     $_record .= qq|      <max_response_time>0.0</max_response_time>\n|;
     $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;
@@ -835,7 +835,7 @@ sub _write_summary_record {
     # $_items_text will look like [1 item] or [5 items] or [4 items/1 pending]
     my $_items_text = _build_items_text($_number_of_items, $_number_of_pending_items);
 
-    my $_number_of_sanity_failures = _get_number_of_sanity_failures($_root);
+    my $_number_of_execution_abortions = _get_number_of_execution_abortions($_root);
 
     my $_number_of_failures = _get_number_of_failures($_root);
     my $_number_of_failed_runs = _get_number_of_failed_runs($_root);
@@ -869,7 +869,7 @@ sub _write_summary_record {
     my $_overall = 'PASS';
     if ($_number_of_pending_items > 0) { $_overall = 'PEND'; }
     if ($_number_of_failures > 0) { $_overall = 'FAIL'; }
-    if ($_number_of_sanity_failures > 0) { $_overall = 'SANITY CHECK FAILED'; $_concurrency_text = q{}; }
+    if ($_number_of_execution_abortions > 0) { $_overall = 'EXECUTION ABORTED'; $_concurrency_text = q{}; }
     if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
     $_concurrency_text = q{}; # blank out concurrency text totally now, it is very low value information
 
@@ -883,8 +883,8 @@ sub _write_summary_record {
 
     if ($_status eq 'CORRUPT' ) {
         $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message *$opt_target*</title>\n|;
-    } elsif ($_number_of_sanity_failures > 0) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_sanity_failures SANITY FAILURE(s), $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
+    } elsif ($_number_of_execution_abortions > 0) {
+        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_execution_abortions EXECUTION ABORTION(s), $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
     } else {
     	if ($_number_of_failures > 0) {
             $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
@@ -1018,7 +1018,7 @@ sub _get_total_run_time_seconds {
 sub _get_number_of_failed_runs {
     my ($_root) = @_;
 
-    # assume we do not have any sanity failures
+    # assume we do not have any execution abortions
     my $_num_failed_runs = 0;
 
     my $_elt = $_root;
@@ -1035,7 +1035,7 @@ sub _get_number_of_failed_runs {
 sub _get_number_of_failures {
     my ($_root) = @_;
 
-    # assume we do not have any sanity failures
+    # assume we do not have any execution abortions
     my $_num_failures = 0;
 
     my $_elt = $_root;
@@ -1047,15 +1047,15 @@ sub _get_number_of_failures {
 }
 
 #------------------------------------------------------------------
-sub _get_number_of_sanity_failures {
+sub _get_number_of_execution_abortions {
     my ($_root) = @_;
 
-    # assume we do not have any sanity failures
+    # assume we do not have any execution abortions
     my $_num_failures = 0;
 
     my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'sanity_check_passed') ) {
-        if ($_elt->field() eq 'false' ) {
+    while ( $_elt = $_elt->next_elt( $_root,'execution_aborted') ) {
+        if ($_elt->field() eq 'true' ) {
             $_num_failures  += 1;
         }
     }
@@ -1214,7 +1214,7 @@ sub _write_pending_record {
     $_record .= qq|      <test_steps_failed>0</test_steps_failed>\n|;
     $_record .= qq|      <test_steps_run>0</test_steps_run>\n|;
     $_record .= qq|      <assertion_skips></assertion_skips>\n|;
-    $_record .= qq|      <sanity_check_passed>true</sanity_check_passed>\n|;
+    $_record .= qq|      <execution_aborted>false</execution_aborted>\n|;
     $_record .= qq|      <max_response_time>0.0</max_response_time>\n|;
     $_record .= qq|      <target>$opt_target</target>\n|;
     $_record .= qq|      <yyyy>$yyyy</yyyy>\n|;

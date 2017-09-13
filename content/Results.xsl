@@ -307,10 +307,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
     </xsl:for-each>
 
   <xsl:choose>
-    <xsl:when test="results/test-summary/sanity-check-passed='false'">
-        <tr class="sanity_row">
+    <xsl:when test="results/test-summary/execution-aborted='true'">
+        <tr class="abort_row">
             <td></td>
-            <td class="sanity_row">SANITY CHECK FAILED - TEST EXECUTION ABORTED</td>
+            <td class="abort_row">TEST EXECUTION ABORTED</td>
             <td></td>
             <td></td>
             <xsl:choose>

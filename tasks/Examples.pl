@@ -20,6 +20,7 @@ $VERSION = '1.04';
 Runner::start_runner();
 
 # specify the location of the test files relative to this script
+Runner::start('../../WebInject/examples/abort.xml');
 Runner::start('../../WebInject/examples/addcookie.xml');
 Runner::start('../../WebInject/examples/addheader.xml');
 Runner::start('../../WebInject/examples/assertcount.xml');
@@ -44,7 +45,6 @@ Runner::start('../../WebInject/examples/retry.xml');
 Runner::start('../../WebInject/examples/retryfromstep.xml');
 
 Runner::start('../../WebInject/examples/retryresponsecode.xml');
-Runner::start('../../WebInject/examples/sanitycheck.xml');
 Runner::start('../../WebInject/examples/section.xml');
 Runner::start('../../WebInject/examples/selenium.xml');
 Runner::start('../../WebInject/examples/simple.xml');
