@@ -49,7 +49,7 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_capture_stdout);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webinject_location, $browsermob_proxy_location_full );
@@ -196,6 +196,14 @@ sub call_webinject_with_testfile {
 
     if ($opt_headless) {
         push @_args, '--headless';
+    }
+
+    if ($opt_keep_session) {
+        push @_args, '--keep-session';
+    }
+
+    if ($opt_resume_session) {
+        push @_args, '--resume-session';
     }
 
     # for now we hardcode the browser to Chrome
@@ -1796,6 +1804,8 @@ sub get_options_and_config {
         'u|no-update-config'        => \$_opt_no_update_config,
         'c|capture-stdout'          => \$opt_capture_stdout,
         'k|keep'                    => \$opt_keep,
+        's|keep-session'            => \$opt_keep_session,
+        'm|resume-session'          => \$opt_resume_session,
         'v|V|version'               => \$opt_version,
         'h|help'                    => \$opt_help,
         )
@@ -1854,6 +1864,11 @@ sub get_options_and_config {
         _write_config();
     }
 
+    # if we are keeping the browser session, we have to keep the temporary folder as well - since chromedriver and the selenium log will still be locked
+    if ($opt_keep_session) {
+        $opt_keep = 1;
+    }    
+
     return;
 }
 
@@ -1878,6 +1893,8 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -u|--no-update-config       do not update config to reflect options
 -c|--capture-stdout         capture wif.pl and webinject.pl STDOUT
 -k|--keep                   keep temporary files
+-s|--keep-session           keep browser session
+-m|--resume-session         use the browser session kept by --keep-session
 
    --create-config          create a wif.config file with default values
                             WARNING! Will overwrite the current wif.config

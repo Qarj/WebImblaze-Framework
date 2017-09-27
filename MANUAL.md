@@ -221,6 +221,15 @@ Sets the environment to PROD and runs the last test with the saved options.
 Starts BrowserMob Proxy, passes to WebInject the proxy port, then shuts down BrowserMob Proxy
 when the test is complete.
 
+## `--selenium-host`
+Passes the Selenium (Grid) host to `webinject.pl`.
+
+## `--selenium-port`
+Passes the Selenium (Grid) port to `webinject.pl`.
+
+## `--headless`
+Tells `webinject.pl` to run Selenium Chrome tests in headless mode.
+
 ## `--no-retry`
 Tells WebInject to ignore the `retry` and `retryfromstep` parameters.
 
@@ -237,6 +246,17 @@ you will want the STDOUT output to be captured.
 ## `--keep`
 Tells wif.pl not to delete the temporary folder it created for WebInject's temporary files.
 For debug purposes.
+
+## `--keep-session`
+Passes this option to `webinject.pl` which tells it to remember the Selenium session information
+and not close Selenium and the browser at the end of the run.
+
+## `--resume-session`
+If `--keep-session` was used in the previous run, then `webinject.pl` will attempt to connect to the existing
+Selenium session and browser and run the tests from the existing state.
+
+This is useful for debugging very long workflows where there is a problem deep into the workflow and you do
+not want to run the entire workflow to try various ideas to get your test step working.
 
 ## `--create-config`
 Creates (or overwrites) the wif.config with default values to get you started.
