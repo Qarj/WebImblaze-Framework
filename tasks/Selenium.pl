@@ -42,10 +42,10 @@ Runner::start('../../WebInject-Selenium/examples/tripadvisor.xml');
 Runner::start('../../WebInject-Selenium/examples/webinject-check.xml');
 
 # start the Selenium based tests first since they are slower
-Runner::start('../../WebInject-Selenium/selftest/substeps/helper_click.xml');
-Runner::start('../../WebInject-Selenium/selftest/substeps/helper_keys_to_element.xml');
-Runner::start('../../WebInject-Selenium/selftest/substeps/helper_move_to.xml');
-Runner::start('../../WebInject-Selenium/selftest/substeps/helper_wait_visible.xml');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_click.xml');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_keys_to_element.xml');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_move_to.xml');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_wait_visible.xml');
 Runner::start('../../WebInject-Selenium/selftest/selenium_core.xml');
 
 Runner::stop_runner();
