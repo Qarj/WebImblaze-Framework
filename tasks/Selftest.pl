@@ -70,6 +70,7 @@ Runner::start('../../WebInject/selftest/runif.xml');
 Runner::start('../../WebInject/selftest/runon.xml');
 Runner::start('../../WebInject/selftest/section.xml');
 Runner::start('../../WebInject/selftest/setcookie.xml');
+Runner::start('../../WebInject/selftest/ssl.xml');
 Runner::start('../../WebInject/selftest/sharedvar.xml');
 Runner::start('../../WebInject/selftest/specialcharacters.xml');
 Runner::start('../../WebInject/selftest/substitutions.xml');
