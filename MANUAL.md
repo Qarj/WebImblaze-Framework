@@ -280,3 +280,36 @@ All the tests referred to in Examples.pl will be run. The environment is `enviro
 the target is `environment_config/DEV/WebInject_examples.config`, the batch name is `WebInject_Examples`.
 Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned.
 If there is no response, no tests will be run.
+
+## Example with alert to Slack on failure (only works with call)
+
+```
+tasks\myTests.pl --env PROD --target web_farm_d --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
+```
+
+## Example which only runs a test file if the group matches
+
+Say you had a tasks file called `tasks\myRegression.pl` with the following content:
+
+```
+Runner::start('../tests/regression/register.xml', ['Bear', 'Frog']  );
+Runner::start('../tests/regression/purchase.xml', ['Bear'] );
+Runner::start('../tests/regression/profile.xml');
+```
+
+Then if you ran it with the `--group` parameter:
+```
+tasks\myRegression.pl --group Bear
+```
+It would run:
+* `register.xml` - since there is a matching group
+* `purchase.xml` - ditto
+* `profile.xml`  - since no groups are specified, default - run it
+
+Another example:
+```
+tasks\myRegression.pl --group Frog
+```
+Would run `register.xml` and `profile.xml` but not `purchase.xml`.
+
+And if you do not specify the --group option at all, then all test files would be run.

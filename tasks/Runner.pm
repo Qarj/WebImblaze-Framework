@@ -9,7 +9,7 @@ package Runner;
 use strict;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.04';
+$VERSION = '1.5.0';
 
 use Getopt::Long;
 use Cwd;
@@ -30,14 +30,15 @@ my $config_wif_location = "../";
 my $opt_batch = $script_name; # default the batch name to the script name
 our ($opt_target, $opt_environment) = read_wif_config($config_wif_location.'wif.config');
 my ($opt_check_alive, $opt_slack_alert);
+my $opt_group;
 
 my $failed_test_files_count = 0;
 my $passed_test_files_count = 0;
 my @failed_test_files;
 
 sub start_runner {
-    
-    ($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert) = get_options($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert);
+
+    ($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group) = get_options($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group);
     $opt_target = lc $opt_target;
     $opt_environment = uc $opt_environment;
     
@@ -71,17 +72,21 @@ sub stop_runner {
 }
 
 sub start {
-    my ($_test) = @_;
+    my ($_test, $_groups, $_no_headless) = @_;
 
-    start_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
+    if (not _group_match($_groups)) { return; }
+
+    start_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless);
 
     return;
 }
 
 sub call {
-    my ($_test) = @_;
+    my ($_test, $_groups, $_no_headless) = @_;
+    
+    if (not _group_match($_groups)) { return; }
 
-    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location);
+    my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless);
 
     my ($_test_name, undef) = fileparse($_test,'.xml');
 
@@ -95,6 +100,28 @@ sub call {
     return;
 }
 
+sub _group_match {
+    my ($_groups) = @_;
+
+    if (not $_groups) {
+        return 'true';
+    }
+
+    my $_group_match;
+    if ($opt_group) {
+        foreach my $_group ( @{$_groups} ) {
+            if (lc $_group eq lc $opt_group) {
+                $_group_match = 'true';
+            }
+        }
+        if (not $_group_match) {
+            return; # this test case file is not part of the specified group
+        }
+    }
+    
+    return 'true';
+}
+
 sub repeat {
     my ($_test, $_repeats) = @_;
 
@@ -104,9 +131,9 @@ sub repeat {
 }
 
 sub start_test {
-    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless) = @_;
 
-    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
+    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless);
 
     # change dir to wif.pl location
     my $_orig_cwd = cwd;
@@ -121,9 +148,9 @@ sub start_test {
 
 #------------------------------------------------------------------
 sub call_test {
-    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless) = @_;
 
-    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location);
+    my @_args = _build_wif_args($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless);
 
     # change dir to wif.pl location
     my $_orig_cwd = cwd;
@@ -146,7 +173,7 @@ sub call_test {
 
 #------------------------------------------------------------------
 sub _build_wif_args {
-    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location) = @_;
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless) = @_;
 
     my $_abs_test_file_full = File::Spec->rel2abs( $_test_file_full );
 
@@ -169,6 +196,12 @@ sub _build_wif_args {
     push @_args, '--no-update-config';
 
     push @_args, '--capture-stdout';
+
+    if ($_no_headless eq 'no-headless') {
+        # do not add headless argument
+    } else {
+        # push @_args, '--headless';
+    }
 
     return @_args;
 }
@@ -270,7 +303,7 @@ sub is_available {
 
 #------------------------------------------------------------------
 sub get_options {
-    my ($_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert) = @_;
+    my ($_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert, $_opt_group) = @_;
 
     my ($_opt_version, $_opt_help);
 
@@ -279,6 +312,7 @@ sub get_options {
         't|target=s'                => \$_opt_target,
         'b|batch=s'                 => \$_opt_batch,
         'e|env=s'                   => \$_opt_environment,
+        'g|group=s'                 => \$_opt_group,
         'c|check-alive=s'           => \$_opt_check_alive,
         's|slack-alert=s'           => \$_opt_slack_alert,
         'v|V|version'               => \$_opt_version,
@@ -302,7 +336,7 @@ sub get_options {
         exit;
     }
 
-    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert;
+    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert, $_opt_group;
 }
 
 sub print_version {

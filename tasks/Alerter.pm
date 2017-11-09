@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.0.1';
+$VERSION = '0.0.2';
 
 use LWP;
 local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 'false';
@@ -27,7 +27,7 @@ sub slack_alert {
     $_useragent->agent('http poster');
 
     my $_post_type = 'application/json';
-    my $_post_body = '{"text": "'.$_message.'"}';
+    my $_post_body = '{"text": "'.$_message.'", "username": "Regression-Test-Failures"}';
     my $_url = $_hook;
 
     my $_request = HTTP::Request->new('POST',"$_url");
