@@ -37,6 +37,10 @@
         <button class="btn" data-filter="fail">Failed</button>
         <button class="btn" data-filter="abort">Execution Aborted</button>
 
+        <span id="groups">
+        </span>
+
+
         <form id="live-search" action="" class="inputbox" onsubmit="return submitFilter()">
             <fieldset>
                 <input type="text" class="text-input" id="live-filter" value="" />
