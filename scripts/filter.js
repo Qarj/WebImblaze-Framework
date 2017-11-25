@@ -71,7 +71,11 @@ function getParameterByName(name, url) { //http://stackoverflow.com/questions/90
 }
 
 function updateGroups() {
-    var nodes = document.querySelectorAll("a"); // The link text for the automation test result
+    insertGroups(document);
+}
+
+function insertGroups(doc) {
+    var nodes = doc.querySelectorAll("a"); // The link text for the automation test result
     var nodesText = [];
     for (var i = 0; i < nodes.length; i++) {
         nodesText.push(nodes[i].textContent);
@@ -85,21 +89,23 @@ function updateGroups() {
         if ( matchGroup ) {
             var existingClass = nodes[i].getAttribute("class");
             nodes[i].setAttribute("class", existingClass + " " + matchGroup);
-            // console.log("Set class to " + existingClass + " " + matchGroup);
+            //console.log("Set class to " + existingClass + " " + matchGroup);
         }
     }
 
     // Now add buttons for the groups
-    var groupsDiv = document.getElementById("groups");
+    var groupsDiv = doc.getElementById("groups");
     for (var i = 0; i < groups.length; i++) {
-        var button = document.createElement("button");
-        var node = document.createTextNode(groups[i]);
+        var button = doc.createElement("button");
+        var node = doc.createTextNode(groups[i]);
         button.appendChild(node);
         button.setAttribute("class", "btn");
         button.setAttribute("data-filter", groups[i]);
         groupsDiv.appendChild(button);
         //console.log(groups[i]);
     }
+    
+    return doc;
 }
 
 function findGroups(list) {
