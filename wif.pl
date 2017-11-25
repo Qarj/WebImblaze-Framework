@@ -1757,27 +1757,45 @@ sub _write_config {
 }
 
 #------------------------------------------------------------------
+sub linux_me {
+    my ($_string) = @_;
+
+    $_string =~ s{\\}{/}g;
+
+    return $_string;
+}
+
+#------------------------------------------------------------------
 sub _locate_file {
     my ($_file) = @_;
 
     require File::Find::Rule;
 
     my ($_file_name, $_file_path) = fileparse($_file,'.xml');
-    if ($_file_name eq $_file) { $_file .= '.xml'; }
+    $_file_name .= '.xml'; 
 
-    my @_folders = ('tests', '../WebInject/examples', '../WebInject/selftest', q{.});
+    my @_folders = ('tests', '../WebInject', '../WebInject-Selenium', q{.});
 
     my @_files = File::Find::Rule->file()
-                                 ->name( $_file )
+                                 ->name( $_file_name )
                                  ->in( @_folders );
 
-    if (@_files) {
-        $_file = $_files[0];
-        print "Test case file [$_file]\n";
+    if (not @_files) {
+        return $_file;
     }
-    #foreach (@_files) { print "file:$_\n"; }
 
-    return $_file;
+    # when substeps/runif passed in, will find selftest/substeps/runif.xml instead of selftest/runif.xml
+    my $_best_match = $_files[0]; # fail safe, in practice best match will be last file in list unless more path specified
+    my $_linux_file = linux_me($_file); # file find always returns paths in Linux format
+    foreach my $_match (@_files) {
+        if ( $_match =~ /$_linux_file/ ) {
+            $_best_match = $_match;
+        }
+    }
+
+    print "Test case file [$_best_match]\n";
+
+    return $_best_match;
 }
 
 #------------------------------------------------------------------
