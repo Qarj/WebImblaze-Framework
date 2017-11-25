@@ -104,8 +104,6 @@ function insertGroups(doc) {
         groupsDiv.appendChild(button);
         //console.log(groups[i]);
     }
-    
-    return doc;
 }
 
 function findGroups(list) {

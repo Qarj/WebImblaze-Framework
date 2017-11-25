@@ -1,3 +1,11 @@
+//  These unit tests check the funcitonality on the Summary.XML page that adds buttons for batch names in the form of
+//
+//      GroupName-Core_Regression_89349
+//
+//  GroupName will be interpreted as a group, and a button added to filter on them
+//
+//  The number at the end, 89349 is a randomly generated number from Runner.pm that the tasks/regression.pl task runner files use
+
 //start karma start
 //karma run
 
@@ -90,11 +98,6 @@ QUnit.test('Should return a list containing Eternity and Enterprise, multiple ma
 });
 
 function createResultsDocument() {
-    
-}
-
-QUnit.test('Should insert a button for Eternity into the DOM', function(assert) {
-
     var doc = document.implementation.createHTMLDocument("Unittest filter");
     
         var filterDiv = doc.createElement("div");
@@ -125,10 +128,10 @@ QUnit.test('Should insert a button for Eternity into the DOM', function(assert) 
                         
                         var a = doc.createElement("a");
                         a.setAttribute("class", "result pass");
-                        a.setAttribute("href", "http://localhost/DEV/2017/11/25/All%20Batches/Eternity-Regression_1234.xml");
+                        a.setAttribute("href", "http://localhost/DEV/2017/11/25/All%20Batches/ManualRun.xml");
                         a.setAttribute("rel", "bookmark");
                         a.setAttribute("style", "display: inline;");
-                        var textNode = doc.createTextNode("PASS 25/11 16:15:01  - 16:15:01 [1 item] Eternity-Regression_1234: ALL 2 steps OK, 0.0 mins  *webinject_examples*");
+                        var textNode = doc.createTextNode("PASS 25/11 16:14:01  - 16:15:01 [1 item] ManualRun: ALL 2 steps OK, 0.0 mins  *webinject_examples*");
                         a.appendChild(textNode);
                     
                     list.appendChild(a);
@@ -141,11 +144,41 @@ QUnit.test('Should insert a button for Eternity into the DOM', function(assert) 
 
     doc.body.appendChild(filterDiv);
     doc.body.appendChild(resultsDiv);
-
-    //console.log(doc.documentElement.innerHTML);
     
-    insertGroups(doc);
+    return doc;
+}
 
+function addResult(doc, batchName) {
+    var uList = doc.getElementById("results").firstChild;
+
+        var articleDiv = doc.createElement("div");
+        articleDiv.setAttribute("class", "article");
+
+            var list = doc.createElement("li");
+            list.setAttribute("class", "row");
+                
+                var a = doc.createElement("a");
+                a.setAttribute("class", "result pass");
+                a.setAttribute("href", "http://localhost/DEV/2017/11/25/All%20Batches/" + batchName + ".xml");
+                a.setAttribute("rel", "bookmark");
+                a.setAttribute("style", "display: inline;");
+                var textNode = doc.createTextNode("PASS 25/11 16:15:01  - 16:15:01 [1 item] " + batchName + ": ALL 2 steps OK, 0.0 mins  *webinject_examples*");
+                a.appendChild(textNode);
+            
+            list.appendChild(a);
+                    
+        articleDiv.appendChild(list);
+   
+   uList.appendChild(articleDiv);
+}
+
+QUnit.test('Should insert a button for Eternity into the DOM', function(assert) {
+
+    doc = createResultsDocument();
+    addResult(doc, "Eternity-Regression_1234");
+    //console.log(doc.documentElement.innerHTML);
+
+    insertGroups(doc);
     //console.log(doc.documentElement.innerHTML);
 
     actual = doc.documentElement.innerHTML;
@@ -154,7 +187,31 @@ QUnit.test('Should insert a button for Eternity into the DOM', function(assert) 
 });
 
 QUnit.test('Eternity should be added as a class for all matching a tags', function(assert) {
-    assert.expect(0);
 
+    doc = createResultsDocument();
+    addResult(doc, "Eternity-Regression_1111");
+    addResult(doc, "Eternity-Regression_2222");
+    addResult(doc, "Eternity-Regression_3333");
 
+    insertGroups(doc);
+
+    actual = doc.documentElement.innerHTML;
+    assert.ok( (actual.match(/result pass Eternity/g)||[]).length === 3, "Eternity should be added to class of three a tags");
 });
+
+QUnit.test('Buttons should be added for Eternity, Enterprise, Qarj', function(assert) {
+
+    doc = createResultsDocument();
+    addResult(doc, "Eternity-Regression_1111");
+    addResult(doc, "Enterprise-Smoke_8723");
+    addResult(doc, "Enterprise-Smoke_2981");
+    addResult(doc, "Qarj-Regression_8888");
+
+    insertGroups(doc);
+
+    actual = doc.documentElement.innerHTML;
+    assert.ok( (actual.match(/data-filter="Eternity">Eternity/g)||[]).length === 1, "Eternity should be added as a button");
+    assert.ok( (actual.match(/data-filter="Enterprise">Enterprise/g)||[]).length === 1, "Enterprise should be added as a button");
+    assert.ok( (actual.match(/data-filter="Qarj">Qarj/g)||[]).length === 1, "Qarj should be added as a button");
+});
+
