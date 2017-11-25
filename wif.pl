@@ -1662,14 +1662,14 @@ sub _create_default_config {
     $_config .= 'batch=example_batch'."\n";
     $_config .= 'environment=DEV'."\n";
     $_config .= 'is_automation_controller=false'."\n";
-    $_config .= 'target=webinject_examples'."\n";
+    $_config .= 'target=team1'."\n";
     $_config .= 'use_browsermob_proxy=false'."\n";
     $_config .= ''."\n";
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
     $_config .= 'selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar'."\n";
     $_config .= 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
-    $_config .= 'testfile_full=../webinject/examples/get.xml'."\n";
+    $_config .= 'testfile_full=../WebInject/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
     $_config .= 'web_server_location_full=C:\inetpub\wwwroot'."\n";
     $_config .= 'webinject_location=../WebInject'."\n";
