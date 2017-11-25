@@ -97,6 +97,49 @@ You can view and drill into the results from this url:
 
 http://localhost/DEV/Summary.xml
 
+Click on a batch to see individual test results for the batch.
+
+Click on the Run number (first column) to see the individual step results for a test case file.
+
+From the test case file results, click on the id number (first column), to see that step actual result.
+
+# Running tests in parallel
+
+The point of the WebInject-Framework is to run a lot of tests quickly and check that there are no failures.
+
+To see this in action, go and first install the Selenium plugin for WebInject https://github.com/Qarj/WebInject-Selenium
+
+Now run the all of the WebInject examples
+```
+tasks\Examples.pl
+```
+
+You'll see a lot of command prompts open, run some tests then close, all at the same time.
+
+Note that when you view the results at http://localhost/DEV/Summary.xml
+you'll see a lot of errors. Many of the examples show how various assertions work, and how tests can be automatically
+retried on failure.
+
+In practice, the tests should be run by a service account. You can use Windows Task Scheduler to run the tests overnight.
+
+You can run all the WebInject selftests quickly as follows:
+```
+tasks\Selftest.pl
+```
+
+Note that the tasks\ scripts can take parameters too
+```
+tasks\Examples.pl --env DEV --target team2 --batch My_Examples
+```
+
+## Pending results
+While the tests are running, you can see intermediate results. Just go the results Summary page, click
+on the batch, and see the pending results. You can press F5 as results complete to see the latest
+completions.
+
+On a pending result, you can click on the Started date/time for a test file and see where it is up to. Again
+just press F5 to get the latest update.
+
 # The WebInject Framework Manual
 
 The manual contains full details on how to setup WebInject Framework.
