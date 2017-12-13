@@ -97,24 +97,147 @@ function insertGroups(doc) {
     var groupsDiv = doc.getElementById("groups");
     for (var i = 0; i < groups.length; i++) {
         var button = doc.createElement("button");
-        var node = doc.createTextNode(groups[i]);
+        var passes = countRegressionPasses(groups[i], nodesText);
+        var total = countRegressions(groups[i], nodesText);
+        var node = doc.createTextNode(groups[i] + " " + passes + "/" + total );
         button.appendChild(node);
-        button.setAttribute("class", "btn");
+        if (passes === 0) {
+            button.setAttribute("class", "btn red");
+        } else if (passes < total){
+            button.setAttribute("class", "btn orange");
+        } else {
+            button.setAttribute("class", "btn green");
+        }
         button.setAttribute("data-filter", groups[i]);
         groupsDiv.appendChild(button);
         //console.log(groups[i]);
     }
 }
 
+function countRegressionPasses(group, list) {
+    // first build up the regressions for the group    
+    var regEx = new RegExp(" " + group + '-([^ ]+)_\\d+: ');  // need an additional escape for \ in this form
+
+    var regressions = [];
+
+    for (var i = 0; i < list.length; i++) {
+        var match = regEx.exec(list[i]);
+        if (match !== null) {
+            regressions.push(_get_run_results(match[1], i, list));
+        } else {
+        }
+    }
+
+    regressions.sort( sort_by('batchTeam', {name:'start', reverse: false}) );
+
+    var count = 0;
+    var batchTeam;
+    for (var i = 0; i < regressions.length; i++) {
+        if (regressions[i].batchTeam !== batchTeam) {
+            batchTeam = regressions[i].batchTeam;
+            if (i > 0) {
+                if (regressions[i-1].pass) {
+                    count += 1;
+                }
+            }
+        }
+    }
+    // Don't forget last batchTeam
+    if (i > 0) {
+        if (regressions[i-1].pass) {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+function _get_run_results(name, i, list) {
+
+    var _debug = name + " ";
+    
+    // first find out if it was a PASS, or not (not PASS = FAIL e.g. PEND, ABORTED, whatever)
+    var passRegEx = new RegExp("(PASS )");
+    var pass = 0;
+    var passMatch = passRegEx.exec(list[i]);
+    if (passMatch !== null) {
+        pass = 1;
+    }
+    if (pass > 0) {
+        _debug += "Passed ";
+    } else {
+        _debug += "Failed ";
+    }
+    
+    // find the team / target server
+    var teamRegEx = new RegExp(" mins[ ]+\\*([^*]+)\\*");
+    var team = "noteam";
+    var teamMatch = teamRegEx.exec(list[i]);
+    if (teamMatch !== null) {
+        team = teamMatch[1];
+    }
+    _debug += team + " ";
+
+    // now find the start time
+    var startRegEx = new RegExp(" (\\d\\d:\\d\\d:\\d\\d)[ ]+- ");
+    var startStr = "";
+    var start = 0;
+    var startMatch = startRegEx.exec(list[i]);
+    if (startMatch !== null) {
+        startStr = startMatch[1];
+        start = new Date('2017-01-01T'+startStr+'Z');
+        _debug += startStr + " " + start;
+    }
+
+    //console.log(_debug);
+    return {
+        batchTeam : name+team,
+        pass : pass,
+        start : start.getTime()
+    }
+}
+
+function countRegressions(group, list) {
+    // need an additional escape for \ in this form
+    var regEx = new RegExp(" " + group + '-([^ ]+)_\\d+: ');
+
+    var count = 0;
+    var names = [];
+
+    for (var i = 0; i < list.length; i++) {
+        var match = regEx.exec(list[i]);
+        if (match !== null) {
+            // find the team / target server
+            var teamRegEx = new RegExp(" mins[ ]+\\*([^*]+)\\*");
+            var team = "noteam";
+            var teamMatch = teamRegEx.exec(list[i]);
+            if (teamMatch !== null) {
+                team = teamMatch[1];
+            }
+            if (inList(names, match[1]+team)) {
+                //console.log("Existing batchTeam found [" + match[1]+team + "]");
+            } else {
+                //console.log("New batchTeam name found [" + match[1]+team + "]");
+                names.push(match[1]+team);
+                count += 1;
+            }
+        } else {
+            //console.log("Not a match for i = " + i);
+        }
+    }
+
+    return count;
+}
+
 function findGroups(list) {
-    var regEx = / ([a-zA-Z]+)-[^:]+: /;
+    var regEx = / ([a-zA-Z]+)-[^ ]+_\d+: /;
 
     var found = [];
     for (var i = 0; i < list.length; i++) {
         var match = regEx.exec(list[i]);
         if (match !== null) {
             //console.log(match[0]);
-            if (inGroups(found, match[1])) {
+            if (inList(found, match[1])) {
                 //console.log("Existing group found [" + match[1] + "]");
             } else {
                 //console.log("New group found [" + match[1] + "]");
@@ -127,7 +250,7 @@ function findGroups(list) {
     return found;
 }
 
-function inGroups(groups, group) {
+function inList(groups, group) {
     for (var i = 0; i < groups.length; i++) {
         if (groups[i] === group) {
             return true;
@@ -145,3 +268,67 @@ function matchesGroups(groups, resultText) {
     }
     return "";
 }
+  
+// https://stackoverflow.com/questions/6913512/how-to-sort-an-array-of-objects-by-multiple-fields/6913821#6913821
+// homes.sort(sort_by('city', {name:'price', primer: parseInt, reverse: true}));
+var sort_by;
+(function() {
+    // utility functions
+    var default_cmp = function(a, b) {
+            if (a == b) return 0;
+            return a < b ? -1 : 1;
+        },
+        getCmpFunc = function(primer, reverse) {
+            var dfc = default_cmp, // closer in scope
+                cmp = default_cmp;
+            if (primer) {
+                cmp = function(a, b) {
+                    return dfc(primer(a), primer(b));
+                };
+            }
+            if (reverse) {
+                return function(a, b) {
+                    return -1 * cmp(a, b);
+                };
+            }
+            return cmp;
+        };
+
+    // actual implementation
+    sort_by = function() {
+        var fields = [],
+            n_fields = arguments.length,
+            field, name, reverse, cmp;
+
+        // preprocess sorting options
+        for (var i = 0; i < n_fields; i++) {
+            field = arguments[i];
+            if (typeof field === 'string') {
+                name = field;
+                cmp = default_cmp;
+            }
+            else {
+                name = field.name;
+                cmp = getCmpFunc(field.primer, field.reverse);
+            }
+            fields.push({
+                name: name,
+                cmp: cmp
+            });
+        }
+
+        // final comparison function
+        return function(A, B) {
+            var a, b, name, result;
+            for (var i = 0; i < n_fields; i++) {
+                result = 0;
+                field = fields[i];
+                name = field.name;
+
+                result = field.cmp(A[name], B[name]);
+                if (result !== 0) break;
+            }
+            return result;
+        }
+    }
+}());  

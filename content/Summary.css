@@ -67,6 +67,11 @@ div { line-height:1.6em; }
   margin: 5px;
 }
 
+.btn.green { background:#5BAB03; }
+.btn.red { background:#FF5940; }
+.btn.orange { background:#FFA500; }
+
+
 /* which button is active */
 .active {
   background: linear-gradient(to bottom, #7d9394, #5B7778);
