@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     updateGroups(); //Reads the groups (Tribes) which are in format TribeName-OtherText_<somenumber>, then adds a filter for them
+    makeSupersededGrey();
 
     var $batches = $("#results > ul > div.article > li > a.result");
     var $buttons = $(".btn").on("click", function() {
@@ -189,11 +190,21 @@ function _get_run_results(name, i, list) {
         _debug += startStr + " " + start;
     }
 
+    // find the full batch name
+    var fullNameRegEx = new RegExp(" ([^ ]+_\\d+): ");
+    var fullName = "nofullname";
+    var fullNameMatch = fullNameRegEx.exec(list[i]);
+    if (fullNameMatch !== null) {
+        fullName = fullNameMatch[1];
+    }
+    _debug += fullName + " ";
+
     //console.log(_debug);
     return {
         batchTeam : name+team,
         pass : pass,
-        start : start.getTime()
+        start : start.getTime(),
+        fullBatchName : fullName
     }
 }
 
@@ -331,4 +342,60 @@ var sort_by;
             return result;
         }
     }
-}());  
+}());
+
+function makeSupersededGrey() {
+    makeSupersededResultsGrey(document);
+}
+
+function makeSupersededResultsGrey(doc) {
+    // get all the results
+    var nodes = doc.querySelectorAll("a"); // The link text for the automation test result
+    var nodesText = [];
+    for (var i = 0; i < nodes.length; i++) {
+        nodesText.push(nodes[i].textContent);
+    }
+
+    // find the unique batch targets    
+    var regEx = new RegExp(" ([^ ]+)_\\d+: ");  // need an additional escape for \ in this form
+
+    var regressions = [];
+
+    for (var i = 0; i < nodesText.length; i++) {
+        var match = regEx.exec(nodesText[i]);
+        if (match !== null) {
+            regressions.push(_get_run_results(match[1], i, nodesText));
+        } else {
+        }
+    }
+
+    regressions.sort( sort_by('batchTeam', {name:'start', reverse: true}) );
+
+    // for each batchTeam, the first result is current, the rest are superseded
+    var count = 0;
+    var batchTeam = "";
+    for (var i = 0; i < regressions.length; i++) {
+        if (regressions[i].batchTeam !== batchTeam) {
+            // this is the first row for that batchTeam, so it is current
+            batchTeam = regressions[i].batchTeam;
+        } else {
+            // this result is superseded, make it grey
+            makeGrey(nodes, regressions[i].fullBatchName);
+        }
+    }
+
+}
+
+function makeGrey(nodes, fullName) {
+    //console.log("Making " + fullName + " grey");
+
+    // Add a class for grey to the link
+    for (var i = 0; i < nodes.length; i++) {
+        if ( nodes[i].textContent.indexOf(fullName) > -1 ) {
+            var existingClass = nodes[i].getAttribute("class");
+            nodes[i].setAttribute("class", existingClass + " grey");
+            //console.log("Set class to " + existingClass + " grey");
+        }
+    }
+
+}

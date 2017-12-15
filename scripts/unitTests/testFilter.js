@@ -436,7 +436,7 @@ QUnit.test('Enterprise should have 0 out of 4 passed regressions', function(asse
     insertGroups(doc);
 
     actual = doc.documentElement.innerHTML;
-    //console.log(actual); 
+    //console.log(actual);
 
     assert.ok( (actual.match(/data-filter="Enterprise">Enterprise 0\/4/g)||[]).length === 1, "Enterprise should have 0 out of 4 passed regressions");
 });
@@ -450,7 +450,7 @@ QUnit.test('Enterprise button should be green since 2/2 passed', function(assert
     insertGroups(doc);
 
     actual = doc.documentElement.innerHTML;
-    //console.log(actual); 
+    //console.log(actual);
 
     assert.ok( (actual.match(/class="btn green" data-filter="Enterprise"/g)||[]).length === 1, "Enterprise button should be green");
 });
@@ -464,7 +464,7 @@ QUnit.test('Enterprise button should be orange since 1/2 passed', function(asser
     insertGroups(doc);
 
     actual = doc.documentElement.innerHTML;
-    //console.log(actual); 
+    //console.log(actual);
 
     assert.ok( (actual.match(/class="btn orange" data-filter="Enterprise"/g)||[]).length === 1, "Enterprise button should be orange");
 });
@@ -478,10 +478,61 @@ QUnit.test('Enterprise button should be red since 0/2 passed', function(assert) 
     insertGroups(doc);
 
     actual = doc.documentElement.innerHTML;
-    //console.log(actual); 
+    //console.log(actual);
 
     assert.ok( (actual.match(/class="btn red" data-filter="Enterprise"/g)||[]).length === 1, "Enterprise button should be red");
 });
 
+//
+// Grey out superseded regression results - where Batch Name and target the same
+//
 
+QUnit.test('Smoke 1723 should be grey since it is superseded by 2111', function(assert) {
 
+    doc = createResultsDocument();
+    addResult(doc, "Enterprise-Smoke_1723", "FAIL", "03:01:01", "minerva");
+    addResult(doc, "Enterprise-Smoke_2111", "FAIL", "12:30:01", "minerva");
+
+    makeSupersededResultsGrey(doc);
+
+    actual = doc.documentElement.innerHTML;
+    //console.log(actual);
+
+    assert.ok( (actual.match(/class="result[^"]+grey"[^*]+Smoke_1723/g)||[]).length === 1, "Smoke 1723 should be grey");
+});
+
+QUnit.test('Smoke 1723 should be grey since it is superseded by 2111 - group is irrelevant', function(assert) {
+
+    doc = createResultsDocument();
+    addResult(doc, "Smoke_1723", "FAIL", "03:01:01", "minerva");
+    addResult(doc, "Smoke_2111", "FAIL", "12:30:01", "minerva");
+
+    makeSupersededResultsGrey(doc);
+
+    actual = doc.documentElement.innerHTML;
+    //console.log(actual);
+
+    assert.ok( (actual.match(/class="result[^"]+grey"[^*]+Smoke_1723/g)||[]).length === 1, "Smoke 1723 should be grey - does not need a group");
+});
+
+QUnit.test('Each result only needs to be made grey once', function(assert) {
+
+    doc = createResultsDocument();
+    addResult(doc, "Smoke_1111", "FAIL", "03:01:01", "minerva");
+    addResult(doc, "Smoke_2222", "FAIL", "12:30:01", "minerva");
+    addResult(doc, "Smoke_3333", "FAIL", "12:32:01", "minerva");
+    addResult(doc, "Smoke_6666", "FAIL", "12:33:01", "minerva");
+    addResult(doc, "Smoke_7777", "FAIL", "12:35:01", "minerva");
+    addResult(doc, "Smoke_8888", "FAIL", "12:38:01", "minerva");
+    addResult(doc, "Smoke_10", "FAIL", "12:38:01", "columbo");
+    addResult(doc, "Smoke_20", "FAIL", "12:38:05", "columbo");
+    addResult(doc, "Regression_5555", "FAIL", "11:32:01", "minerva");
+    addResult(doc, "Regression_4444", "FAIL", "12:32:01", "minerva");
+
+    makeSupersededResultsGrey(doc);
+
+    actual = doc.documentElement.innerHTML;
+    //console.log(actual);
+
+    assert.ok( (actual.match(/grey grey/g)||[]).length === 0, "Grey should only be added once");
+});
