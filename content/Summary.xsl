@@ -33,9 +33,6 @@
     <div id="filter">
         <button class="active btn" data-filter="result">Show All</button>
         <button class="btn" data-filter="pass">Passed</button>
-        <button class="btn" data-filter="pend">Pending</button>
-        <button class="btn" data-filter="fail">Failed</button>
-        <button class="btn" data-filter="abort">Execution Aborted</button>
 
         <span id="groups">
         </span>
