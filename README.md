@@ -55,7 +55,7 @@ To run an automated test, wif.pl needs to know the:
 * target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
 
 ```
-wif.pl ../WebInject/examples/get.xml --env DEV --target team1
+wif.pl example_test --env DEV --target team1
 ```
 
 If everything worked ok, wif.pl created a configuration file for WebInject, called

@@ -13,13 +13,32 @@ wif.pl --create-config
 The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you
 invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
+An example `wif.config` looks like this:
+```
+[main]
+batch=example_batch
+environment=DEV
+is_automation_controller=false
+target=team1
+use_browsermob_proxy=false
+
+[path]
+browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat
+selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
+chromedriver_location_full=C:\selenium\chromedriver.exe
+testfile_full=../WebInject/examples/get.xml
+web_server_address=localhost
+web_server_location_full=C:\inetpub\wwwroot
+webinject_location=../WebInject
+```
+
 ## [main] config
 
 ### batch
-The batch name to group run results under. Updated by wif.pl --batch option.
+The batch name to group run results under. Updated by `wif.pl --batch` option.
 
 ### environment
-The high level environment name, e.g. DEV, PAT or PROD. Updated by wif.pl --env option.
+The high level environment name, e.g. DEV, PAT or PROD. Updated by `wif.pl --env` option.
 
 ### is_automation_controller
 `true` if this machine is a company automated testing controller, `false` otherwise.
@@ -27,13 +46,23 @@ The high level environment name, e.g. DEV, PAT or PROD. Updated by wif.pl --env 
 `true` means that WebInject `automationcontrolleronly` test steps will be run. Otherwise they
 will be skipped.
 
+Sometimes only your servers set up to run your automated tests will have the access they need to run all tests.
+This feature gives you a way of developing and running your tests on a workstation while skipping any tests
+that are not possible to run from your local environment.
+
 ### target
 Target 'mini-environment' for the test case file. Update by wif.pl --target option.
+
+For example, the mini environment might be the name of a team within your development environment.
 
 ### use_browsermob_proxy
 `true` means run any Selenium WebDriver tests through BrowserMob Proxy.
 
 You should ensure this option is set to `false` in most circumstances.
+
+The author used to use browsermob proxy to remove under performing banner ads and tracking pixels
+from Selenium tests. Today the Selenium Page Load timeout is used instead - this feature will
+probably be removed.
 
 ## [path] config
 
@@ -98,9 +127,9 @@ in the same folder, you can simply specify `.`
 webinject_location=.
 ```
 
-# environment_config
+# environment_config/ folder
 
-In the folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebInject tests need.
+In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebInject tests need.
 
 The information is specified in a hierarchical way. This means it is possible to have many
 'mini-environments' without having to repeat information that is common to each of the mini-environments.
@@ -108,9 +137,40 @@ The information is specified in a hierarchical way. This means it is possible to
 It is often the case in a development environment that you have many teams where each team
 has some of their own components, yet shares many other lesser used or lesser changed components with other teams.
 
+You can call the environments and individual config files anything you want. You can have as many environments and
+sub-environments as you need.
+
+Only `_global.config` cannot be renamed.
+
+
 ## Level 1: environment_config/_global.config
 
 _global.config contains configuration common to all environments.
+
+_global.config example:
+```
+[autoassertions]
+autoassertion1=^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error
+autoassertion2=^((?!HTTP Error 500.0 . Not Found).)*$|||Server error
+
+[smartassertions]
+smartassertion1=Set\-Cookies: |||Cache\-Control: private|Cache\-Control: no\-cache|||Must have a Cache-Control of private or no-cache when a cookie is set
+
+[main]
+globalretry=50
+globaljumpbacks=15
+autoretry=0
+
+[userdefined]
+totaljobs=www.totaljobs.com
+wic=webinject-check.azurewebsites.net
+
+[baseurl_subs]
+https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
+
+[content_subs]
+stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
+```
 
 ## Level 2: environment_config/DEV.config /PAT.config /PROD.config
 
@@ -123,6 +183,22 @@ In the provided example, three environments have been defined:
 
 For wif.pl quick start purposes, you can leave this as it is.
 
+DEV.config example:
+```
+[main]
+testonly=true
+ntlm=.dev.com:8020::DEV\JXS-SCT001:password
+
+[userdefined]
+domain=.dev.com
+high_level_environment_name=DEV
+backoffice_password=password1
+postcode_api_password=password2
+template_id=554433
+client_id=AABBCCEA-AECD-432F-84B2-07214F3C12E2
+testonly=true
+```
+
 ## Level 3: environment_config/DEV/team1.config etc.
 
 You create sub folders for each high level environment. In there you can create .config
@@ -133,6 +209,23 @@ In the provided example, there is an environment called WebInject_examples.confi
 
 Note that for any configuration item provided at a lower level, it will take precedence
 over the same configuration specified at a higher level.
+
+Level 3 config example (e.g. DEV/skynet.config):
+```
+[main]
+ntlm=.skynet.com:8020::SKYNET\JXS-SCT001:password
+deny_access=true
+globalretry=42
+
+[userdefined]
+team_name=skynet
+content_server=server666
+adsensemode=,"adtest":"debug"
+
+[autoassertions]
+autoassertion1=^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error
+autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
+```
 
 ## Sections within the configuration files
 
@@ -198,6 +291,23 @@ a .config file in the same folder.
 
 # wif.pl command line options
 
+Typical example:
+```
+wif.pl example_test --env DEV --target team1 --batch My_Tests
+```
+
+The WebInject-Framework will search all sub folders of tests/ for a file called `example_test.xml`.
+If it doesn't find it, it will also search (plus subfolders):
+```
+../WebInject
+../WebInject-Selenium
+```
+
+To run the same test again, just issue:
+```
+wif.pl
+```
+
 ## `wif.pl --version`
 
 ## `wif.pl --help`
@@ -261,7 +371,7 @@ not want to run the entire workflow to try various ideas to get your test step w
 ## `--create-config`
 Creates (or overwrites) the wif.config with default values to get you started.
 
-# tasks
+# tasks/ folder
 The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
 
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
@@ -270,21 +380,28 @@ parallel.
 If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script
 proceeds.
 
-## Example
+## Minimal Example
 
 ```
-tasks\Examples.pl --env DEV --target WebInject_examples --batch WebInject_Example_Tests --check-alive http://www.example.com
+tasks\Examples.pl --env DEV --target team1 --batch Examples
 ```
 
 All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`,
-the target is `environment_config/DEV/WebInject_examples.config`, the batch name is `WebInject_Examples`.
+the target is `environment_config/DEV/team1.config`, the batch name is `Examples`.
+
+## Example to only run the task if a certain URL is reachable
+
+```
+tasks\Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
+```
+
 Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned.
 If there is no response, no tests will be run.
 
 ## Example with alert to Slack on failure (only works with call)
 
 ```
-tasks\myTests.pl --env PROD --target web_farm_d --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
+tasks\myTests.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
 ```
 
 ## Example which only runs a test file if the group matches
