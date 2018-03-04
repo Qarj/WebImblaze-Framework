@@ -9,13 +9,14 @@ use vars qw/ $VERSION /;
 
 use File::Basename;
 chdir dirname(__FILE__);
+use lib '.';
 require Runner;
 
 $VERSION = '1.04';
 
 ## Usage:
 ##
-## tasks\<task_filename>.pl --env PAT --target bcs --batch Core_Regression --check-alive http://www.example.com
+## perl tasks\<task_filename>.pl --env PAT --target bcs --batch Core_Regression --check-alive http://www.example.com
 
 Runner::start_runner();
 
