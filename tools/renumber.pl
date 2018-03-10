@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 #Takes a test case file, and renumbers it
 #Starts numbering from 10
@@ -40,7 +40,8 @@ foreach my $line (@lines) {
         #print "id = $id \n"; #debug
         $line =~ s{id="([\d]+)"}{id="$new_id"};
         print "$1 now $new_id\n";
-        update_retryfromstep($1, $new_id);
+        update_parameter($1, $new_id, 'retryfromstep');
+        update_parameter($1, $new_id, 'abort');
         $new_id=$new_id+$inc;
     };
     
@@ -56,19 +57,20 @@ foreach my $line (@lines) {
 open my $OUTFILE, '>', $file_full or die "Could not open $file_full for writing!\n";
 foreach my $line (@lines) {
     $line =~ s{retryfromstep="_}{retryfromstep="}; # remove retryfromstep multi-update protection
+    $line =~ s{abort="_}{abort="}; # remove abort multi-update protection
     #print $line;
     print {$OUTFILE} $line;
 }
 close $OUTFILE;
 
 #------------------------------------------------------------------
-sub update_retryfromstep {
-    my ($_old, $_new) = @_;
+sub update_parameter {
+    my ($_old, $_new, $_parameter) = @_;
 
     foreach (@lines) {
-        if ($_ =~ m{retryfromstep="$_old"}) {
-            $_ =~ s{retryfromstep="$_old"}{retryfromstep="_$_new"}; # put a protection on so the retryfromstep is only updated once
-            print qq|    retryfromstep="$_old" now retryfromstep="$_new"\n|;
+        if ($_ =~ m{$_parameter="$_old"}) {
+            $_ =~ s{$_parameter="$_old"}{$_parameter="_$_new"}; # put a protection on so the $_parameter is only updated once
+            print qq|    $_parameter="$_old" now $_parameter="$_new"\n|;
         }
     }
 
