@@ -40,6 +40,7 @@ Runner::start('../../WebInject/selftest/commandonerror.xml');
 Runner::start('../../WebInject/selftest/decodequotedprintable.xml');
 Runner::start('../../WebInject/selftest/donotrunon.xml');
 Runner::start('../../WebInject/selftest/errormessage.xml');
+Runner::start('../../WebInject/selftest/eval.xml');
 Runner::start('../../WebInject/selftest/firstlooponly.xml');
 Runner::start('../../WebInject/selftest/getbackgroundimages.xml');
 Runner::start('../../WebInject/selftest/getallhrefs.xml');
