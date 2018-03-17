@@ -78,6 +78,7 @@ Runner::start('../../WebInject/selftest/sharedvar.xml');
 Runner::start('../../WebInject/selftest/specialcharacters.xml');
 Runner::start('../../WebInject/selftest/ssl.xml');
 Runner::start('../../WebInject/selftest/substitutions.xml');
+Runner::start('../../WebInject/selftest/unittest.xml');
 Runner::start('../../WebInject/selftest/useragent.xml');
 Runner::start('../../WebInject/selftest/var.xml');
 Runner::start('../../WebInject/selftest/verifynegative.xml');
