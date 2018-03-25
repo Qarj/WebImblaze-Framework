@@ -1667,7 +1667,7 @@ sub _create_default_config {
     $_config .= ''."\n";
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
-    $_config .= 'selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar'."\n";
+    $_config .= 'selenium_location_full=C:\selenium\selenium-server-standalone-3.11.0.jar'."\n";
     $_config .= 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
     $_config .= 'testfile_full=../WebInject/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
