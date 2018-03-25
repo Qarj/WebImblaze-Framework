@@ -32,7 +32,6 @@ Runner::start('../../WebInject-Selenium/examples/graincorp.xml');
 Runner::start('../../WebInject-Selenium/examples/gumtree.xml');
 Runner::start('../../WebInject-Selenium/examples/Jobsite.xml');
 Runner::start('../../WebInject-Selenium/examples/NHSJobs.xml');
-Runner::start('../../WebInject-Selenium/examples/panerabread.xml');
 Runner::start('../../WebInject-Selenium/examples/rightmove.xml');
 Runner::start('../../WebInject-Selenium/examples/searchimage.xml');
 Runner::start('../../WebInject-Selenium/examples/selenium.xml');
