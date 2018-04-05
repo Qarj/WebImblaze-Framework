@@ -38,6 +38,7 @@ Runner::start('../../WebInject/selftest/assertionskips.xml');
 Runner::start('../../WebInject/selftest/autocontrolleronly.xml');
 Runner::start('../../WebInject/selftest/autoretry.xml');
 Runner::start('../../WebInject/selftest/checkpoint.xml');
+Runner::start('../../WebInject/selftest/commandonfail.xml');
 Runner::start('../../WebInject/selftest/commandonerror.xml');
 Runner::start('../../WebInject/selftest/decodequotedprintable.xml');
 Runner::start('../../WebInject/selftest/donotrunon.xml');
