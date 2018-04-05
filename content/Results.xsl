@@ -127,7 +127,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
           <td class="retry"><xsl:value-of select="result-message"/></td>
         </xsl:when>
         <xsl:otherwise>
-          <td class="for_future_expansion"><xsl:value-of select="result-message"/></td>
+          <td class="fail"><xsl:text>FAIL: </xsl:text><xsl:value-of select="result-message"/></td>
         </xsl:otherwise>
       </xsl:choose>
      	<xsl:choose>
