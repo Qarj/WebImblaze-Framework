@@ -169,6 +169,10 @@ sub call_webinject_with_testfile {
         push @_args, '--ignoreretry';
     }
 
+    if (defined $opt_capture_stdout) {
+        push @_args, '--no-colour';
+    }
+
     if ($_proxy_port) {
         push @_args, '--proxy';
         push @_args, 'localhost:' . $_proxy_port;
@@ -1634,16 +1638,15 @@ sub remove_temp_folder {
 
     ATTEMPT:
     {
-        eval
-        {
-            remove_tree 'temp/' . $_remove_folder or die "Could not remove temporary folder temp/$_remove_folder\n";
-        };
+        remove_tree 'temp/' . $_remove_folder, {error =>  \my $_error};
 
-        if ( $@ and $_try++ < $_max )
-        {
+        if ( @$_error and $_try++ < $_max ) {
             #print "\nError: $@ Failed to remove folder, trying again...\n";
             sleep 0.1;
             redo ATTEMPT;
+        }
+        if ( @$_error and $_try++ > $_max ) {
+            print "\nError: Failed to remove folder, given up after $_max tries\n";
         }
     }
 
