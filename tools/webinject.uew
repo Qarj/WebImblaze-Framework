@@ -1,14 +1,14 @@
-/L325"WebInject" XML_LANG Noquote Block Comment On = <!-- Block Comment Off = --> File Extensions = XML CONFIG
-/Colors = 0,8421376,8421376,8421504,255,
+/L19"WebInject" XML_LANG Noquote Block Comment On = <!-- Block Comment Off = --> File Extensions = XML CONFIG
+/Colors = 0,12632256,8421376,8421504,255,
 /Colors Back = 16777215,16777215,16777215,16777215,16777215,
 /Colors Auto Back = 1,1,1,1,1,
-/Font Style = 0,0,0,0,0,
+/Font Style = 0,2,0,0,0,
 /Regexp Type = Perl
 /Delimiters = ~@$^&*( )+=|\{};"'<>	,
 /Function String = "name=*">"
 /Open Brace Strings =  "{" "(" "[" "<"
 /Close Brace Strings = "}" ")" "]" ">"
-/C1"Elements" STYLE_ELEMENT Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C1"Elements" STYLE_ELEMENT Colors = 8421504 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 ** <
 <testcases </testcases> <testvar </testvar>
 <case
@@ -22,7 +22,7 @@
 <? <?xml
 ]]>
 <![CDATA[
-/C2"Attributes" STYLE_ATTRIBUTE Colors = 255 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C2"Attributes" STYLE_ATTRIBUTE Colors = 16711808 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 -
 abort=
 addcookie=
@@ -40,7 +40,6 @@ description2=
 donotrunon=
 dumpjson=
 errormessage=
-eval=
 file=
 formatjson=
 formatxml=
@@ -77,83 +76,90 @@ verifyresponsetime=
 verifytext=
 writesharedvar=
 /C3"Commands" STYLE_COMMAND Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
-_keys_to_element
-_keys_to_element_after
-_keys_to_element_before
+$driver->
+ALPHA
+ALPHANUMERIC
+AMPERSAND
+BASEURL
+BASEURL1
+BASEURL2
+CONCURRENCY
+COUNTER
+CWD
+DATA
+DATE:::
+DATETIME
+DAY
+DAYTEXT
+ELAPSED_MINUTES
+ELAPSED_SECONDS
+EPOCHSECONDS
+EPOCHSPLIT
+FORMATDATETIME
+HH
+HOSTNAME
+JUMPBACKS
+LENGTH
+LESSTHAN
+MM
+MONTH
+MONTHTEXT
+NAME
+NOW
+NUMERIC
+OPT_PROXY
+OUTPUT
+OUTSUM
+RANDOM
+RETRY
+SINGLEQUOTE
+SS
+STARTTIME
+TESTFILENAME
+TESTNUM
+TESTSTEPTIME
+TIMESTAMP
+WEEKOFMONTH
+YEAR
+YY
+_check_element_within_pixels
+_clear_and_send_keys
 _click
 _click_after
 _click_before
 _get_element
-_wait_visible
-_wait_not_visible
-_scroll_to
+_keys_to_element
+_keys_to_element_after
+_keys_to_element_before
 _move_to
-_clear_and_send_keys
+_scroll_to
 _switch_to_window
 _wait_for_text_present
 _wait_for_text_visible
-_check_element_within_pixels
-RETRY
-ELAPSED_SECONDS
-ELAPSED_MINUTES
-NOW
-TIMESTAMP
-EPOCHSECONDS
-EPOCHSPLIT
-TESTNUM
-LENGTH
-TESTSTEPTIME
-RANDOM
-ALPHA
-NUMERIC
-ALPHANUMERIC
-COUNTER
-JUMPBACKS
-STARTTIME
-AMPERSAND
-LESSTHAN
-SINGLEQUOTE
-CWD
-OUTPUT
-HOSTNAME
-CONCURRENCY
-OUTSUM
-TESTFILENAME
-OPT_PROXY
-BASEURL
-BASEURL1
-BASEURL2
-DAY
-DAYTEXT
-MONTH
-MONTHTEXT
-YEAR
-YY
-HH
-MM
-SS
-WEEKOFMONTH
-DATETIME
-FORMATDATETIME
-NAME
-DATA
-driver
+_wait_not_visible
+_wait_visible
+application/json
+application/soap+xml
+application/x-www-form-urlencoded
 cmd
 delete
 false
 get
+multipart/form-data
 post
 put
 selenium
+text/xml
 true
-/C4"Assertions" Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C4"Assertions" Colors = 32768 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 1
 ** assertcount
 ** searchimage
 ** verifynegative
 ** verifypositive
-/C5"Parse Response" Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C5"Parse Response" Colors = 4210816 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 1
 ** parseresponse
-/C6"Variables" Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
+/C6"Variables" Colors = 6331802 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 3
+** eval
 ** var
 /C7"Commands" Colors = 16711680 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 ** command
