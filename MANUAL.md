@@ -430,3 +430,9 @@ tasks\myRegression.pl --group Frog
 Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
+
+# Syntax Highlighting of WebInject test case files
+
+In the tools folder, the `webinject.uew` file is an UltraEdit word file which you can use
+with UltraEdit to highlight WebInject test case files - it makes it much easier to be
+certain that you are using the right keyword / parameter.
