@@ -431,8 +431,23 @@ Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
 
-# Syntax Highlighting of WebInject test case files
+# Syntax Highlighting WebInject test case files
+
+## UltraEdit
 
 In the tools folder, the `webinject.uew` file is an UltraEdit word file which you can use
 with UltraEdit to highlight WebInject test case files - it makes it much easier to be
 certain that you are using the right keyword / parameter.
+
+## Notepad++
+
+1. Select `Language / Define your language...` menu item
+2. Click `Import...` buton then select the file `tools/webinject_notepad++.xml`
+3. Restart Notepad++
+4. Select `Settings / Style Configurator...` menu item
+5. Select `Enable global background colour` checkbox (i.e. ensure it is checked)
+6. From the `Select theme :` drop down, select one of the dark themes - say `Bespin`
+7. Select Save & Close
+
+Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp
+
