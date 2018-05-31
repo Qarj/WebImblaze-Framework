@@ -49,7 +49,7 @@ local $| = 1; # don't buffer output to STDOUT
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webinject_location, $browsermob_proxy_location_full );
@@ -169,7 +169,7 @@ sub call_webinject_with_testfile {
         push @_args, '--ignoreretry';
     }
 
-    if (defined $opt_capture_stdout) {
+    if (defined $opt_capture_stdout || defined $opt_no_update_config) {
         push @_args, '--no-colour';
     }
 
@@ -1810,7 +1810,6 @@ sub get_options_and_config {
     if (not defined $opt_environment) { $opt_environment = 'DEV'; }; # default the environment name
     if (not defined $opt_batch) { $opt_batch = 'Default_Batch'; }; # default the batch
 
-    my $_opt_no_update_config;
     # options specified at the command line win over those defined in wif.config
     Getopt::Long::Configure('bundling');
     GetOptions(
@@ -1822,7 +1821,7 @@ sub get_options_and_config {
         'o|selenium-port=s'         => \$opt_selenium_port,
         'l|headless'                => \$opt_headless,
         'n|no-retry'                => \$opt_no_retry,
-        'u|no-update-config'        => \$_opt_no_update_config,
+        'u|no-update-config'        => \$opt_no_update_config,
         'c|capture-stdout'          => \$opt_capture_stdout,
         'k|keep'                    => \$opt_keep,
         's|keep-session'            => \$opt_keep_session,
@@ -1881,7 +1880,7 @@ sub get_options_and_config {
     ($opt_environment, $opt_target) = _check_target($opt_environment, $opt_target);
 
     # now we know what the preferred settings are, save them for next time
-    if ( not defined $_opt_no_update_config ) {
+    if ( not defined $opt_no_update_config ) {
         _write_config();
     }
 
