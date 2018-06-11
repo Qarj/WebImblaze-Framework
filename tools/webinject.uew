@@ -1,4 +1,4 @@
-/L19"WebInject" XML_LANG Noquote Block Comment On = <!-- Block Comment Off = --> File Extensions = XML CONFIG TXT
+/L19"WebInject" XML_LANG Noquote Block Comment On = <!-- Block Comment Off = --> File Extensions = XML CONFIG TXT Line Comment = #
 /Colors = 0,12632256,8421376,8421504,255,
 /Colors Back = 16777215,16777215,16777215,16777215,16777215,
 /Colors Auto Back = 1,1,1,1,1,
@@ -75,6 +75,59 @@ verifyresponsecode=
 verifyresponsetime=
 verifytext=
 writesharedvar=
+abort:
+addcookie:
+addheader:
+autocontrolleronly:
+autoretry:
+checkpoint:
+command:
+commandonerror:
+commandonfail:
+decodequotedprintable:
+decodesmtp:
+description2:
+donotrunon:
+dumpjson:
+errormessage:
+file:
+formatjson:
+formatxml:
+getallhrefs:
+getallsrcs:
+getbackgroundimages:
+id:
+ignoreautoassertions:
+ignoreautoretry:
+ignorehttpresponsecode:
+ignoresmartassertions:
+include:
+logastext:
+logresponseasfile:
+maxredirect:
+method:
+parms:
+postbody:
+posttype:
+readsharedvar:
+restartbrowser:
+restartbrowseronfail:
+retry:
+retryfromstep:
+runif:
+runon:
+section:
+selenium:
+setcookie:
+shell:
+sleep:
+step:
+url:
+useragent:
+verifyresponsecode:
+verifyresponsetime:
+verifytext:
+writesharedvar:
 /C3"Commands" STYLE_COMMAND Colors = 33023 Colors Back = 16777215 Colors Auto Back = 1 Font Style = 0
 $driver->
 ALPHA
