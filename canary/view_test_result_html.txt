@@ -7,7 +7,7 @@ verifynegative1: uninitialized value
 parseresponseRESULT: Result at: (.*/)|regex|
 
 step: View result html
-url: {RESULT}/Results.html
+url: {RESULT}Results.html
 verifypositive1: Echo some output
 verifypositive2: <title>WebInject Test Results</title>
 verifypositive3: class="pass"

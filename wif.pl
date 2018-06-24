@@ -47,6 +47,8 @@ chdir $this_script_folder_full;
 
 local $| = 1; # don't buffer output to STDOUT
 
+my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
+
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
@@ -97,7 +99,9 @@ my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 
 my ($proxy_server_pid, $proxy_server_port, $proxy_port) = start_browsermob_proxy($testfile_contains_selenium);
 
-display_title_info($testfile_name, $run_number, $config_file_name, $proxy_port);
+if ($is_windows) {
+    display_title_info($testfile_name, $run_number, $config_file_name, $proxy_port);
+}
 
 my $status = call_webinject_with_testfile($config_file_full, $proxy_port, $this_run_home);
 
@@ -228,7 +232,7 @@ sub call_webinject_with_testfile {
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
         write_file($_wi_stdout_file_full, 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out');
-        $_status = system '.\webinject.pl', @_args;
+        $_status = system slash_me('.\webinject.pl'), @_args;
     }
 
     chdir $_orig_cwd;
@@ -408,6 +412,19 @@ sub _start_windows_process {
     }
 
     return $_pid;
+}
+
+#------------------------------------------------------------------
+sub slash_me {
+    my ($_string) = @_;
+
+    if ($is_windows) {
+        $_string =~ s{/}{\\}g;
+    } else {
+        $_string =~ s{\\}{/}g;
+    }
+
+    return $_string;
 }
 
 #------------------------------------------------------------------
