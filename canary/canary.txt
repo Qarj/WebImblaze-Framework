@@ -1,0 +1,16 @@
+# Run all WebInject Framework core self tests
+
+step: {FEATURE}
+varFEATURE: view_test_result_xml
+varBATCH: {RANDOM:3:NUMERIC}
+shell: perl ./../WebInject-Framework/wif.pl canary/{FEATURE}.txt --env DEV --target default --batch WebInject-Framework_canary_{BATCH} --no-retry --no-update-config
+verifypositive1: TEST CASE PASSED
+verifypositive2: Test Cases Failed: 0
+verifynegative: TEST CASE FAILED
+
+step: {FEATURE}
+varFEATURE: view_test_result_html
+shell: perl ./../WebInject-Framework/wif.pl canary/{FEATURE}.txt --env DEV --target default --batch WebInject-Framework_canary_{BATCH} --no-retry --no-update-config
+verifypositive1: TEST CASE PASSED
+verifypositive2: Test Cases Failed: 0
+verifynegative: TEST CASE FAILED

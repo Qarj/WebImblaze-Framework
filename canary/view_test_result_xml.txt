@@ -1,0 +1,15 @@
+# Self test master file. All test steps in this file should pass.
+
+step: {FEATURE}
+varFEATURE: view_test_result_xml
+shell1: perl ./../WebInject-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.txt --env DEV --target default --batch WebInject-Framework_canary_substeps --no-retry --no-update-config
+verifynegative1: uninitialized value
+parseresponseRESULT: Result at: (.*$)|regex|
+
+step: View result xml
+url: {RESULT}
+verifypositive1: Echo some output
+verifypositive2: id="10"
+verifypositive3: test-summary
+verifypositive4: TEST CASE PASSED
+verifypositive5: {FEATURE}

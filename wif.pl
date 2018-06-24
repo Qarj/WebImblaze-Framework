@@ -81,7 +81,7 @@ my ($run_number, $this_run_home) = create_run_number();
 capture_stdout($this_run_home);
 
 # check the testfile to ensure the XML parses - will die if it doesn't
-check_testfile_xml_parses_ok();
+##deprecated_check_testfile_xml_parses_ok();
 
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
@@ -1247,7 +1247,7 @@ sub _write_pending_record {
 }
 
 #------------------------------------------------------------------
-sub check_testfile_xml_parses_ok {
+sub deprecated_check_testfile_xml_parses_ok {
 
     my $_xml = read_file($testfile_full);
 

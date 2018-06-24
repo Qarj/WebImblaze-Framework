@@ -1,0 +1,5 @@
+# Self test sub steps
+
+step: Echo some output
+shell1: echo Hello World
+verifypositive: Hello World
