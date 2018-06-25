@@ -1677,6 +1677,15 @@ sub remove_temp_folder {
 #------------------------------------------------------------------
 sub _create_default_config {
 
+    my $_web_server_location_full = 'web_server_location_full=/var/www/html'."\n";
+    my $_chromedriver_location_full = 'chromedriver_location_full=~/selenium/chromedriver'."\n";
+    my $_selenium_location_full = 'selenium_location_full=~/selenium/selenium-server-standalone-3.11.0.jar'."\n";
+    if ( $is_windows ) {
+        $_web_server_location_full = 'web_server_location_full=C:\Apache24\htdocs'."\n";
+        $_chromedriver_location_full = 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
+        $_selenium_location_full = 'selenium_location_full=C:\selenium\selenium-server-standalone-3.11.0.jar'."\n";
+    }
+
     my $_config;
     $_config .= '[main]'."\n";
     $_config .= 'batch=example_batch'."\n";
@@ -1687,11 +1696,11 @@ sub _create_default_config {
     $_config .= ''."\n";
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
-    $_config .= 'selenium_location_full=C:\selenium\selenium-server-standalone-3.11.0.jar'."\n";
-    $_config .= 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
+    $_config .= $_selenium_location_full;
+    $_config .= $_chromedriver_location_full;
     $_config .= 'testfile_full=../WebInject/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
-    $_config .= 'web_server_location_full=C:\inetpub\wwwroot'."\n";
+    $_config .= $_web_server_location_full;
     $_config .= 'webinject_location=../WebInject'."\n";
 
     write_file('wif.config', $_config);

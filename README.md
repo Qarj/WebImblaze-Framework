@@ -57,6 +57,7 @@ git clone https://github.com/Qarj/WebInject-Framework.git
 4. Now setup Apache - if you already have Apache configured to do something else, you'll need to manually merge the config.
 Otherwise just do this (compatible with all my GitHub projects):
 ```
+cd WebInject-Framework
 sudo cp tools/all-qarj-projects-linux.conf /etc/apache2/sites-enabled/all-qarj-projects.conf
 sudo rm /etc/apache2/sites-enabled/000-default.conf
 sudo chmod 777 /var/www/html
@@ -71,16 +72,6 @@ sudo cpan Config::Tiny
 6. Create wif.config:
 ```
 perl wif.pl --create-config
-```
-
-Now edit the config:
-```
-gedit wif.config
-```
-
-Make the `web_server_location_full` line read as follows:
-```
-web_server_location_full=/var/www/html
 ```
 
 7. Finally, confirm that you can view the help without error messages:
