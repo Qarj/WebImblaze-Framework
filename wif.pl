@@ -1891,7 +1891,7 @@ sub get_options_and_config {
         }
     }
 
-    ($testfile_name, $testfile_path) = fileparse($testfile_full,'.xml');
+    ($testfile_name, $testfile_path) = fileparse( $testfile_full, ('.xml', '.txt', '.test', '.wi', '.t') );
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     $testfile_parent_folder_name =  basename ( dirname($_abs_testfile_full) );

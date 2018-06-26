@@ -17,26 +17,57 @@ You can see WebInject example output here: http://qarj.github.io/WebInject-Examp
 
 ## Windows Installation
 
-1. Install WebInject. (refer to https://github.com/Qarj/WebInject)
+Install WebInject. (refer to https://github.com/Qarj/WebInject).
 
-2. Clone the project
-    ```
-    cd /D C:\git
-    git clone https://github.com/Qarj/WebInject-Framework.git
-    ```
+Clone the project.
+```
+cd /D C:\git
+git clone https://github.com/Qarj/WebInject-Framework.git
+```
 
-3. From an Administrator command prompt:
-    ```
-    cpan Config::Tiny
-    ```
+Install Perl packages required by `wif.pl`.
+```
+cpan Config::Tiny
+```
 
-4. Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`. Ensure `Internet Information Services` (IIS) is turned on.
+Now install let's install Apache for windows.
+
+First we need to ensure that IIS isn't installed and running.
+Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
+Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
+
+From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
+
+Then open a command prompt as Administrator.
+```
+cd C:\Apache\bin
+httpd -k install
+httpd -k start
+```
+
+Now create the `wif.config` file.
+```
+cd /D C:\git\WebInject-Framework
+perl wif.pl --create-config
+```
+You don't need to change the default settings for this example to work.
+
+Find out the DNS name of this server.
+```
+echo %COMPUTERNAME%.%USERDNSDOMAIN%
+```
+
+Edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
+```
+notepad wif.config
+```
+If you don't do this, you won't be able to access the results from outside this server.
 
 That's it! You are now ready to run your first WebInject test using the WebInject Framework.
 
 ## Linux
 
-1. First install required system packages as root:
+Open a terminal then install system packages root.
 ```
 sudo apt update
 sudo apt install gnome-terminal
@@ -44,37 +75,48 @@ sudo apt install apache2
 sudo apt install apache2-dev
 ```
 
-2. Install WebInject. (refer to https://github.com/Qarj/WebInject)
+Install WebInject (refer to https://github.com/Qarj/WebInject).
 
-3. Clone the project
+Clone the project.
 ```
-cd ~
-mkdir git
-cd git
-git clone https://github.com/Qarj/WebInject-Framework.git
+cd /usr/local/bin
+sudo git clone https://github.com/Qarj/WebInject-Framework.git
 ```
 
-4. Now setup Apache - if you already have Apache configured to do something else, you'll need to manually merge the config.
-Otherwise just do this (compatible with all my GitHub projects):
+Set permissions.
 ```
-cd WebInject-Framework
+cd /usr/local/bin/WebInject-Framework
+sudo find . -type d -exec chmod a+rwx {} \;
+sudo find . -type f -exec chmod a+rw {} \;
+```
+
+Now configure Apache - if you already have Apache configured to do something else, you'll need to manually merge the config.
+Otherwise just do this (compatible with all my GitHub projects).
+```
 sudo cp tools/all-qarj-projects-linux.conf /etc/apache2/sites-enabled/all-qarj-projects.conf
 sudo rm /etc/apache2/sites-enabled/000-default.conf
 sudo chmod 777 /var/www/html
 sudo systemctl restart apache2
 ```
 
-5. Install Perl packages:
+Install Perl packages required by `wif.pl`.
 ```
 sudo cpan Config::Tiny
 ```
 
-6. Create wif.config:
+Create `wif.config`.
 ```
 perl wif.pl --create-config
 ```
 
-7. Finally, confirm that you can view the help without error messages:
+Edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
+```
+vi wif.config
+```
+If you don't do this, you won't be able to access the results from outside this server.
+
+
+Finally, confirm that you can view the help without error messages.
 ```
 perl wif.pl --help
 ```
@@ -83,19 +125,10 @@ perl wif.pl --help
 
 Open the command prompt up as an Administrator.
 
-Now create the wif.config file, a default one can be created with this command
-```
-cd /D C:\git\WebInject-Framework
-perl wif.pl --create-config
-```
-You don't need to change the default settings for this example to work.
-
 To run an automated test, wif.pl needs to know the:
 * test file to run
 * high level environment
 * target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
-
-Open the command prompt as an Administrator. Then issue:
 
 ```
 perl wif.pl example_test --env DEV --target team1
