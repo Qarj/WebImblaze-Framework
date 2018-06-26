@@ -102,6 +102,7 @@ sudo systemctl restart apache2
 Install Perl packages required by `wif.pl`.
 ```
 sudo cpan Config::Tiny
+cpan File::Find::Rule
 ```
 
 Create `wif.config`.
