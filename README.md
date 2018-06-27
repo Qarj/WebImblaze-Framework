@@ -15,56 +15,6 @@ You can see WebInject example output here: http://qarj.github.io/WebInject-Examp
 
 # Quick Start Guide - 5 minutes to install and use!
 
-## Windows Installation
-
-Install WebInject. (refer to https://github.com/Qarj/WebInject).
-
-Clone the project.
-```
-cd /D C:\git
-git clone https://github.com/Qarj/WebInject-Framework.git
-```
-
-Install Perl packages required by `wif.pl`.
-```
-cpan Config::Tiny
-```
-
-Now install let's install Apache for windows.
-
-First we need to ensure that IIS isn't installed and running.
-Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
-Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
-
-From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
-
-Then open a command prompt as Administrator.
-```
-cd C:\Apache\bin
-httpd -k install
-httpd -k start
-```
-
-Now create the `wif.config` file.
-```
-cd /D C:\git\WebInject-Framework
-perl wif.pl --create-config
-```
-You don't need to change the default settings for this example to work.
-
-Find out the DNS name of this server.
-```
-echo %COMPUTERNAME%.%USERDNSDOMAIN%
-```
-
-Edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
-```
-notepad wif.config
-```
-If you don't do this, you won't be able to access the results from outside this server.
-
-That's it! You are now ready to run your first WebInject test using the WebInject Framework.
-
 ## Linux
 
 Open a terminal then install system packages root.
@@ -118,6 +68,56 @@ Finally, confirm that you can view the help without error messages.
 ```
 perl wif.pl --help
 ```
+
+## Windows Installation
+
+Install WebInject. (refer to https://github.com/Qarj/WebInject).
+
+Clone the project.
+```
+cd /D C:\git
+git clone https://github.com/Qarj/WebInject-Framework.git
+```
+
+Install Perl packages required by `wif.pl`.
+```
+cpan Config::Tiny
+```
+
+Now install let's install Apache for windows.
+
+First we need to ensure that IIS isn't installed and running.
+Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
+Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
+
+From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
+
+Then open a command prompt as Administrator.
+```
+cd C:\Apache\bin
+httpd -k install
+httpd -k start
+```
+
+Now create the `wif.config` file.
+```
+cd /D C:\git\WebInject-Framework
+perl wif.pl --create-config
+```
+You don't need to change the default settings for this example to work.
+
+Find out the DNS name of this server.
+```
+echo %COMPUTERNAME%.%USERDNSDOMAIN%
+```
+
+Edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
+```
+notepad wif.config
+```
+If you don't do this, you won't be able to access the results from outside this server.
+
+That's it! You are now ready to run your first WebInject test using the WebInject Framework.
 
 ## running wif.pl - minimal example
 
