@@ -88,14 +88,11 @@ Set permissions.
 cd /usr/local/bin/WebInject-Framework
 sudo find . -type d -exec chmod a+rwx {} \;
 sudo find . -type f -exec chmod a+rw {} \;
+sudo chmod 777 /var/www/html
 ```
 
-Now configure Apache - if you already have Apache configured to do something else, you'll need to manually merge the config.
-Otherwise just do this (compatible with all my GitHub projects).
+Restart Apache and make sure there are no error messages.
 ```
-sudo cp tools/all-qarj-projects-linux.conf /etc/apache2/sites-enabled/all-qarj-projects.conf
-sudo rm /etc/apache2/sites-enabled/000-default.conf
-sudo chmod 777 /var/www/html
 sudo systemctl restart apache2
 ```
 
@@ -110,7 +107,7 @@ Create `wif.config`.
 perl wif.pl --create-config
 ```
 
-Edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
+Optional - edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
 ```
 vi wif.config
 ```
