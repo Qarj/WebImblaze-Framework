@@ -20,9 +20,9 @@ You can see WebInject example output here: http://qarj.github.io/WebInject-Examp
 Open a terminal then install system packages root.
 ```
 sudo apt update
-sudo apt install gnome-terminal
-sudo apt install apache2
-sudo apt install apache2-dev
+sudo apt --yes install gnome-terminal
+sudo apt --yes install apache2
+sudo apt --yes install apache2-dev
 ```
 
 Install WebInject (refer to https://github.com/Qarj/WebInject).
