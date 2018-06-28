@@ -1441,7 +1441,7 @@ sub _touch {
 sub _prepend_to_filename {
     my ($_string, $_file_full) = @_;
 
-    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html', '.record'));
+    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html', '.test', 'wi', '.record'));
 
     return $_file_path.$_string.$_file_name.$_file_suffix;
 
@@ -1800,8 +1800,8 @@ sub _locate_file {
 
     require File::Find::Rule;
 
-    my ($_file_name, $_file_path) = fileparse($_file,'.xml');
-    $_file_name .= '.xml'; 
+    my ($_file_name, $_file_path) = fileparse( $_file, ('.xml', '.test', '.wi', '.t') );
+    $_file_name .= '.*'; 
 
     my @_folders = ('tests', '../WebInject', '../WebInject-Selenium', q{.});
 
