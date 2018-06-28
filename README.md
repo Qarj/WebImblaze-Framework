@@ -64,9 +64,14 @@ vi wif.config
 If you don't do this, you won't be able to access the results from outside this server.
 
 
-Finally, confirm that you can view the help without error messages.
+Confirm that you can view the help without error messages.
 ```
 perl wif.pl --help
+```
+
+Run the canary checks too.
+```
+perl wif.pl canary/canary.test
 ```
 
 ## Windows Installation
