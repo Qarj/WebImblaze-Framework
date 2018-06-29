@@ -1441,7 +1441,7 @@ sub _touch {
 sub _prepend_to_filename {
     my ($_string, $_file_full) = @_;
 
-    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('.xml', '.txt', '.html', '.test', 'wi', '.record'));
+    my ($_file_name, $_file_path, $_file_suffix) = fileparse($_file_full, ('\.xml', '\.txt', '\.html', '\.test', '\.wi', '\.record'));
 
     return $_file_path.$_string.$_file_name.$_file_suffix;
 
@@ -1472,7 +1472,7 @@ sub create_webinject_config_file {
     my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
     _write_file($_config_file_full, $_webinject_config);
 
-    my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'.xml');
+    my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'\.xml');
 
     return $_config_file_full, $_config_file_name, $_config_file_path;
 }
@@ -1800,7 +1800,7 @@ sub _locate_file {
 
     require File::Find::Rule;
 
-    my ($_file_name, $_file_path) = fileparse( $_file, ('.xml', '.test', '.wi', '.t') );
+    my ($_file_name, $_file_path) = fileparse( $_file, ('\.xml', '\.test', '\.wi', '\.t') );
     $_file_name .= '.*'; 
 
     my @_folders = ('tests', '../WebInject', '../WebInject-Selenium', q{.});
@@ -1891,7 +1891,7 @@ sub get_options_and_config {
         }
     }
 
-    ($testfile_name, $testfile_path) = fileparse( $testfile_full, ('.xml', '.txt', '.test', '.wi', '.t') );
+    ($testfile_name, $testfile_path) = fileparse( $testfile_full, ('\.xml', '\.txt', '\.test', '\.wi', '\.t') );
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     $testfile_parent_folder_name =  basename ( dirname($_abs_testfile_full) );
