@@ -177,9 +177,9 @@ stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
 All other .config files directly in this folder refer to high level environment names.
 
 In the provided example, three environments have been defined:
-* DEV - development
-* PAT - production acceptance test
-* PROD - production
+- DEV - development
+- PAT - production acceptance test
+- PROD - production
 
 For wif.pl quick start purposes, you can leave this as it is.
 
@@ -233,15 +233,15 @@ autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
 Refer to the WebInject Manual, Configuration section.
 
 In this section you can specify values for:
-* proxy
-* useragent
-* httpauth
-* baseurl, baseurl1, baserurl2
-* timeout
-* globalretry
-* globaljumpbacks
-* autocontrolleronly
-* autoretry
+- proxy
+- useragent
+- httpauth
+- baseurl, baseurl1, baserurl2
+- timeout
+- globalretry
+- globaljumpbacks
+- autocontrolleronly
+- autoretry
 
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebInject may try to use a null value and fail.
 
@@ -419,9 +419,9 @@ Then if you ran it with the `--group` parameter:
 tasks\myRegression.pl --group Bear
 ```
 It would run:
-* `register.xml` - since there is a matching group
-* `purchase.xml` - ditto
-* `profile.xml`  - since no groups are specified, default - run it
+- `register.xml` - since there is a matching group
+- `purchase.xml` - ditto
+- `profile.xml`  - since no groups are specified, default - run it
 
 Another example:
 ```
@@ -441,13 +441,28 @@ certain that you are using the right keyword / parameter.
 
 ## Notepad++
 
-1. Select `Language / Define your language...` menu item
-2. Click `Import...` buton then select the file `tools/webinject_notepad++.xml`
-3. Restart Notepad++
-4. Select `Settings / Style Configurator...` menu item
-5. Select `Enable global background colour` checkbox (i.e. ensure it is checked)
-6. From the `Select theme :` drop down, select one of the dark themes - say `Bespin`
-7. Select Save & Close
+_If you've done this previously and are updating - delete the existing WebInject language first._
+
+It is worth spending two minutes to set up WebInject syntax highlighting in Notepad++
+- Select menu `Language -> Define your language ...`
+- Click `Import...`
+- Select file `WebInject-Framework/tools/webinject_notepad++.xml`
+- Restart Notepad++
+
+It looks much, much better if you use a dark theme.
+- Select menu `Settings -> Style Configurator...`
+- Set `Select theme :` to `Plastic Code Wrap`
+- Check `Enable global background colour`
+- Click `Save & Close`
+- Restart Notepad++
 
 Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp
 
+# Convert WebInject .xml test case files to new .test format
+
+The script `tools/transmute.pl` will output an xml test file in the new format.
+
+Example usage (assuming you have `transmute.pl` in path):
+```
+transmute.pl MyTest.xml > MyTest.test
+```
