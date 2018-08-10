@@ -24,30 +24,30 @@ Runner::start_runner();
 my $update = system('..\..\WebInject-Selenium\plugins\update.pl');
 
 # specify the location of the test files relative to this script
-Runner::start('../../WebInject-Selenium/examples/Caterer.xml');
-Runner::start('../../WebInject-Selenium/examples/Condobolin.xml');
-Runner::start('../../WebInject-Selenium/examples/food.gov.uk.xml');
-Runner::start('../../WebInject-Selenium/examples/govuk.xml');
-Runner::call('../../WebInject-Selenium/examples/graincorp.xml');
+Runner::start('../../WebInject-Selenium/examples/Caterer.test');
+Runner::start('../../WebInject-Selenium/examples/Condobolin.test');
+Runner::start('../../WebInject-Selenium/examples/food.gov.uk.test');
+Runner::start('../../WebInject-Selenium/examples/govuk.test');
+Runner::call('../../WebInject-Selenium/examples/graincorp.test');
 
-Runner::start('../../WebInject-Selenium/examples/gumtree.xml');
-Runner::start('../../WebInject-Selenium/examples/Jobsite.xml');
-Runner::start('../../WebInject-Selenium/examples/NHSJobs.xml');
-Runner::start('../../WebInject-Selenium/examples/rightmove.xml');
-Runner::call('../../WebInject-Selenium/examples/searchimage.xml');
+Runner::start('../../WebInject-Selenium/examples/gumtree.test');
+Runner::start('../../WebInject-Selenium/examples/Jobsite.test');
+Runner::start('../../WebInject-Selenium/examples/NHSJobs.test');
+Runner::start('../../WebInject-Selenium/examples/rightmove.test');
+Runner::call('../../WebInject-Selenium/examples/searchimage.test');
 
-Runner::start('../../WebInject-Selenium/examples/selenium.xml');
-Runner::start('../../WebInject-Selenium/examples/StepStone.xml');
-Runner::start('../../WebInject-Selenium/examples/test_jobs.xml');
-Runner::start('../../WebInject-Selenium/examples/trainline.xml');
-Runner::call('../../WebInject-Selenium/examples/tripadvisor.xml');
+Runner::start('../../WebInject-Selenium/examples/selenium.test');
+Runner::start('../../WebInject-Selenium/examples/StepStone.test');
+Runner::start('../../WebInject-Selenium/examples/test_jobs.test');
+Runner::start('../../WebInject-Selenium/examples/trainline.test');
+Runner::call('../../WebInject-Selenium/examples/tripadvisor.test');
 
-Runner::start('../../WebInject-Selenium/examples/webinject-check.xml');
-Runner::start('../../WebInject-Selenium/selftest/substeps/_click.xml');
-Runner::start('../../WebInject-Selenium/selftest/substeps/_keys_to_element.xml');
-Runner::call('../../WebInject-Selenium/selftest/substeps/_move_to.xml');
+Runner::start('../../WebInject-Selenium/examples/webinject-check.test');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_click.test');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_keys_to_element.test');
+Runner::call('../../WebInject-Selenium/selftest/substeps/_move_to.test');
 
-Runner::start('../../WebInject-Selenium/selftest/substeps/_wait_visible.xml');
-Runner::start('../../WebInject-Selenium/selftest/selenium_core.xml');
+Runner::start('../../WebInject-Selenium/selftest/substeps/_wait_visible.test');
+Runner::start('../../WebInject-Selenium/selftest/selenium_core.test');
 
 Runner::stop_runner();
