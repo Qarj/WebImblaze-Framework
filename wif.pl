@@ -1222,6 +1222,7 @@ sub _write_file {
         }
 
     }
+    print {*STDOUT} "...(try $_try) wrote file $_file_full \n" if defined $opt_capture_stdout;
 
     return;
 }
