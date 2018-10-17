@@ -99,7 +99,7 @@ From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip fil
 
 Then open a command prompt as Administrator.
 ```
-cd C:\Apache\bin
+cd C:\Apache24\bin
 httpd -k install
 httpd -k start
 ```
