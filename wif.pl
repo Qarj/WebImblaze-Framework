@@ -226,13 +226,15 @@ sub call_webinject_with_testfile {
     my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
     if (defined $opt_capture_stdout) {
         print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
-        print {*STDOUT} '    .\webinject.pl '."@_args\n";
-        $_status = system '.\webinject.pl '."@_args > $_wi_stdout_file_full 2>&1";
+        print {*STDOUT} slash_me('perl .\webinject.pl ')."@_args\n";
+        $_status = system slash_me('perl .\webinject.pl ')."@_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwebinject.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
-        write_file($_wi_stdout_file_full, 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out');
-        $_status = system slash_me('.\webinject.pl'), @_args;
+        my $_message = 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out'."\n\n";
+        $_message .= 'WebInject started with args: '. "@_args";
+        write_file($_wi_stdout_file_full, $_message);
+        $_status = system slash_me('perl .\webinject.pl ')."@_args";
     }
 
     chdir $_orig_cwd;
