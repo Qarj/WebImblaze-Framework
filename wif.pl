@@ -8,26 +8,26 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.08';
+$VERSION = '1.09';
 
-#    WebInjectFramework is free software; you can redistribute it and/or modify
+#    WebImblazeFramework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation; either version 2 of the License, or
 #    (at your option) any later version.
 #
-#    WebInjectFramework is distributed in the hope that it will be useful,
+#    WebImblazeFramework is distributed in the hope that it will be useful,
 #    but without any warranty; without even the implied warranty of
 #    merchantability or fitness for a particular purpose.  See the
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebInject/examples/demo.xml --target skynet --batch demonstration
-#              wif.pl ../WebInject/examples/command.xml --target skynet --batch allgood
-#              wif.pl ../WebInject/examples/abort.xml --target skynet --batch veryverybad
-#              wif.pl ../WebInject/examples/errormessage.xml --target skynet --batch notgood
-#              wif.pl ../WebInject/examples/corrupt.xml --target skynet --batch worstpossible
-#              wif.pl ../WebInject/examples/sleep.xml --target skynet --batch tired
-#              wif.pl ../WebInject/examples/selenium.xml --target skynet --batch gui
+#              wif.pl ../WebImblaze/examples/demo.xml --target skynet --batch demonstration
+#              wif.pl ../WebImblaze/examples/command.xml --target skynet --batch allgood
+#              wif.pl ../WebImblaze/examples/abort.xml --target skynet --batch veryverybad
+#              wif.pl ../WebImblaze/examples/errormessage.xml --target skynet --batch notgood
+#              wif.pl ../WebImblaze/examples/corrupt.xml --target skynet --batch worstpossible
+#              wif.pl ../WebImblaze/examples/sleep.xml --target skynet --batch tired
+#              wif.pl ../WebImblaze/examples/selenium.xml --target skynet --batch gui
 
 use Getopt::Long;
 use File::Basename;
@@ -54,7 +54,7 @@ my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webinject_location, $browsermob_proxy_location_full );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location, $browsermob_proxy_location_full );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -86,9 +86,9 @@ capture_stdout($this_run_home);
 ##deprecated_check_testfile_xml_parses_ok();
 
 # generate the config file, and find out where it is
-my ($config_file_full, $config_file_name, $config_file_path) = create_webinject_config_file($run_number);
+my ($config_file_full, $config_file_name, $config_file_path) = create_webimblaze_config_file($run_number);
 
-# indicate that WebInject is running the testfile
+# indicate that WebImblaze is running the testfile
 write_pending_result($run_number);
 
 # there is now a new item in the batch, so the overall summary of everything has to be rebuilt
@@ -103,7 +103,7 @@ if ($is_windows) {
     display_title_info($testfile_name, $run_number, $config_file_name, $proxy_port);
 }
 
-my $status = call_webinject_with_testfile($config_file_full, $proxy_port, $this_run_home);
+my $status = call_webimblaze_with_testfile($config_file_full, $proxy_port, $this_run_home);
 
 #write_har_file($proxy_port);
 
@@ -133,7 +133,7 @@ if (not $opt_capture_stdout) {
 if ($status) { exit 1; } else { exit 0; }
 
 #------------------------------------------------------------------
-sub call_webinject_with_testfile {
+sub call_webimblaze_with_testfile {
     my ($_config_file_full, $_proxy_port, $_this_run_home) = @_;
 
     my $_temp_folder_name = 'temp/' . $temp_folder_name;
@@ -218,23 +218,23 @@ sub call_webinject_with_testfile {
     push @_args, '--driver';
     push @_args, 'chrome';
 
-    # WebInject test cases expect the current working directory to be where webinject.pl is
+    # WebImblaze test cases expect the current working directory to be where wi.pl is
     my $_orig_cwd = cwd;
-    chdir $webinject_location;
+    chdir $webimblaze_location;
 
     my $_status;
-    my $_wi_stdout_file_full = $_this_run_home.'webinject_stdout.txt';
+    my $_wi_stdout_file_full = $_this_run_home.'webimblaze_stdout.txt';
     if (defined $opt_capture_stdout) {
-        print {*STDOUT} "\nLaunching webinject.pl, STDOUT redirected to $_wi_stdout_file_full\n";
-        print {*STDOUT} slash_me('perl .\webinject.pl ')."@_args\n";
-        $_status = system slash_me('perl .\webinject.pl ')."@_args > $_wi_stdout_file_full 2>&1";
-        print {*STDOUT} "\nwebinject.pl execution all done.\n";
+        print {*STDOUT} "\nLaunching wi.pl, STDOUT redirected to $_wi_stdout_file_full\n";
+        print {*STDOUT} slash_me('perl .\wi.pl ')."@_args\n";
+        $_status = system slash_me('perl .\wi.pl ')."@_args > $_wi_stdout_file_full 2>&1";
+        print {*STDOUT} "\nwi.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
-        my $_message = 'Start wif.pl with --capture-stdout flag to capture webinject.pl standard out'."\n\n";
-        $_message .= 'WebInject started with args: '. "@_args";
+        my $_message = 'Start wif.pl with --capture-stdout flag to capture wi.pl standard out'."\n\n";
+        $_message .= 'WebImblaze started with args: '. "@_args";
         write_file($_wi_stdout_file_full, $_message);
-        $_status = system slash_me('perl .\webinject.pl ')."@_args";
+        $_status = system slash_me('perl .\wi.pl ')."@_args";
     }
 
     chdir $_orig_cwd;
@@ -255,7 +255,7 @@ sub capture_stdout {
         *STDOUT = $std_fh; ## no critic(Variables::RequireLocalizedPunctuationVars)
         *STDERR = $std_fh; ## no critic(Variables::RequireLocalizedPunctuationVars)
 
-        print {*STDOUT} "\nWebInject Framework Config:\n";
+        print {*STDOUT} "\nWebImblaze Framework Config:\n";
         print {*STDOUT} Data::Dumper::Dumper ( $config );
     } else {
         write_file($_output_location.'wif_stdout.txt', 'Start wif.pl with --capture-stdout flag to capture wif.pl standard out');
@@ -674,10 +674,10 @@ sub _write_final_record {
     $results_content = read_file("$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/results_$_run_number.xml");
 
     if ( $results_content =~ m{</test-summary>}i ) {
-        # WebInject ran to completion - all ok
+        # WebImblaze ran to completion - all ok
     } else {
-        # WebInject did not start, or crashed part way through
-        _write_corrupt_record($_file_full, $_run_number, 'WebInject abnormal end - run manually to diagnose');
+        # WebImblaze did not start, or crashed part way through
+        _write_corrupt_record($_file_full, $_run_number, 'WebImblaze abnormal end - run manually to diagnose');
         return;
     }
 
@@ -694,7 +694,7 @@ sub _write_final_record {
         $_message =~ s/[<]/{LT}/g;
         $_message =~ s/[>]/{GT}/g;
         _write_corrupt_record($_file_full, $_run_number, "$_message in results.xml");
-        print {*STDOUT} "WebInject results.xml could not be parsed - CORRUPT\n";
+        print {*STDOUT} "WebImblaze results.xml could not be parsed - CORRUPT\n";
         return;
     }
 
@@ -908,7 +908,7 @@ sub _write_summary_record {
 
     $_record .= qq|      <title>$opt_environment Summary</title>\n|;
     $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yesterday_yyyy/$yesterday_mm/$yesterday_dd/All_Batches/Summary.xml</link>\n|;
-    $_record .= qq|      <description>WebInject Framework Batch Summary</description>\n|;
+    $_record .= qq|      <description>WebImblaze Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
     $_record .= '         <title>';
 
@@ -1271,7 +1271,7 @@ sub deprecated_check_testfile_xml_parses_ok {
 
     my $_xml = read_file($testfile_full);
 
-    # for convenience, WebInject allows ampersand and less than to appear in xml data, so this needs to be masked
+    # for convenience, WebImblaze allows ampersand and less than to appear in xml data, so this needs to be masked
     $_xml =~ s/&/{AMPERSAND}/g;
     while ( $_xml =~ s/\w\s*=\s*"[^"]*\K<(?!case)([^"]*")/{LESSTHAN}$1/sg ) {}
     while ( $_xml =~ s/\w\s*=\s*'[^']*\K<(?!case)([^']*')/{LESSTHAN}$1/sg ) {}
@@ -1451,7 +1451,7 @@ sub _prepend_to_filename {
 }
 
 #------------------------------------------------------------------
-sub create_webinject_config_file {
+sub create_webimblaze_config_file {
     my ($_run_number) = @_;
 
     $target_config = Config::Tiny->read( "environment_config/$opt_environment/$opt_target.config" );
@@ -1462,18 +1462,18 @@ sub create_webinject_config_file {
         $global_config = Config::Tiny->read( 'environment_config/_global.config' );
     }
 
-    my $_webinject_config = "<root>\n";
-    $_webinject_config .= _write_webinject_config('main');
-    $_webinject_config .= _write_webinject_config('userdefined');
-    $_webinject_config .= _write_webinject_config('autoassertions');
-    $_webinject_config .= _write_webinject_config('smartassertions');
-    $_webinject_config .= _write_webinject_config('baseurl_subs');
-    $_webinject_config .= _write_webinject_config('content_subs');
-    $_webinject_config .= _write_webinject_wif_config($_run_number);
-    $_webinject_config .=  "</root>\n";
+    my $_webimblaze_config = "<root>\n";
+    $_webimblaze_config .= _write_webimblaze_config('main');
+    $_webimblaze_config .= _write_webimblaze_config('userdefined');
+    $_webimblaze_config .= _write_webimblaze_config('autoassertions');
+    $_webimblaze_config .= _write_webimblaze_config('smartassertions');
+    $_webimblaze_config .= _write_webimblaze_config('baseurl_subs');
+    $_webimblaze_config .= _write_webimblaze_config('content_subs');
+    $_webimblaze_config .= _write_webimblaze_wif_config($_run_number);
+    $_webimblaze_config .=  "</root>\n";
 
     my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
-    _write_file($_config_file_full, $_webinject_config);
+    _write_file($_config_file_full, $_webimblaze_config);
 
     my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'\.xml');
 
@@ -1548,12 +1548,12 @@ sub _get_alias {
 }
 
 #------------------------------------------------------------------
-sub _write_webinject_config {
+sub _write_webimblaze_config {
     my ($_section) = @_;
 
     my $_config;
 
-    # config parameters defined under [main] will be written at the root level of the WebInject config
+    # config parameters defined under [main] will be written at the root level of the WebImblaze config
     my $_indent = q{};
     if (not $_section eq 'main') {
         $_indent = q{    };
@@ -1601,7 +1601,7 @@ sub _write_webinject_config {
 }
 
 #------------------------------------------------------------------
-sub _write_webinject_wif_config {
+sub _write_webimblaze_wif_config {
     my ($_run_number) = @_;
 
     my $_config;
@@ -1696,15 +1696,15 @@ sub _create_default_config {
     $_config .= 'is_automation_controller=false'."\n";
     $_config .= 'target=team1'."\n";
     $_config .= 'use_browsermob_proxy=false'."\n";
-    $_config .= ''."\n";
+    $_config .= q{}."\n";
     $_config .= '[path]'."\n";
     $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
     $_config .= $_selenium_location_full;
     $_config .= $_chromedriver_location_full;
-    $_config .= 'testfile_full=../WebInject/examples/get.xml'."\n";
+    $_config .= 'testfile_full=../WebImblaze/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
     $_config .= $_web_server_location_full;
-    $_config .= 'webinject_location=../WebInject'."\n";
+    $_config .= 'webimblaze_location=../WebImblaze'."\n";
 
     write_file('wif.config', $_config);
 
@@ -1742,7 +1742,7 @@ sub _read_config {
     $chromedriver_location_full = $config->{path}->{chromedriver_location_full};
     $web_server_location_full = $config->{path}->{web_server_location_full};
     $web_server_address = $config->{path}->{web_server_address};
-    $webinject_location = $config->{path}->{webinject_location};
+    $webimblaze_location = $config->{path}->{webimblaze_location};
     $browsermob_proxy_location_full = $config->{path}->{browsermob_proxy_location_full};
 
     # normalise config
@@ -1780,7 +1780,7 @@ sub _write_config {
     $config->{path}->{chromedriver_location_full} = $chromedriver_location_full;
     $config->{path}->{web_server_location_full} = $web_server_location_full;
     $config->{path}->{web_server_address} = $web_server_address;
-    $config->{path}->{webinject_location} = $webinject_location;
+    $config->{path}->{webimblaze_location} = $webimblaze_location;
     $config->{path}->{browsermob_proxy_location_full} = $browsermob_proxy_location_full;
 
     $config->write( 'wif.config' );
@@ -1804,9 +1804,9 @@ sub _locate_file {
     require File::Find::Rule;
 
     my ($_file_name, $_file_path) = fileparse( $_file, ('\.xml', '\.test', '\.wi', '\.t') );
-    $_file_name .= '.*'; 
+    $_file_name .= q{.*};
 
-    my @_folders = ('tests', '../WebInject', '../WebInject-Selenium', q{.});
+    my @_folders = ('tests', '../WebImblaze', '../WebImblaze-Selenium', q{.});
 
     my @_files = File::Find::Rule->file()
                                  ->name( $_file_name )
@@ -1916,20 +1916,20 @@ sub get_options_and_config {
     # if we are keeping the browser session, we have to keep the temporary folder as well - since chromedriver and the selenium log will still be locked
     if ($opt_keep_session) {
         $opt_keep = 1;
-    }    
+    }
 
     return;
 }
 
 sub print_version {
-    print {*STDOUT} "\nWebInjectFramework version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n\n";
+    print {*STDOUT} "\nWebImblaze-Framework version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Framework\n\n";
     return;
 }
 
 sub print_usage {
     print <<'EOB'
 
-Usage: wif.pl tests\testfilename.xml <<options>>
+Usage: wif.pl tests/testfilename.test <<options>>
 
 -t|--target                 target environment handle           --target skynet
 -b|--batch                  batch name for grouping results     --batch SmokeTests
@@ -1940,7 +1940,7 @@ Usage: wif.pl tests\testfilename.xml <<options>>
 -l|--headless               start chrome in headless mode       --headless
 -n|--no-retry               do not invoke retries
 -u|--no-update-config       do not update config to reflect options
--c|--capture-stdout         capture wif.pl and webinject.pl STDOUT
+-c|--capture-stdout         capture wif.pl and wi.pl STDOUT
 -k|--keep                   keep temporary files
 -s|--keep-session           keep browser session
 -m|--resume-session         use the browser session kept by --keep-session

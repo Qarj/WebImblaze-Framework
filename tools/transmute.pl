@@ -106,9 +106,10 @@ sub transmute_to_lean_format {
         rename_parameter('parseresponseREDIRECTURL', 'parseresponseREDIRECT');
         rename_value('{REDIRECTURL}', '{REDIRECT}');
         rename_parameter('description1', 'step');
+        rename_parameter('description2', 'desc');
 
         $stdout .= output_parameter('step');
-        $stdout .= output_parameter('description2');
+        $stdout .= output_parameter('desc');
         $stdout .= output_parameter('section');
         $stdout .= output_multi('var');
         $stdout .= output_parameter('url');
