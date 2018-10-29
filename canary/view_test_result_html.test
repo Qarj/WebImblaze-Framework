@@ -2,7 +2,7 @@
 
 step: {FEATURE}
 varFEATURE: view_test_result_html
-shell1: perl ./../WebInject-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebInject-Framework_canary_substeps --no-retry --no-update-config
+shell1: perl ./../WebImblaze-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_substeps --no-retry --no-update-config
 verifynegative1: uninitialized value
 parseresponseRESULT: Result at: ([^\v]+/)|regex|
 
@@ -10,6 +10,6 @@ step: View result html
 description2: [{RESULT}]
 url: {RESULT}Results.html
 verifypositive1: Echo some output
-verifypositive2: <title>WebInject Test Results</title>
+verifypositive2: <title>WebImblaze Test Results</title>
 verifypositive3: class="pass"
 verifypositive5: {FEATURE}

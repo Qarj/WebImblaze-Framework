@@ -13,7 +13,7 @@
   <body>
     <div id="heading">
       <h1>
-        WebInject Results
+        WebImblaze Results
         (
         <A href="http://localhost/DEV/Summary.xml"> DEV </A>
         /

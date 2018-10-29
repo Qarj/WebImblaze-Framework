@@ -340,7 +340,7 @@ sub get_options {
 }
 
 sub print_version {
-    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebInjectFramework\n";
+    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblazeFramework\n";
     return;
 }
 

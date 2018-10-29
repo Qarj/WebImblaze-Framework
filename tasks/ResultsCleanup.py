@@ -63,12 +63,12 @@ log.write(remove_old(inetpub+'/DEV',100))
 log.write(remove_old(inetpub+'/PAT',100))
 log.write(remove_old(inetpub+'/PROD',100))
 
-log.write("\n--> Removing Temporary WebInject Files\n")
+log.write("\n--> Removing Temporary WebImblaze Files\n")
 
-log.write(remove_old('/webinjectDEV/temp',2))
-log.write(remove_old('/webinjectPAT/temp',2))
-log.write(remove_old('/webinjectPROD/temp',2))
-log.write(remove_old('/webinject/temp',2))
+log.write(remove_old('/webimblazeDEV/temp',2))
+log.write(remove_old('/webimblazePAT/temp',2))
+log.write(remove_old('/webimblazePROD/temp',2))
+log.write(remove_old('/webimblaze/temp',2))
 
 log.write("\n--> Removing Temporary Files left by Chrome\n")
 username = (os.environ['USERNAME'])

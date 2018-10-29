@@ -21,10 +21,10 @@ $VERSION = '1.04';
 Runner::start_runner();
 
 # specify the location of the test files relative to this script
-Runner::start('../../WebInject/examples/myaccount.test');
-Runner::start('../../WebInject/examples/myaccount.test');
-Runner::start('../../WebInject/examples/myaccount.test');
-Runner::start('../../WebInject/examples/myaccount.test');
-Runner::start('../../WebInject/examples/myaccount.test');
+Runner::start('../../WebImblaze/examples/myaccount.test');
+Runner::start('../../WebImblaze/examples/myaccount.test');
+Runner::start('../../WebImblaze/examples/myaccount.test');
+Runner::start('../../WebImblaze/examples/myaccount.test');
+Runner::start('../../WebImblaze/examples/myaccount.test');
 
 Runner::stop_runner();

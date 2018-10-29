@@ -1,4 +1,4 @@
-# WebInject Framework 1.08 Manual
+# WebImblaze Framework 1.09 Manual
 
 # wif.config
 
@@ -26,10 +26,10 @@ use_browsermob_proxy=false
 browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat
 selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 chromedriver_location_full=C:\selenium\chromedriver.exe
-testfile_full=../WebInject/examples/get.xml
+testfile_full=../WebImblaze/examples/get.xml
 web_server_address=localhost
 web_server_location_full=C:\inetpub\wwwroot
-webinject_location=../WebInject
+webimblaze_location=../WebImblaze
 ```
 
 ## [main] config
@@ -43,7 +43,7 @@ The high level environment name, e.g. DEV, PAT or PROD. Updated by `wif.pl --env
 ### is_automation_controller
 `true` if this machine is a company automated testing controller, `false` otherwise.
 
-`true` means that WebInject `automationcontrolleronly` test steps will be run. Otherwise they
+`true` means that WebImblaze `automationcontrolleronly` test steps will be run. Otherwise they
 will be skipped.
 
 Sometimes only your servers set up to run your automated tests will have the access they need to run all tests.
@@ -118,18 +118,18 @@ On Windows, the default IIS server location is at 'C:\inetpub\wwwroot'
 web_server_location_full=C:\inetpub\wwwroot
 ```
 
-### webinject_location
+### webimblaze_location
 
-Where to find webinject.pl, relative to where wif.pl is located. If you have placed them
+Where to find wi.pl, relative to where wif.pl is located. If you have placed them
 in the same folder, you can simply specify `.`
 
 ```
-webinject_location=.
+webimblaze_location=.
 ```
 
 # environment_config/ folder
 
-In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebInject tests need.
+In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
 
 The information is specified in a hierarchical way. This means it is possible to have many
 'mini-environments' without having to repeat information that is common to each of the mini-environments.
@@ -163,7 +163,7 @@ autoretry=0
 
 [userdefined]
 totaljobs=www.totaljobs.com
-wic=webinject-check.azurewebsites.net
+wic=webimblaze-check.azurewebsites.net
 
 [baseurl_subs]
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
@@ -205,7 +205,7 @@ You create sub folders for each high level environment. In there you can create 
 files for each 'mini-environment' as needed. You need to create at least one
 mini-environment.
 
-In the provided example, there is an environment called WebInject_examples.config.
+In the provided example, there is an environment called WebImblaze_examples.config.
 
 Note that for any configuration item provided at a lower level, it will take precedence
 over the same configuration specified at a higher level.
@@ -230,7 +230,7 @@ autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
 ## Sections within the configuration files
 
 ### [main]
-Refer to the WebInject Manual, Configuration section.
+Refer to the WebImblaze Manual, Configuration section.
 
 In this section you can specify values for:
 - proxy
@@ -243,21 +243,21 @@ In this section you can specify values for:
 - autocontrolleronly
 - autoretry
 
-Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebInject may try to use a null value and fail.
+Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebImblaze may try to use a null value and fail.
 
 ### [userdefined]
-Refer to the WebInject Manual, Configuration section.
+Refer to the WebImblaze Manual, Configuration section.
 
 In a nutshell, you can make up your own configuration items. So if you had `google=www.google.co.uk` you could refer to it in the
-WebInject tests as `{GOOGLE}`.
+WebImblaze tests as `{GOOGLE}`.
 
 ### [autoassertions] and [smartassertions]
-Refer to the WebInject Manual, Configuration section.
+Refer to the WebImblaze Manual, Configuration section.
 
 There examples in the example config - you can just delete them if you do not want them.
 
 ### [baseurl_subs]
-WebInject creates an html file for every step result. WebInject will remap the http references in the html source
+WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source
 back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example,
 change https references to http to get around test environment ssl certificate issues.
 
@@ -296,11 +296,11 @@ Typical example:
 wif.pl example_test --env DEV --target team1 --batch My_Tests
 ```
 
-The WebInject-Framework will search all sub folders of tests/ for a file called `example_test.xml`.
+The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`.
 If it doesn't find it, it will also search (plus subfolders):
 ```
-../WebInject
-../WebInject-Selenium
+../WebImblaze
+../WebImblaze-Selenium
 ```
 
 To run the same test again, just issue:
@@ -328,20 +328,20 @@ Sets the batch to `Priority_1_Tests` and runs the last test with the saved optio
 Sets the environment to PROD and runs the last test with the saved options.
 
 ## `--use_browsermob_proxy`
-Starts BrowserMob Proxy, passes to WebInject the proxy port, then shuts down BrowserMob Proxy
+Starts BrowserMob Proxy, passes to WebImblaze the proxy port, then shuts down BrowserMob Proxy
 when the test is complete.
 
 ## `--selenium-host`
-Passes the Selenium (Grid) host to `webinject.pl`.
+Passes the Selenium (Grid) host to `wi.pl`.
 
 ## `--selenium-port`
-Passes the Selenium (Grid) port to `webinject.pl`.
+Passes the Selenium (Grid) port to `wi.pl`.
 
 ## `--headless`
-Tells `webinject.pl` to run Selenium Chrome tests in headless mode.
+Tells `wi.pl` to run Selenium Chrome tests in headless mode.
 
 ## `--no-retry`
-Tells WebInject to ignore the `retry` and `retryfromstep` parameters.
+Tells WebImblaze to ignore the `retry` and `retryfromstep` parameters.
 
 ## `--no-update-config`
 Tells wif.pl not to update wif.config with the current options. Important for running
@@ -349,20 +349,20 @@ many tests in parallel - otherwise competing instances of wif.pl will try to upd
 wif.config file at the same time - and cause unknown problems.
 
 ## `--capture-stdout`
-When running through the command line, you'll see webinject.pl and wif.pl go straight
+When running through the command line, you'll see wi.pl and wif.pl go straight
 to the command prompt. However when running a large set of tests from a service account,
 you will want the STDOUT output to be captured.
 
 ## `--keep`
-Tells wif.pl not to delete the temporary folder it created for WebInject's temporary files.
+Tells wif.pl not to delete the temporary folder it created for WebImblaze's temporary files.
 For debug purposes.
 
 ## `--keep-session`
-Passes this option to `webinject.pl` which tells it to remember the Selenium session information
+Passes this option to `wi.pl` which tells it to remember the Selenium session information
 and not close Selenium and the browser at the end of the run.
 
 ## `--resume-session`
-If `--keep-session` was used in the previous run, then `webinject.pl` will attempt to connect to the existing
+If `--keep-session` was used in the previous run, then `wi.pl` will attempt to connect to the existing
 Selenium session and browser and run the tests from the existing state.
 
 This is useful for debugging very long workflows where there is a problem deep into the workflow and you do
@@ -372,7 +372,7 @@ not want to run the entire workflow to try various ideas to get your test step w
 Creates (or overwrites) the wif.config with default values to get you started.
 
 # tasks/ folder
-The tasks folder contains a script called `Examples.pl` that runs all of the WebInject examples at the same time.
+The tasks folder contains a script called `Examples.pl` that runs all of the WebImblaze examples at the same time.
 
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
 parallel.
@@ -431,22 +431,22 @@ Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
 
-# Syntax Highlighting WebInject test case files
+# Syntax Highlighting WebImblaze test case files
 
 ## UltraEdit
 
-In the tools folder, the `webinject.uew` file is an UltraEdit word file which you can use
-with UltraEdit to highlight WebInject test case files - it makes it much easier to be
+In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use
+with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be
 certain that you are using the right keyword / parameter.
 
 ## Notepad++
 
-_If you've done this previously and are updating - delete the existing WebInject language first._
+_If you've done this previously and are updating - delete the existing WebImblaze language first._
 
-It is worth spending two minutes to set up WebInject syntax highlighting in Notepad++
+It is worth spending two minutes to set up WebImblaze syntax highlighting in Notepad++
 - Select menu `Language -> Define your language ...`
 - Click `Import...`
-- Select file `WebInject-Framework/tools/webinject_notepad++.xml`
+- Select file `WebImblaze-Framework/tools/webimblaze_notepad++.xml`
 - Restart Notepad++
 
 It looks much, much better if you use a dark theme.
@@ -458,7 +458,7 @@ It looks much, much better if you use a dark theme.
 
 Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp
 
-# Convert WebInject .xml test case files to new .test format
+# Convert WebInject .xml test case files to WebImblaze .test format
 
 The script `tools/transmute.pl` will output an xml test file in the new format.
 

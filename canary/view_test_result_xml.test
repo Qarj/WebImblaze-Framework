@@ -2,7 +2,7 @@
 
 step: {FEATURE}
 varFEATURE: view_test_result_xml
-shell1: perl ./../WebInject-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebInject-Framework_canary_substeps --no-retry --no-update-config
+shell1: perl ./../WebImblaze-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_substeps --no-retry --no-update-config
 verifynegative1: uninitialized value
 parseresponseRESULT: Result at: ([^\v]+)|regex|
 

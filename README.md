@@ -1,17 +1,18 @@
-# WebInject Framework 1.08
+# WebImblaze-Framework 1.09
 
 Automated regression testing framework for
-* managing WebInject configuration
-* running many WebInject automated tests in parallel
+* managing WebImblaze configuration
+* running many WebImblaze automated tests in parallel
 * organising actual test run results for many teams and test case files
 
 This framework is for those with large suites of automated tests. It helps to quickly
 answer the question "Did all of our regression tests pass?".
 
-If the answer is no, you can very quickly drill into what went wrong. Since an organised history of previous run results are kept,
+If the answer is no, you can very quickly drill into what went wrong.
+Since an organised history of previous run results are kept,
 you can compare a failed result easily against a previous successful run.
 
-You can see WebInject example output here: http://qarj.github.io/WebInject-Example/
+You can see WebImblaze example output here: http://qarj.github.io/WebInject-Example/
 
 # Quick Start Guide - 5 minutes to install and use!
 
@@ -25,17 +26,17 @@ sudo apt --yes install apache2
 sudo apt --yes install apache2-dev
 ```
 
-Install WebInject (refer to https://github.com/Qarj/WebInject).
+Install WebImblaze (refer to https://github.com/Qarj/WebImblaze).
 
 Clone the project.
 ```
 cd /usr/local/bin
-sudo git clone https://github.com/Qarj/WebInject-Framework.git
+sudo git clone https://github.com/Qarj/WebImblaze-Framework.git
 ```
 
 Set permissions.
 ```
-cd /usr/local/bin/WebInject-Framework
+cd /usr/local/bin/WebImblaze-Framework
 sudo find . -type d -exec chmod a+rwx {} \;
 sudo find . -type f -exec chmod a+rw {} \;
 sudo chmod 777 /var/www/html
@@ -76,12 +77,12 @@ perl wif.pl canary/canary.test
 
 ## Windows Installation
 
-Install WebInject. (refer to https://github.com/Qarj/WebInject).
+Install WebImblaze. (refer to https://github.com/Qarj/WebImblaze).
 
 Clone the project.
 ```
 cd /D C:\git
-git clone https://github.com/Qarj/WebInject-Framework.git
+git clone https://github.com/Qarj/WebImblaze-Framework.git
 ```
 
 Install Perl packages required by `wif.pl`.
@@ -106,7 +107,7 @@ httpd -k start
 
 Now create the `wif.config` file.
 ```
-cd /D C:\git\WebInject-Framework
+cd /D C:\git\WebImblaze-Framework
 perl wif.pl --create-config
 ```
 You don't need to change the default settings for this example to work.
@@ -122,7 +123,7 @@ notepad wif.config
 ```
 If you don't do this, you won't be able to access the results from outside this server.
 
-That's it! You are now ready to run your first WebInject test using the WebInject Framework.
+That's it! You are now ready to run your first WebImblaze test using the WebImblaze Framework.
 
 ## running wif.pl - minimal example
 
@@ -137,8 +138,8 @@ To run an automated test, wif.pl needs to know the:
 perl wif.pl example_test --env DEV --target team1
 ```
 
-If everything worked ok, wif.pl created a configuration file for WebInject, called
-WebInject, ran the tests, then put all the results in your web server location.
+If everything worked ok, wif.pl created a configuration file for WebImblaze, called
+WebImblaze, ran the tests, then put all the results in your web server location.
 
 You can view the results by going to http://localhost/DEV/Summary.xml
 
@@ -153,10 +154,10 @@ If you want to run another example, since the environment details have not chang
 you can just specify the test case file:
 
 ```
-perl wif.pl ../WebInject/examples/hello
+perl wif.pl ../WebImblaze/examples/hello
 ```
 
-The WebInject framework will search for the test case file that is the best match and run it.
+The WebImblaze framework will search for the test case file that is the best match and run it.
 ```
 perl wif.pl examples/hello
 ```
@@ -184,11 +185,11 @@ From the test case file results, click on the id number (first column), to see t
 
 # Running tests in parallel
 
-The point of the WebInject-Framework is to run a lot of tests quickly and check that there are no failures.
+The point of the WebImblaze-Framework is to run a lot of tests quickly and check that there are no failures.
 
-To see this in action, go and first install the Selenium plugin for WebInject https://github.com/Qarj/WebInject-Selenium
+To see this in action, go and first install the Selenium plugin for WebImblaze https://github.com/Qarj/WebImblaze-Selenium
 
-Now run the all of the WebInject examples
+Now run the all of the WebImblaze examples
 ```
 perl tasks\Examples.pl
 ```
@@ -201,7 +202,7 @@ retried on failure.
 
 In practice, the tests should be run by a service account. You can use Windows Task Scheduler to run the tests overnight.
 
-You can run all the WebInject selftests quickly as follows:
+You can run all the WebImblaze selftests quickly as follows:
 ```
 perl tasks\Selftest.pl
 ```
@@ -219,8 +220,8 @@ completions.
 On a pending result, you can click on the Started date/time for a test file and see where it is up to. Again
 just press F5 to get the latest update.
 
-# The WebInject Framework Manual
+# The WebImblaze Framework Manual
 
-The manual contains full details on how to setup WebInject Framework.
+The manual contains full details on how to setup WebImblaze Framework.
 
-[WebInject Framework Manual - MANUAL.md](MANUAL.md)
+[WebImblaze Framework Manual - MANUAL.md](MANUAL.md)

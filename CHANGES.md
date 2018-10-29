@@ -1,9 +1,12 @@
-# WebInject Framework change log
+# WebImblaze-Framework change log
 
 Tim Buckland, https://github.com/Qarj/WebInjectFramework
 
 ---------------------------------
 ## Release History:
+
+### Version 1.09 - Oct, 2018
+* rename project to WebImblaze-Framework
 
 ### Version 1.08 - Jun 8, 2017
 * optimisations - create less temporary files

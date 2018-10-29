@@ -131,7 +131,7 @@ function createResultsDocument() {
                         a.setAttribute("href", "http://localhost/DEV/2017/11/25/All%20Batches/ManualRun.xml");
                         a.setAttribute("rel", "bookmark");
                         a.setAttribute("style", "display: inline;");
-                        var textNode = doc.createTextNode("PASS 25/11 16:14:01  - 16:15:01 [1 item] ManualRun: ALL 2 steps OK, 0.0 mins  *webinject_examples*");
+                        var textNode = doc.createTextNode("PASS 25/11 16:14:01  - 16:15:01 [1 item] ManualRun: ALL 2 steps OK, 0.0 mins  *webimblaze_examples*");
                         a.appendChild(textNode);
                     
                     list.appendChild(a);
@@ -151,7 +151,7 @@ function createResultsDocument() {
 function addResult(doc, batchName, runResult, startTime, teamName) {
     if (typeof runResult === 'undefined') { runResult = 'PASS'; }
     if (typeof startTime === 'undefined') { startTime = '16:15:59'; }
-    if (typeof teamName === 'undefined') { teamName = 'webinject_examples'; }
+    if (typeof teamName === 'undefined') { teamName = 'webimblaze_examples'; }
 
     var uList = doc.getElementById("results").firstChild;
 
