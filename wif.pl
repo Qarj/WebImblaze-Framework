@@ -214,7 +214,7 @@ sub call_webimblaze_with_testfile {
         push @_args, '--resume-session';
     }
 
-    # for now we hardcode the browser to Chrome
+    # for now we hard code the browser to Chrome
     push @_args, '--driver';
     push @_args, 'chrome';
 

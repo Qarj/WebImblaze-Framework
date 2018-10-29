@@ -87,22 +87,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       <td>
         
         <!-- Make any text that appears between square brackets brown bold -->
-        <xsl:variable name="desc1inSB" select="substring-after(substring-before(description1, ']'), '[')"/>
-        <xsl:variable name="desc1afterSB" select="substring-after(description1, ']')"/>
-        <xsl:variable name="desc1beforeSB" select="substring-before(description1, '[')"/>
-        <xsl:variable name="desc1" select="description1"/>
+        <xsl:variable name="desc1inSB" select="substring-after(substring-before(step, ']'), '[')"/>
+        <xsl:variable name="desc1afterSB" select="substring-after(step, ']')"/>
+        <xsl:variable name="desc1beforeSB" select="substring-before(step, '[')"/>
+        <xsl:variable name="desc1" select="step"/>
 
-        <!-- If description1 starts with "Info " then make description1 bold green  -->
+        <!-- If step starts with "Info " then make step bold green  -->
         <xsl:choose>
             <xsl:when test="not($desc1inSB)"> <!-- parameter has not been supplied -->
                 <xsl:choose>
                     <xsl:when test="starts-with($desc1, 'Info ')">
                         <b><font color="green">
-                            <xsl:value-of select="description1"/>
+                            <xsl:value-of select="step"/>
                         </font></b>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="description1"/>
+                        <xsl:value-of select="step"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -111,13 +111,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
             </xsl:otherwise>
         </xsl:choose>
 
-        <small><xsl:text> </xsl:text><xsl:value-of select="description2"/></small></td>
+        <small><xsl:text> </xsl:text><xsl:value-of select="desc"/></small></td>
         <xsl:variable name="message" select="result-message" />
      	<xsl:choose>
-        <xsl:when test="result-message='TEST CASE FAILED'">
+        <xsl:when test="result-message='TEST STEP FAILED'">
           <td class="fail"> <xsl:text>FAIL</xsl:text> </td>
         </xsl:when>
-        <xsl:when test="result-message='TEST CASE PASSED'">
+        <xsl:when test="result-message='TEST STEP PASSED'">
           <td class="pass"> <xsl:text>PASS</xsl:text> </td>
         </xsl:when>
         <xsl:when test="contains($message,'RETRYING...')">
