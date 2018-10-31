@@ -62,7 +62,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </xsl:choose>
     </tr>
 
-    <xsl:for-each select="results/testcases/testcase">
+    <xsl:for-each select="results/teststeps/teststep">
     <!--	Set a variable to hold the href link -->
     <xsl:variable name="step_number"><xsl:value-of select="@id"/></xsl:variable>
 
