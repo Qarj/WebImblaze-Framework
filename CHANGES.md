@@ -5,8 +5,14 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
-### Version 1.09 - Oct, 2018
+### Version 1.09 - Oct 31, 2018
 * rename project to WebImblaze-Framework
+* added --selenium-port, --selenium-post switches
+* added --headless switch
+* added --keep-session and --resume-session
+* grey out superseded automation results
+* added Notepad++ and Ultraedit syntax highlighting files
+
 
 ### Version 1.08 - Jun 8, 2017
 * optimisations - create less temporary files
