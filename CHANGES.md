@@ -5,6 +5,10 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.10 - Nov 12, 2018
+* improved Linux support
+* remove BrowserMob Proxy support
+
 ### Version 1.09 - Oct 31, 2018
 * rename project to WebImblaze-Framework
 * added --selenium-port, --selenium-post switches
