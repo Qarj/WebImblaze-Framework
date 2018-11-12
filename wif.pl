@@ -51,10 +51,10 @@ my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my $har_file_content;
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_use_browsermob_proxy, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location, $browsermob_proxy_location_full );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -94,19 +94,11 @@ build_summary_of_batches();
 my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
 #print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
-my ($proxy_server_pid, $proxy_server_port, $proxy_port) = start_browsermob_proxy($testfile_contains_selenium);
-
 if ($is_windows) {
-    display_title_info($testfile_name, $run_number, $config_file_name, $proxy_port);
+    display_title_info($testfile_name, $run_number, $config_file_name);
 }
 
-my $status = call_webimblaze_with_testfile($config_file_full, $proxy_port, $this_run_home);
-
-#write_har_file($proxy_port);
-
-shutdown_browsermob_proxy($proxy_server_pid, $proxy_server_port, $proxy_port);
-
-#report_har_file_urls($proxy_port);
+my $status = call_webimblaze_with_testfile($config_file_full, $this_run_home);
 
 write_final_result($run_number);
 
@@ -129,7 +121,7 @@ if ($status) { exit 1; } else { exit 0; }
 
 #------------------------------------------------------------------
 sub call_webimblaze_with_testfile {
-    my ($_config_file_full, $_proxy_port, $_this_run_home) = @_;
+    my ($_config_file_full, $_this_run_home) = @_;
 
     my $_temp_folder_name = slash_me( 'temp/' . $temp_folder_name );
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
@@ -169,11 +161,6 @@ sub call_webimblaze_with_testfile {
 
     if (defined $opt_capture_stdout || defined $opt_no_update_config) {
         push @_args, '--no-colour';
-    }
-
-    if ($_proxy_port) {
-        push @_args, '--proxy';
-        push @_args, 'localhost:' . $_proxy_port;
     }
 
     if ($selenium_location_full) {
@@ -291,104 +278,9 @@ sub get_date {
 
 #------------------------------------------------------------------
 sub display_title_info {
-    my ($_testfile_name, $_run_number, $_config_file_name, $_proxy_port) = @_;
+    my ($_testfile_name, $_run_number, $_config_file_name) = @_;
 
-    my $_proxy_port_info = q{};
-    if (defined $_proxy_port) {
-        $_proxy_port_info = " [Proxy Port:$_proxy_port]";
-    }
-
-    my $_result = `title temp\\$temp_folder_name $_config_file_name $_run_number:$_testfile_name$_proxy_port_info`;
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub report_har_file_urls {
-    my ($_proxy_port) = @_;
-
-    if (not defined $_proxy_port) {
-        return;
-    }
-
-    my $_filename = 'temp/' . $temp_folder_name . '/URLs.txt';
-    open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
-    binmode $_fh, ':encoding(UTF-8)'; # set binary mode and utf8 character set
-
-    my $doublequote = "\x22"; ## no critic(ValuesAndExpressions::ProhibitEscapedCharacters)
-    while ( $har_file_content =~ m/"url":$doublequote([^$doublequote]*)$doublequote/g ) {
-        print {$_fh} "$1\n";
-    }
-
-    close $_fh or die "Could not close file $_filename\n";
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub write_har_file {
-    my ($_proxy_port) = @_;
-
-    if (not defined $_proxy_port) {
-        return;
-    }
-
-    # get the har file from browsermob-proxy
-    require LWP::Simple;
-    my $_url = "http://localhost:9091/proxy/$_proxy_port/har";
-    $har_file_content = LWP::Simple::get $_url;
-
-    require Encode;
-    $har_file_content = Encode::encode_utf8( $har_file_content );
-
-    # write har file uncompressed
-    my $_filename = 'temp/' . $temp_folder_name . '/har.txt';
-    open my $_fh, '>', $_filename or die "Could not open file '$_filename' $!\n";
-    binmode $_fh; # set binary mode
-    print {$_fh} $har_file_content;
-    close $_fh or die "Could not close file $_filename\n";
-
-    # write har file compressed
-    require Compress::Zlib;
-    $_filename = 'temp/' . $temp_folder_name . '/har.gzip';
-    open my $_fh2, '>', $_filename or die "Could not open file '$_filename' $!\n";
-    binmode $_fh2; # set binary mode
-    my $_compressed = Compress::Zlib::memGzip($har_file_content);
-    print {$_fh2} $_compressed;
-    close $_fh2 or die "Could not close file $_filename\n";
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub shutdown_browsermob_proxy {
-    my ($_proxy_server_pid, $_proxy_server_port, $_proxy_port) = @_;
-
-    if (not defined $_proxy_server_pid) {
-        return;
-    }
-
-    require LWP::UserAgent;
-
-    # prove that that the proxy port is in use
-    #my $_available_port= _find_available_port($_proxy_port);
-    #print "_available_port:$_available_port\n";
-
-    # first shutdown the proxy (a bit pointless since we will kill the parent process next)
-    if (defined $_proxy_port) {
-        LWP::UserAgent->new->delete("http://localhost:$_proxy_server_port/proxy/$_proxy_port");
-    }
-
-    # prove that that the proxy server has been shut down
-    #$_available_port= _find_available_port($_proxy_port);
-    #print "_proxy_port:$_proxy_port\n";
-    #print "_available_port:$_available_port\n";
-
-    # now shutdown the proxy server
-    my $_result = `taskkill /PID $_proxy_server_pid /T /F`;
-    if (not $_result =~ m/SUCCESS.*child process/ ) {
-        print {*STDOUT} "ERROR: Did not kill browsermob proxy (pid $_proxy_server_pid) and child processes\n";
-    }
+    my $_result = `title temp\\$temp_folder_name $_config_file_name $_run_number:$_testfile_name`;
 
     return;
 }
@@ -455,55 +347,6 @@ sub _find_available_port {
     }
 
     return 'none';
-}
-
-#------------------------------------------------------------------
-sub start_browsermob_proxy {
-    my ($_testfile_contains_selenium) = @_;
-
-    require LWP::UserAgent;
-
-    if (not defined $opt_use_browsermob_proxy) {
-        return;
-    }
-
-    if (not $opt_use_browsermob_proxy eq 'true') {
-        return;
-    }
-
-    # for the moment, a proxy can only be used in conjunction with selenium
-    if (not defined $_testfile_contains_selenium) {
-        return;
-    }
-
-    #my $_cmd = 'subs\start_browsermob_proxy.pl ' . $temp_folder_name;
-    #my $_proxy_port = `$_cmd`;
-
-    # we need two ports, one for the proxy (server) server, and the other for the proxy (server)
-    # find free port
-    # start proxy server
-    my $_proxy_server_port = _find_available_port(int(rand 999)+9000);
-    my $_proxy_server_pid = _start_windows_process( "cmd /c $browsermob_proxy_location_full -port $_proxy_server_port" );
-    #print "_proxy_server_port:$_proxy_server_port\n";
-
-    # start proxy
-    my $_proxy_port = _find_available_port(int(rand 999)+10_000);
-    _http_post ("http://localhost:$_proxy_server_port/proxy", 'port', $_proxy_port);
-
-    #print "_proxy_port:$_proxy_port\n";
-
-    my $_browsermob_config = Config::Tiny->read( 'plugins/browsermob_proxy/browsermob_proxy.config' );
-    foreach my $_blacklist (sort keys %{$_browsermob_config->{'blacklist'}}) {
-        #print "_blacklist:$_blacklist\n";
-        _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/blacklist", "regex=http.*$_blacklist.*&status=200");
-    }
-
-    foreach my $_rewrite (sort keys %{$_browsermob_config->{'rewrite'}}) {
-        print "_rewrite:$_rewrite\n";
-        _http_put ("http://localhost:$_proxy_server_port/proxy/$_proxy_port/rewrite", "matchRegex=http.*$_rewrite.*&replace=http://localhost/$_rewrite");
-    }
-
-    return $_proxy_server_pid, $_proxy_server_port, $_proxy_port;
 }
 
 #------------------------------------------------------------------
@@ -1655,10 +1498,8 @@ sub _create_default_config {
     $_config .= 'environment=DEV'."\n";
     $_config .= 'is_automation_controller=false'."\n";
     $_config .= 'target=team1'."\n";
-    $_config .= 'use_browsermob_proxy=false'."\n";
     $_config .= q{}."\n";
     $_config .= '[path]'."\n";
-    $_config .= 'browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat'."\n";
     $_config .= $_selenium_location_full;
     $_config .= $_chromedriver_location_full;
     $_config .= 'testfile_full=../WebImblaze/examples/get.xml'."\n";
@@ -1693,7 +1534,6 @@ sub _read_config {
     $opt_target = $config->{main}->{target};
     $opt_batch = $config->{main}->{batch};
     $opt_environment = $config->{main}->{environment};
-    $opt_use_browsermob_proxy = $config->{main}->{use_browsermob_proxy};
     $config_is_automation_controller = $config->{main}->{is_automation_controller};
 
     # path
@@ -1703,20 +1543,12 @@ sub _read_config {
     $web_server_location_full = $config->{path}->{web_server_location_full};
     $web_server_address = $config->{path}->{web_server_address};
     $webimblaze_location = $config->{path}->{webimblaze_location};
-    $browsermob_proxy_location_full = $config->{path}->{browsermob_proxy_location_full};
 
     # normalise config
     if (lc $config_is_automation_controller eq 'true' ) {
         $config_is_automation_controller = 'true';
     } else {
         $config_is_automation_controller = 'false';
-    }
-
-    # normalise config
-    if (lc $opt_use_browsermob_proxy eq 'true' ) {
-        $opt_use_browsermob_proxy = 'true';
-    } else {
-        $opt_use_browsermob_proxy = 'false';
     }
 
     return;
@@ -1731,7 +1563,6 @@ sub _write_config {
     $config->{main}->{target} = $opt_target;
     $config->{main}->{batch} = $opt_batch;
     $config->{main}->{environment} = $opt_environment;
-    $config->{main}->{use_browsermob_proxy} = $opt_use_browsermob_proxy;
     $config->{main}->{is_automation_controller} = $config_is_automation_controller;
 
     # path
@@ -1741,7 +1572,6 @@ sub _write_config {
     $config->{path}->{web_server_location_full} = $web_server_location_full;
     $config->{path}->{web_server_address} = $web_server_address;
     $config->{path}->{webimblaze_location} = $webimblaze_location;
-    $config->{path}->{browsermob_proxy_location_full} = $browsermob_proxy_location_full;
 
     $config->write( 'wif.config' );
 
@@ -1805,7 +1635,6 @@ sub get_options_and_config {
         't|target=s'                => \$opt_target,
         'b|batch=s'                 => \$opt_batch,
         'e|env=s'                   => \$opt_environment,
-        'p|use-browsermob-proxy=s'  => \$opt_use_browsermob_proxy,
         'g|selenium-host=s'         => \$opt_selenium_host,
         'o|selenium-port=s'         => \$opt_selenium_port,
         'l|headless'                => \$opt_headless,
@@ -1894,7 +1723,6 @@ Usage: wif.pl tests/testfilename.test <<options>>
 -t|--target                 target environment handle           --target skynet
 -b|--batch                  batch name for grouping results     --batch SmokeTests
 -e|--env                    high level environment DEV, LIVE    --env DEV
--p|--use-browsermob-proxy   use browsermob-proxy                --use-browsermob-proxy true
 -g|--selenium-host          use selenium (grid) host at         --selenium-host 10.44.1.2
 -o|--selenium-port          selenium (grid) port                --selenium-port 4444
 -l|--headless               start chrome in headless mode       --headless

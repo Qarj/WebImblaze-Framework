@@ -20,15 +20,13 @@ batch=example_batch
 environment=DEV
 is_automation_controller=false
 target=team1
-use_browsermob_proxy=false
 
 [path]
-browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat
-selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
+selenium_location_full=C:\selenium\selenium-server-standalone-3.11.0.jar
 chromedriver_location_full=C:\selenium\chromedriver.exe
-testfile_full=../WebImblaze/examples/get.xml
+testfile_full=../WebImblaze/examples/get.test
 web_server_address=localhost
-web_server_location_full=C:\inetpub\wwwroot
+web_server_location_full=C:\Apache24\htdocs
 webimblaze_location=../WebImblaze
 ```
 
@@ -55,23 +53,7 @@ Target 'mini-environment' for the test case file. Update by wif.pl --target opti
 
 For example, the mini environment might be the name of a team within your development environment.
 
-### use_browsermob_proxy
-`true` means run any Selenium WebDriver tests through BrowserMob Proxy.
-
-You should ensure this option is set to `false` in most circumstances.
-
-The author used to use browsermob proxy to remove under performing banner ads and tracking pixels
-from Selenium tests. Today the Selenium Page Load timeout is used instead - this feature will
-probably be removed.
-
 ## [path] config
-
-### browsermob_proxy_location_full
-Where to find `browsermob-proxy.bat`. If you are not using BrowserMob Proxy, it is safe to leave this option at the default, even if is not installed.
-
-```
-browsermob_proxy_location_full=C:\browsermob\bin\browsermob-proxy.bat
-```
 
 ### chromedriver_location_full
 Where to find the chromedriver binary. If you do not have Selenium tests, this value does not matter.
@@ -233,7 +215,6 @@ autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
 Refer to the WebImblaze Manual, Configuration section.
 
 In this section you can specify values for:
-- proxy
 - useragent
 - httpauth
 - baseurl, baseurl1, baserurl2
@@ -326,10 +307,6 @@ Sets the batch to `Priority_1_Tests` and runs the last test with the saved optio
 
 ## `wif.pl --env PROD`
 Sets the environment to PROD and runs the last test with the saved options.
-
-## `--use_browsermob_proxy`
-Starts BrowserMob Proxy, passes to WebImblaze the proxy port, then shuts down BrowserMob Proxy
-when the test is complete.
 
 ## `--selenium-host`
 Passes the Selenium (Grid) host to `wi.pl`.

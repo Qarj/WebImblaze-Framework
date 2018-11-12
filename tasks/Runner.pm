@@ -190,9 +190,6 @@ sub _build_wif_args {
     push @_args, '--env';
     push @_args, $_config_environment;
 
-    push @_args, '--use-browsermob-proxy';
-    push @_args, 'false';
-
     push @_args, '--no-update-config';
 
     push @_args, '--capture-stdout';
