@@ -9,7 +9,7 @@ package Runner;
 use strict;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.5.0';
+$VERSION = '1.6.0';
 
 use Getopt::Long;
 use Cwd;
@@ -139,7 +139,7 @@ sub start_test {
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
-    _start_windows_process('wif.pl '."@_args");
+    _start_windows_process('perl wif.pl '."@_args");
 
     chdir $_orig_cwd;
 
@@ -159,7 +159,7 @@ sub call_test {
     printf "%-69s ", $_test_file_full;
     print "...";
 
-    my $_status = system('wif.pl '."@_args");
+    my $_status = system('perl wif.pl '."@_args");
     if ($_status) {
         print " failed\n";
     } else {
@@ -340,14 +340,14 @@ sub get_options {
 }
 
 sub print_version {
-    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblazeFramework\n";
+    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Framework\n";
     return;
 }
 
 sub print_usage {
     print <<'EOB'
 
-Usage: <task_name>.pl tests\testfilename.xml <<options>>
+Usage: perl <task_name>.pl tests/testfilename.test <<options>>
 
 -t|--target                 target "mini-environment"           --target skynet
 -b|--batch                  batch name for grouping results     --batch Smoke

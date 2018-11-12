@@ -12,11 +12,11 @@ chdir dirname(__FILE__);
 use lib '.';
 require Runner;
 
-$VERSION = '1.04';
+$VERSION = '1.05';
 
 ## Usage:
 ##
-## perl tasks\<task_filename>.pl --env PAT --target bcs --batch Core_Regression --check-alive http://www.example.com
+## perl tasks/<task_filename>.pl --env PAT --target bcs --batch Core_Regression --check-alive http://www.example.com
 
 Runner::start_runner();
 
