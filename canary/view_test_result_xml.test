@@ -1,16 +1,16 @@
 # Self test master file. All test steps in this file should pass.
 
-step: {FEATURE}
-varFEATURE: view_test_result_xml
-shell1: perl ./../WebImblaze-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_substeps --no-retry --no-update-config
-verifynegative1: uninitialized value
-parseresponseRESULT: Result at: ([^\v]+)|regex|
+step:                   {FEATURE}
+varFEATURE:             view_test_result_xml
+shell1:                 perl ./../WebImblaze-Framework/wif.pl canary{SLASH}substeps{SLASH}{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_substeps --no-retry --no-update-config
+verifynegative1:        uninitialized value
+parseresponseRESULT:    Result at: ([^\v]+)|regex|
 
-step: View result xml
-description2: [{RESULT}]
-url: {RESULT}
-verifypositive1: Echo some output
-verifypositive2: id="10"
-verifypositive3: test-summary
-verifypositive4: TEST CASE PASSED
-verifypositive5: {FEATURE}
+step:                   View result xml
+desc:                   [{RESULT}]
+url:                    {RESULT}
+verifypositive1:        Echo some output
+verifypositive2:        id="10"
+verifypositive3:        test-summary
+verifypositive4:        TEST STEP PASSED
+verifypositive5:        {FEATURE}

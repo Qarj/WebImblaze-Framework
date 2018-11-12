@@ -1,16 +1,16 @@
 # Run all WebImblaze Framework core self tests
 
-step: {FEATURE}
-varFEATURE: view_test_result_xml
-varBATCH: {RANDOM:3:NUMERIC}
-shell: perl ./../WebImblaze-Framework/wif.pl canary/{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_{BATCH} --no-retry --no-update-config
-verifypositive1: TEST CASE PASSED
-verifypositive2: Test Cases Failed: 0
-verifynegative: TEST CASE FAILED
+step:               {FEATURE}
+varFEATURE:         view_test_result_xml
+varBATCH:           {RANDOM:3:NUMERIC}
+shell:              perl ./../WebImblaze-Framework/wif.pl canary/{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_{BATCH} --no-retry --no-update-config
+verifypositive1:    TEST STEP PASSED
+verifypositive2:    Test Steps Failed: 0
+verifynegative:     TEST STEP FAILED
 
-step: {FEATURE}
-varFEATURE: view_test_result_html
-shell: perl ./../WebImblaze-Framework/wif.pl canary/{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_{BATCH} --no-retry --no-update-config
-verifypositive1: TEST CASE PASSED
-verifypositive2: Test Cases Failed: 0
-verifynegative: TEST CASE FAILED
+step:               {FEATURE}
+varFEATURE:         view_test_result_html
+shell:              perl ./../WebImblaze-Framework/wif.pl canary/{FEATURE}.test --env DEV --target default --batch WebImblaze-Framework_canary_{BATCH} --no-retry --no-update-config
+verifypositive1:    TEST STEP PASSED
+verifypositive2:    Test Steps Failed: 0
+verifynegative:     TEST STEP FAILED
