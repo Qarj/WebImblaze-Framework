@@ -131,13 +131,12 @@ if ($status) { exit 1; } else { exit 0; }
 sub call_webimblaze_with_testfile {
     my ($_config_file_full, $_proxy_port, $_this_run_home) = @_;
 
-    my $_temp_folder_name = 'temp/' . $temp_folder_name;
+    my $_temp_folder_name = slash_me( 'temp/' . $temp_folder_name );
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
     my $_abs_config_file_full = File::Spec->rel2abs( $_config_file_full );
-    my $_abs_temp_folder = File::Spec->rel2abs( $_temp_folder_name ) . q{/};
-    $_abs_temp_folder =~ s{/}{\\};
+    my $_abs_temp_folder = slash_me( File::Spec->rel2abs( $_temp_folder_name ) . q{/} );
 
     #print {*STDOUT} "\n_abs_testfile_full: [$_abs_testfile_full]\n";
     #print {*STDOUT} "_abs_config_file_full: [$_abs_config_file_full]\n";
@@ -221,15 +220,15 @@ sub call_webimblaze_with_testfile {
     my $_wi_stdout_file_full = $_this_run_home.'webimblaze_stdout.txt';
     if (defined $opt_capture_stdout) {
         print {*STDOUT} "\nLaunching wi.pl, STDOUT redirected to $_wi_stdout_file_full\n";
-        print {*STDOUT} slash_me('perl .\wi.pl ')."@_args\n";
-        $_status = system slash_me('perl .\wi.pl ')."@_args > $_wi_stdout_file_full 2>&1";
+        print {*STDOUT} 'perl wi.pl '."@_args\n";
+        $_status = system 'perl wi.pl '."@_args > $_wi_stdout_file_full 2>&1";
         print {*STDOUT} "\nwi.pl execution all done.\n";
     } else {
         # we run it like this so you can see test case execution progress "as it happens"
         my $_message = 'Start wif.pl with --capture-stdout flag to capture wi.pl standard out'."\n\n";
         $_message .= 'WebImblaze started with args: '. "@_args";
         write_file($_wi_stdout_file_full, $_message);
-        $_status = system slash_me('perl .\wi.pl ')."@_args";
+        $_status = system 'perl wi.pl '."@_args";
     }
 
     chdir $_orig_cwd;
@@ -1777,7 +1776,7 @@ sub _locate_file {
         return $_file;
     }
 
-    # when substeps/runif passed in, will find selftest/substeps/runif.xml instead of selftest/runif.xml
+    # when substeps/runif passed in, will find selftest/substeps/runif.test instead of selftest/runif.test
     my $_best_match = $_files[0]; # fail safe, in practice best match will be last file in list unless more path specified
     my $_linux_file = linux_me($_file); # file find always returns paths in Linux format
     foreach my $_match (@_files) {
@@ -1786,7 +1785,7 @@ sub _locate_file {
         }
     }
 
-    print "Test case file [$_best_match]\n";
+    print  {*STDOUT} "Test case file [$_best_match]\n";
 
     return $_best_match;
 }
