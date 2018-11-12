@@ -50,7 +50,6 @@ local $| = 1; # don't buffer output to STDOUT
 my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
-my $har_file_content;
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
@@ -90,9 +89,6 @@ write_pending_result($run_number);
 
 # there is now a new item in the batch, so the overall summary of everything has to be rebuilt
 build_summary_of_batches();
-
-my $testfile_contains_selenium = does_testfile_contain_selenium($testfile_full);
-#print "testfile_contains_selenium:$testfile_contains_selenium\n";
 
 if ($is_windows) {
     display_title_info($testfile_name, $run_number, $config_file_name);
@@ -406,19 +402,6 @@ sub _http_post {
         }
     }
     #print "_response:$_response\n";
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub does_testfile_contain_selenium {
-    my ($_testfile_full) = @_;
-
-    my $_text = read_file($_testfile_full);
-
-    if ($_text =~ m/\$driver->/) {
-        return 'true';
-    }
 
     return;
 }
@@ -1556,8 +1539,6 @@ sub _read_config {
 
 #------------------------------------------------------------------
 sub _write_config {
-
-    my $_config = Config::Tiny->new;
 
     # main
     $config->{main}->{target} = $opt_target;
