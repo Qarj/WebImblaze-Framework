@@ -154,7 +154,7 @@ If you want to run another example, since the environment details have not chang
 you can just specify the test case file:
 
 ```
-perl wif.pl ../WebImblaze/examples/hello
+perl wif.pl ../WebImblaze/examples/advanced/hello
 ```
 
 The WebImblaze framework will search for the test case file that is the best match and run it.
@@ -191,7 +191,7 @@ To see this in action, go and first install the Selenium plugin for WebImblaze h
 
 Now run the all of the WebImblaze examples
 ```
-perl tasks\Examples.pl
+perl tasks/Examples.pl
 ```
 
 You'll see a lot of command prompts open, run some tests then close, all at the same time.
@@ -202,14 +202,14 @@ retried on failure.
 
 In practice, the tests should be run by a service account. You can use Windows Task Scheduler to run the tests overnight.
 
-You can run all the WebImblaze selftests quickly as follows:
+You can run all the WebImblaze self tests quickly as follows:
 ```
-perl tasks\Selftest.pl
+perl tasks/Selftest.pl
 ```
 
 Note that the tasks\ scripts can take parameters too
 ```
-perl tasks\Examples.pl --env DEV --target team2 --batch My_Examples
+perl tasks/Examples.pl --env DEV --target team2 --batch My_Examples
 ```
 
 ## Pending results
