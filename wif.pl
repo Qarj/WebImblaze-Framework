@@ -21,13 +21,13 @@ $VERSION = '1.09';
 #    GNU General Public License for more details.
 
 #    Example: 
-#              wif.pl ../WebImblaze/examples/demo.xml --target skynet --batch demonstration
-#              wif.pl ../WebImblaze/examples/command.xml --target skynet --batch allgood
-#              wif.pl ../WebImblaze/examples/abort.xml --target skynet --batch veryverybad
-#              wif.pl ../WebImblaze/examples/errormessage.xml --target skynet --batch notgood
-#              wif.pl ../WebImblaze/examples/corrupt.xml --target skynet --batch worstpossible
-#              wif.pl ../WebImblaze/examples/sleep.xml --target skynet --batch tired
-#              wif.pl ../WebImblaze/examples/selenium.xml --target skynet --batch gui
+#              perl wif.pl ../WebImblaze/examples/demo.xml --target skynet --batch demonstration
+#              perl wif.pl ../WebImblaze/examples/command.xml --target skynet --batch allgood
+#              perl wif.pl ../WebImblaze/examples/abort.xml --target skynet --batch veryverybad
+#              perl wif.pl ../WebImblaze/examples/errormessage.xml --target skynet --batch notgood
+#              perl wif.pl ../WebImblaze/examples/corrupt.xml --target skynet --batch worstpossible
+#              perl wif.pl ../WebImblaze/examples/sleep.xml --target skynet --batch tired
+#              perl wif.pl ../WebImblaze/examples/selenium.xml --target skynet --batch gui
 
 use Getopt::Long;
 use File::Basename;
@@ -42,7 +42,7 @@ use XML::Simple;
 use XML::Twig;
 require Data::Dumper;
 
-my $this_script_folder_full = dirname(__FILE__);
+my (undef, $this_script_folder_full, undef) = fileparse(File::Spec->rel2abs( __FILE__ ));
 chdir $this_script_folder_full;
 
 local $| = 1; # don't buffer output to STDOUT
