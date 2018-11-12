@@ -77,18 +77,15 @@ $today_home = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd";
 # generate a random folder for the temporary files
 $temp_folder_name = create_temp_folder();
 
-# find out what run number we are up to today for this testcase file
+# find out what run number we are up to today for this test file
 my ($run_number, $this_run_home) = create_run_number();
 
 capture_stdout($this_run_home);
 
-# check the testfile to ensure the XML parses - will die if it doesn't
-##deprecated_check_testfile_xml_parses_ok();
-
 # generate the config file, and find out where it is
 my ($config_file_full, $config_file_name, $config_file_path) = create_webimblaze_config_file($run_number);
 
-# indicate that WebImblaze is running the testfile
+# indicate that WebImblaze is running the test file
 write_pending_result($run_number);
 
 # there is now a new item in the batch, so the overall summary of everything has to be rebuilt
@@ -111,14 +108,12 @@ shutdown_browsermob_proxy($proxy_server_pid, $proxy_server_port, $proxy_port);
 
 #report_har_file_urls($proxy_port);
 
-publish_results_on_web_server($run_number);
-
 write_final_result($run_number);
 
 # the pending item in the batch is now final, so the overall summary of everything has to be rebuilt
 build_summary_of_batches();
 
-# ensure the stylesheets, assets and manual files are on the web server
+# ensure the style sheets, assets and manual files are on the web server
 publish_static_files($run_number);
 
 # tear down
@@ -602,40 +597,6 @@ sub publish_static_files {
     # javascripts
     _make_path ( $web_server_location_full.'/scripts/' ) ;
     _copy ( 'scripts/*.js', $web_server_location_full.'/scripts/' );
-
-    return;
-}
-
-#------------------------------------------------------------------
-sub publish_results_on_web_server {
-    my ($_run_number) = @_;
-
-    my $_this_run_home = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/";
-
-    # copy captured email files to web server 
-    _copy ( "temp/$temp_folder_name/*.eml", $_this_run_home);
-
-    # copy any .txt files over
-    _copy ( "temp/$temp_folder_name/*.txt", $_this_run_home);
-
-    # copy any .7z files over - e.g. har.7z
-    _copy ( "temp/$temp_folder_name/*.7z", $_this_run_home);
-
-    # copy .htm and .html files over
-    _copy ( "temp/$temp_folder_name/*.htm*", $_this_run_home);
-
-    # copy .css and .less files over
-    _copy ( "temp/$temp_folder_name/*ss", $_this_run_home);
-
-    # copy .jpg and .png files over
-    _copy ( "temp/$temp_folder_name/*.jpg", $_this_run_home);
-    _copy ( "temp/$temp_folder_name/*.png", $_this_run_home);
-
-    # copy the .js files over
-    _copy ( "temp/$temp_folder_name/*.js", $_this_run_home);
-
-    # copy chromedriver.log file over as chromedriver.txt so we do not need another MIME type
-    _copy ( "temp/$temp_folder_name/chromedriver.log", "$_this_run_home".'chromedriver.txt');
 
     return;
 }
@@ -1472,7 +1433,7 @@ sub create_webimblaze_config_file {
     $_webimblaze_config .= _write_webimblaze_wif_config($_run_number);
     $_webimblaze_config .=  "</root>\n";
 
-    my $_config_file_full = "temp/$temp_folder_name/$opt_target.xml";
+    my $_config_file_full = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/$opt_target.xml";
     _write_file($_config_file_full, $_webimblaze_config);
 
     my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'\.xml');
