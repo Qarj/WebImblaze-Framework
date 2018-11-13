@@ -1507,7 +1507,7 @@ sub _read_config {
 
     if (not -e 'wif.config') {
         my $_message = "\nERROR: ./wif.config not found\n";
-        $_message .= "\nTo create default config file, use: wif.pl --create-config\n";
+        $_message .= "\nTo create default config file, use: perl wif.pl --create-config\n";
         die $_message;
     }
 
@@ -1699,7 +1699,7 @@ sub print_version {
 sub print_usage {
     print <<'EOB'
 
-Usage: wif.pl tests/testfilename.test <<options>>
+Usage: perl wif.pl tests/testfilename.test <<options>>
 
 -t|--target                 target environment handle           --target skynet
 -b|--batch                  batch name for grouping results     --batch SmokeTests
@@ -1717,8 +1717,8 @@ Usage: wif.pl tests/testfilename.test <<options>>
    --create-config          create a wif.config file with default values
                             WARNING! Will overwrite the current wif.config
 
-wif.pl -v|--version
-wif.pl -h|--help
+perl wif.pl -v|--version
+perl wif.pl -h|--help
 EOB
 ;
 return;
