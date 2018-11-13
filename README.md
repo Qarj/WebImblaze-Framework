@@ -1,9 +1,9 @@
 # WebImblaze-Framework 1.10
 
 Automated regression testing framework for
-* managing WebImblaze configuration
-* running many WebImblaze automated tests in parallel
-* organising actual test run results for many teams and test case files
+- managing WebImblaze configuration
+- running many WebImblaze automated tests in parallel
+- organising actual test run results for many teams and test case files
 
 This framework is for those with large suites of automated tests. It helps to quickly
 answer the question "Did all of our regression tests pass?".
@@ -92,13 +92,24 @@ Install Perl packages required by `wif.pl`.
 cpan Config::Tiny
 ```
 
-Now install let's install Apache for windows.
+Now install Apache for windows.
 
-First we need to ensure that IIS isn't installed and running.
+First ensure that IIS isn't installed and running.
 Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
 Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
 
 From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
+
+```
+curl -o %temp%/Apache24.zip https://home.apache.org/~steffenal/VC15/binaries/httpd-2.4.37-win32-VC15.zip
+"C:\Program Files\7-Zip\7z.exe" x %temp%/Apache24.zip -o"C:\" -r -x!ReadMe.txt -x!"-- Win32 VC15  --"
+```
+
+Visual Studio redist might be needed
+```
+curl -o %temp%/VC_redist.x86.exe https://aka.ms/vs/15/release/VC_redist.x86.exe
+%temp%\VC_redist.x86.exe
+```
 
 Then open a command prompt as Administrator.
 ```
@@ -132,9 +143,9 @@ That's it! You are now ready to run your first WebImblaze test using the WebImbl
 Open the command prompt up as an Administrator.
 
 To run an automated test, wif.pl needs to know the:
-* test file to run
-* high level environment
-* target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
+- test file to run
+- high level environment
+- target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
 
 ```
 perl wif.pl example_test --env DEV --target team1
@@ -221,6 +232,37 @@ completions.
 
 On a pending result, you can click on the Started date/time for a test file and see where it is up to. Again
 just press F5 to get the latest update.
+
+# Syntax Highlighting
+
+Syntax Highlights of WebImblaze `.test` files works will with Material-Dark theme.
+
+Download it
+```
+curl -o C:\git\WebImblaze-Framework\tools\Material-Dark.xml https://raw.githubusercontent.com/naderi/material-theme-for-npp/master/Material-Dark.xml
+```
+
+Copy it to `%APPDATA%\Notepad++\themes`
+```
+copy C:\git\WebImblaze-Framework\tools\Material-Dark.xml "%APPDATA%\Notepad++\themes"
+```
+
+From `Language` menu, select `Define your language...`
+Click `Import...`
+Copy paste this to the filename `C:\git\WebImblaze-Framework\tools\webimblaze_notepad++.xml`
+Restart Notepad++
+
+From `Settings` menu, select `Style Configurator...`
+Select theme: `Material-Dark`
+Click `Enable global background colour`
+Save and close
+
+## Markdown highlighting
+
+```
+curl -o C:\git\WebImblaze-Framework\tools\Zenburn-Markdown.xml https://raw.githubusercontent.com/Edditoria/markdown-plus-plus/master/theme-zenburn/userDefinedLang-markdown.zenburn.modern.xml
+```
+Then import the language.
 
 # The WebImblaze Framework Manual
 
