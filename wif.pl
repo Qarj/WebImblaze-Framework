@@ -1468,7 +1468,7 @@ sub _create_default_config {
 
     my $_web_server_location_full = 'web_server_location_full=/var/www/html'."\n";
     my $_chromedriver_location_full = 'chromedriver_location_full=/usr/local/bin/selenium/chromedriver'."\n";
-    my $_selenium_location_full = 'selenium_location_full=/usr/local/bin/selenium/selenium-server-standalone-3.11.0.jar'."\n";
+    my $_selenium_location_full = 'selenium_location_full=/usr/local/bin/selenium/selenium-server-3-standalone.jar'."\n";
     if ( $is_windows ) {
         $_web_server_location_full = 'web_server_location_full=C:\Apache24\htdocs'."\n";
         $_chromedriver_location_full = 'chromedriver_location_full=C:\selenium\chromedriver.exe'."\n";
