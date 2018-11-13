@@ -39,7 +39,9 @@ Set permissions.
 cd /usr/local/bin/WebImblaze-Framework
 sudo find . -type d -exec chmod a+rwx {} \;
 sudo find . -type f -exec chmod a+rw {} \;
-sudo chmod 777 /var/www/html
+sudo chgrp -R www-data /var/www/html
+sudo find /var/www/html -type d -exec chmod g+rwx {} +
+sudo find /var/www/html -type f -exec chmod g+rw {} +
 ```
 
 Restart Apache and make sure there are no error messages.
