@@ -83,7 +83,7 @@ Install WebImblaze. (refer to https://github.com/Qarj/WebImblaze).
 
 Clone the project.
 ```
-cd /D C:\git
+cd /D C:/git
 git clone https://github.com/Qarj/WebImblaze-Framework.git
 ```
 
@@ -92,35 +92,37 @@ Install Perl packages required by `wif.pl`.
 cpan Config::Tiny
 ```
 
-Now install Apache for windows.
+Now install Apache for Windows.
 
 First ensure that IIS isn't installed and running.
-Press the windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
+Press the Windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
 Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
 
 From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
 
+Administrator Command Prompt
 ```
 curl -o %temp%/Apache24.zip https://home.apache.org/~steffenal/VC15/binaries/httpd-2.4.37-win32-VC15.zip
 "C:\Program Files\7-Zip\7z.exe" x %temp%/Apache24.zip -o"C:\" -r -x!ReadMe.txt -x!"-- Win32 VC15  --"
 ```
 
-Visual Studio redist might be needed
+Then open a command prompt as Administrator.
+```
+cd C:/Apache24/bin
+httpd -k install
+httpd -k start
+```
+
+If `httpd` does not work, the Visual Studio redist might be needed
 ```
 curl -o %temp%/VC_redist.x86.exe https://aka.ms/vs/15/release/VC_redist.x86.exe
 %temp%\VC_redist.x86.exe
 ```
 
-Then open a command prompt as Administrator.
-```
-cd C:\Apache24\bin
-httpd -k install
-httpd -k start
-```
 
 Now create the `wif.config` file.
 ```
-cd /D C:\git\WebImblaze-Framework
+cd /D C:/git/WebImblaze-Framework
 perl wif.pl --create-config
 ```
 You don't need to change the default settings for this example to work.
@@ -179,7 +181,7 @@ Will also work, and even
 perl wif.pl hello
 ```
 
-Finally, let's run another example, but store the result under a batch name:
+Finally, run another example, but store the result under a batch name:
 ```
 perl wif.pl examples/post.xml --batch my_team_results
 ```
@@ -235,27 +237,36 @@ just press F5 to get the latest update.
 
 # Syntax Highlighting
 
-Syntax Highlights of WebImblaze `.test` files works will with Material-Dark theme.
+Syntax Highlights of WebImblaze `.test` files works will with Material-Dark theme and Monaco font.
 
-Download it
+Download Material-Dark
 ```
 curl -o C:\git\WebImblaze-Framework\tools\Material-Dark.xml https://raw.githubusercontent.com/naderi/material-theme-for-npp/master/Material-Dark.xml
 ```
 
-Copy it to `%APPDATA%\Notepad++\themes`
+Copy Material-Dark to `%APPDATA%\Notepad++\themes`
 ```
 copy C:\git\WebImblaze-Framework\tools\Material-Dark.xml "%APPDATA%\Notepad++\themes"
 ```
 
+Download Monaco font
+```
+curl -o C:\git\WebImblaze-Framework\tools\monaco.ttf https://raw.githubusercontent.com/todylu/monaco.ttf/master/monaco.ttf
+```
+Right click on `tools/monaco.ttf` in Windows Explorer and click `Install`.
+
+
 From `Language` menu, select `Define your language...`
 Click `Import...`
 Copy paste this to the filename `C:\git\WebImblaze-Framework\tools\webimblaze_notepad++.xml`
+
 Restart Notepad++
 
 From `Settings` menu, select `Style Configurator...`
 Select theme: `Material-Dark`
 Click `Enable global background colour`
 Save and close
+
 
 ## Markdown highlighting
 
