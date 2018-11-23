@@ -22,7 +22,7 @@ is_automation_controller=false
 target=team1
 
 [path]
-selenium_location_full=C:\selenium\selenium-server-standalone-3.11.0.jar
+selenium_location_full=C:\selenium\selenium-server-3-standalone.jar
 chromedriver_location_full=C:\selenium\chromedriver.exe
 testfile_full=../WebImblaze/examples/get.test
 web_server_address=localhost
