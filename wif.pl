@@ -1501,7 +1501,8 @@ sub _read_config {
     if (defined $ARGV[0]) {
         if (lc $ARGV[0] eq '--create-config') {
             _create_default_config();
-            die "\nDefault wif.config created.\n\nPlease review the config and refer to the manual for correct settings.\n";
+            print "\nDefault wif.config created.\n\nPlease review the config and refer to the manual for correct settings.\n";
+            exit;
         }
     }
 
