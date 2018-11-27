@@ -1258,10 +1258,10 @@ sub create_webimblaze_config_file {
     $_webimblaze_config .= _write_webimblaze_wif_config($_run_number);
     $_webimblaze_config .=  "</root>\n";
 
-    my $_config_file_full = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/$opt_target.xml";
+    my $_config_file_full = "$today_home/$testfile_parent_folder_name/$testfile_name/results_$_run_number/$opt_target.config";
     _write_file($_config_file_full, $_webimblaze_config);
 
-    my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'\.xml');
+    my ($_config_file_name, $_config_file_path) = fileparse($_config_file_full,'\.config');
 
     return $_config_file_full, $_config_file_name, $_config_file_path;
 }
