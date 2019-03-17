@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.10';
+$VERSION = '1.11';
 
 #    WebImblaze-Framework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ use XML::Simple;
 use XML::Twig;
 require Data::Dumper;
 
+my $start_folder_full = getcwd;
 my (undef, $this_script_folder_full, undef) = fileparse(File::Spec->rel2abs( __FILE__ ));
 chdir $this_script_folder_full;
 
@@ -1572,6 +1573,10 @@ sub linux_me {
 #------------------------------------------------------------------
 sub _locate_file {
     my ($_file) = @_;
+
+    if (-e $start_folder_full.'/'.$testfile_full) {
+        return $start_folder_full.'/'.$testfile_full;
+    }
 
     require File::Find::Rule;
 
