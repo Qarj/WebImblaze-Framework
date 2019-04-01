@@ -1,4 +1,4 @@
-# WebImblaze Framework 1.10 Manual
+# WebImblaze Framework 1.11 Manual
 
 # wif.config
 

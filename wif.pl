@@ -51,7 +51,7 @@ local $| = 1; # don't buffer output to STDOUT
 my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
-my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config);
+my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config, $opt_show_batch_url);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
 my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location );
@@ -73,6 +73,8 @@ my $results_content;
 
 get_options_and_config();  # get command line options
 $today_home = "$web_server_location_full/$opt_environment/$yyyy/$mm/$dd";
+
+show_batch_url();
 
 # generate a random folder for the temporary files
 $temp_folder_name = create_temp_folder();
@@ -1633,6 +1635,7 @@ sub get_options_and_config {
         'm|resume-session'          => \$opt_resume_session,
         'v|V|version'               => \$opt_version,
         'h|help'                    => \$opt_help,
+        'w|show-batch-url'          => \$opt_show_batch_url,
         )
         or do {
             print_usage();
@@ -1702,6 +1705,15 @@ sub print_version {
     return;
 }
 
+sub show_batch_url {
+    if ($opt_show_batch_url) {
+        print( "http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch.xml" );
+        exit;
+    }
+
+    return;
+}
+
 sub print_usage {
     print <<'EOB'
 
@@ -1725,6 +1737,7 @@ Usage: perl wif.pl tests/testfilename.test <<options>>
 
 perl wif.pl -v|--version
 perl wif.pl -h|--help
+perl wif.pl -w|--show-batch-url
 EOB
 ;
 return;

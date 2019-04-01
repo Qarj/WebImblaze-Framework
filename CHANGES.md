@@ -5,6 +5,10 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.11 - Apr 1, 2019
+* option to show the batch url
+* ability to locate a test file from cwd assuming wif.pl started from another folder (e.g. system path)
+
 ### Version 1.10 - Nov 12, 2018
 * improved Linux support
 * remove BrowserMob Proxy support
