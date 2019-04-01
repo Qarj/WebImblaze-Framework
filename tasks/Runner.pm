@@ -88,7 +88,7 @@ sub call {
 
     my $_status = Runner::call_test($_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless);
 
-    my ($_test_name, undef) = fileparse($_test,'.xml');
+    my ($_test_name, undef) = fileparse($_test,'.test');
 
     if ($_status) {
         $failed_test_files_count++;
@@ -257,6 +257,8 @@ sub read_wif_config {
     # main
     my $_config_target = $_config->{main}->{target};
     my $_config_environment = $_config->{main}->{environment};
+    $_config_target = lc $_config_target;
+    $_config_environment = uc $_config_environment;
 
     return ($_config_target, $_config_environment);
 }
