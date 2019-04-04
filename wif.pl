@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.11';
+$VERSION = '1.12.0';
 
 #    WebImblaze-Framework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -45,6 +45,8 @@ require Data::Dumper;
 my $start_folder_full = getcwd;
 my (undef, $this_script_folder_full, undef) = fileparse(File::Spec->rel2abs( __FILE__ ));
 chdir $this_script_folder_full;
+use lib q{.}; # current folder is not @INC from Perl 5.26
+require lib::BatchSummary;
 
 local $| = 1; # don't buffer output to STDOUT
 
@@ -642,56 +644,7 @@ sub _write_summary_record {
         }
     }
 
-    my $_root = $_twig->root;
-
-    my $_start_time = _get_earliest_start_time($_root);
-    my $_end_time = _get_largest_end_time($_root);
-
-    my $_number_of_pending_items = _get_number_of_pending_items($_root);
-
-    # calculate the number of items in the batch - pending items are not counted
-    my $_number_of_items = $_root->children_count() - $_number_of_pending_items;
-
-    # $_items_text will look like [1 item] or [5 items] or [4 items/1 pending]
-    my $_items_text = _build_items_text($_number_of_items, $_number_of_pending_items);
-
-    my $_number_of_execution_abortions = _get_number_of_execution_abortions($_root);
-
-    my $_number_of_failures = _get_number_of_failures($_root);
-    my $_number_of_failed_runs = _get_number_of_failed_runs($_root);
-
-    my $_total_run_time_seconds = _get_total_run_time_seconds($_root);
-
-    my $_start_time_seconds = _get_start_time_seconds($_root);
-    my $_end_time_seconds = _get_end_time_seconds($_root);
-
-    my $_elapsed_seconds = $_end_time_seconds - $_start_time_seconds;
-    my $_elapsed_minutes = sprintf '%.1f', ($_elapsed_seconds / 60);
-
-    # now it is possible to calculate a concurrency factor
-    # from this we can infer approximately how much time we saved by running the tests in parallel vs one after the other
-    my $_concurrency;
-    if ($_elapsed_seconds > 0) {
-        $_concurrency = sprintf '%.1f', ($_total_run_time_seconds / $_elapsed_seconds);
-    } else {
-        $_concurrency = 0;
-    }
-
-    # build concurrency text
-    my $_concurrency_text = "(Concurrency $_concurrency)";
-    if ($_concurrency == 0) { $_concurrency_text = q{}; }
-
-    my $_total_steps_run = _get_total_steps_run($_root);
-
-    my ($_status, $_status_message) = _get_status($_root);
-
-    # build overall summary text
-    my $_overall = 'PASS';
-    if ($_number_of_pending_items > 0) { $_overall = 'PEND'; }
-    if ($_number_of_failures > 0) { $_overall = 'FAIL'; }
-    if ($_number_of_execution_abortions > 0) { $_overall = 'EXECUTION ABORTED'; $_concurrency_text = q{}; }
-    if ($_status eq 'CORRUPT') { $_overall = 'CORRUPT'; $_concurrency_text = q{}; }
-    $_concurrency_text = q{}; # blank out concurrency text totally now, it is very low value information
+    BatchSummary::_calculate_stats($_twig);
 
     my $_record;
 
@@ -699,19 +652,15 @@ sub _write_summary_record {
     $_record .= qq|      <link>http://$web_server_address/$opt_environment/$yesterday_yyyy/$yesterday_mm/$yesterday_dd/All_Batches/Summary.xml</link>\n|;
     $_record .= qq|      <description>WebImblaze Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
-    $_record .= '         <title>';
 
-    if ($_status eq 'CORRUPT' ) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_status_message *$opt_target*</title>\n|;
-    } elsif ($_number_of_execution_abortions > 0) {
-        $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_execution_abortions EXECUTION ABORTION(s), $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
-    } else {
-    	if ($_number_of_failures > 0) {
-            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: $_number_of_failed_runs/$_number_of_items items FAILED ($_number_of_failures/$_total_steps_run steps), $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
-    	} else {
-            $_record .= qq|$_overall $dd/$mm $_start_time  - $_end_time $_items_text $opt_batch: ALL $_total_steps_run steps OK, $_elapsed_minutes mins $_concurrency_text *$opt_target*</title>\n|;
-    	}
-    }
+    $_record .= qq|         <title>|;
+    $_record .= BatchSummary::_build_overall_summary_text(
+        $opt_batch,
+        $opt_target,
+        $dd,
+        $mm
+    );
+    $_record .= qq|</title>\n|;
 
     $_record .= qq|         <link>http://$web_server_address/$opt_environment/$yyyy/$mm/$dd/All_Batches/$opt_batch.xml</link>\n|;
     $_record .= qq|         <description></description>\n|;
@@ -721,222 +670,6 @@ sub _write_summary_record {
     _write_file ($_file_full, $_record);
 
     return;
-}
-
-#------------------------------------------------------------------
-sub _build_items_text {
-    my ($_number_of_items, $_number_of_pending_items) = @_;
-
-    # singular or plural
-    my $_items_word;
-    if ( $_number_of_items == 1) {
-        $_items_word = 'item';
-    } else {
-        $_items_word = 'items';
-    }
-
-    # if there are some pending items, we need a different text
-    my $_items_text;
-    if ($_number_of_pending_items == 0)
-    {
-        $_items_text = "[$_number_of_items $_items_word]";
-    } else {
-        $_items_text = "[$_number_of_items $_items_word/$_number_of_pending_items pending]";
-    }
-
-    return $_items_text;
-}
-
-#------------------------------------------------------------------
-sub _get_status {
-    my ($_root) = @_;
-
-    # example tags: <status>CORRUPT</status>
-    #               <status-message>Not well formed at line 582</status-message>
-
-    # for the moment, status-message is only set when status is corrupt
-    my $_status = 'NORMAL';
-    my $_status_message;
-    my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt($_root,'status_message') ) {
-        if ( $_elt->field() ) {
-            $_status_message = $_elt->field();
-            $_status = 'CORRUPT';
-        }
-    }
-
-    return $_status, $_status_message;
-}
-
-#------------------------------------------------------------------
-sub _get_total_steps_run {
-    my ($_root) = @_;
-
-    # example tag: <testcasesrun>2</testcasesrun>
-
-    my $_total_run = 0;
-    my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'test_steps_run') ) {
-        $_total_run += $_elt->field();
-    }
-
-    return $_total_run;
-}
-
-#------------------------------------------------------------------
-sub _get_end_time_seconds {
-    my ($_root) = @_;
-
-    # example tag: <endseconds>75089</endseconds>
-
-    my $_end_seconds = 0;
-    my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'end_seconds') ) {
-        if ($_elt->field() > $_end_seconds) {
-            $_end_seconds = $_elt->field();
-        }
-    }
-
-    return $_end_seconds;
-}
-
-#------------------------------------------------------------------
-sub _get_start_time_seconds {
-    my ($_root) = @_;
-
-    # example tag: <startseconds>75059</startseconds>
-
-    # there are 86400 seconds in a day, we need to find the smallest start time in seconds
-    my $_start_seconds = 86_400;
-    my $_elt = $_root;
-    while ( $_elt= $_elt->next_elt($_root,'start_seconds') ) {
-        if ($_elt->field() < $_start_seconds) {
-            $_start_seconds = $_elt->field();
-        }
-    }
-
-    return $_start_seconds;
-}
-
-#------------------------------------------------------------------
-sub _get_total_run_time_seconds {
-    my ($_root) = @_;
-
-    # example tag: <totalruntime>0.537</totalruntime>
-
-    my $_elt = $_root;
-    my $_total_run_time = 0;
-    while ( $_elt= $_elt->next_elt($_root,'total_run_time') ) {
-      	$_total_run_time += $_elt->field();
-    }
-
-    # format to 0 decimal places
-    return sprintf '%.0f', $_total_run_time;
-}
-
-#------------------------------------------------------------------
-sub _get_number_of_failed_runs {
-    my ($_root) = @_;
-
-    # assume we do not have any execution abortions
-    my $_num_failed_runs = 0;
-
-    my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'test_steps_failed') ) {
-        if ($_elt->field() > 0) {
-            $_num_failed_runs += 1;
-        }
-    }
-
-    return $_num_failed_runs;
-}
-
-#------------------------------------------------------------------
-sub _get_number_of_failures {
-    my ($_root) = @_;
-
-    # assume we do not have any execution abortions
-    my $_num_failures = 0;
-
-    my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'test_steps_failed') ) {
-        $_num_failures += $_elt->field();
-    }
-
-    return $_num_failures;
-}
-
-#------------------------------------------------------------------
-sub _get_number_of_execution_abortions {
-    my ($_root) = @_;
-
-    # assume we do not have any execution abortions
-    my $_num_failures = 0;
-
-    my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'execution_aborted') ) {
-        if ($_elt->field() eq 'true' ) {
-            $_num_failures  += 1;
-        }
-    }
-
-    return $_num_failures;
-}
-
-#------------------------------------------------------------------
-sub _get_number_of_pending_items {
-    my ($_root) = @_;
-
-    # assume we do not have any pending items
-    my $_num_pending = 0;
-
-    my $_elt = $_root;
-    while ( $_elt = $_elt->next_elt( $_root,'end_time') ) {
-        if ($_elt->field() eq 'PENDING' ) {
-            $_num_pending += 1;
-        }
-    }
-
-    return $_num_pending;
-}
-
-#------------------------------------------------------------------
-sub _get_earliest_start_time {
-    my ($_root) = @_;
-
-    # example tag: <startdatetime>2016-04-05T20:50:59</startdatetime>
-    # the very first run in the batch will always contain the earliest start time
-
-    my $_start_time = $_root->first_child('run')->first_child_text('start_date_time');
-
-    # just return the time portion of the date time string
-    return substr $_start_time, 11;
-}
-
-#------------------------------------------------------------------
-sub _get_largest_end_time {
-    my ($_root) = @_;
-
-    # example tag: <end_time>2016-04-05T20:51:00</end_time>
-    # we do not know which run in the batch ended last, so we have to examine all of them
-
-    my $_elt = $_root;
-    my $_end_time = $_root->last_child('run')->last_child_text('end_time');
-    while ( $_elt = $_elt->next_elt($_root,'end_time') )
-      {
-        #cmp comparison operator -1 if string smaller, 0 if the same, 1 if first string greater than second
-        if ( ($_elt->field() cmp $_end_time) == 1) {
-      	        $_end_time=$_elt->field();
-            }
-      }
-
-    if (length $_end_time < 11) {
-        # there is not an end time, batch is still pending
-        return q{};
-    }
-
-    # just return the time portion of the date time string
-    return substr $_end_time, 11;
 }
 
 #------------------------------------------------------------------

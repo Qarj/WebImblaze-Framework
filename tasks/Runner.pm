@@ -9,7 +9,7 @@ package Runner;
 use strict;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.6.0';
+$VERSION = '1.7.1';
 
 use Getopt::Long;
 use Cwd;
@@ -17,12 +17,16 @@ use Config::Tiny;
 use File::Spec;
 use File::Basename;
 use LWP;
+use HTTP::Request;
 use HTTP::Request::Common;
 use IO::Socket::SSL;
+use XML::Twig;
 local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 'false';
 local $| = 1; # don't buffer output to STDOUT
 
 require Alerter;
+use lib q{..}; # current folder is not @INC from Perl 5.26
+require lib::BatchSummary;
 
 my ($script_name, $script_path) = fileparse($0,'.pl');
 
@@ -35,8 +39,11 @@ my $opt_group;
 my $failed_test_files_count = 0;
 my $passed_test_files_count = 0;
 my @failed_test_files;
+my $batch_url = '';
 
 sub start_runner {
+
+    my $_trial_test_file = '../tasks/Runner.test';
 
     ($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group) = get_options($opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group);
     $opt_target = lc $opt_target;
@@ -53,22 +60,94 @@ sub start_runner {
     
     # add a random number to the batch name so this run will have a different name to a previous run
     $opt_batch .= random(99_999);
+
+    # to find out the batch_url we need the location of any valid test file - the test will not be run
+    if (defined $_trial_test_file) {
+        my @_args = _build_wif_args($_trial_test_file, $opt_target, $opt_batch, $opt_environment, $config_wif_location, '', '--show-batch-url');
+
+        # change dir to wif.pl location
+        my $_orig_cwd = cwd;
+        chdir $config_wif_location;
+
+        my $_cmd = 'perl wif.pl '."@_args";
+        my $_cmd_response = `$_cmd`;
+        if ($_cmd_response =~ /(http[\S]+)/) {
+            $batch_url = $1;
+            print "Batch URL: [$batch_url]\n";
+        } else {
+            die 'Fatal error - batch url not found.';
+        }
+
+        chdir $_orig_cwd;
+    }
+
 }
 
 sub stop_runner {
-    if ($failed_test_files_count && $opt_slack_alert) {
-        my $_files = 'files';
-        if ($failed_test_files_count == 1) { $_files = 'file'; }
-        my $_message = "There were errors in $script_name. $failed_test_files_count test $_files returned an error status:\n";
-        foreach (@failed_test_files) {
-            $_message .= '    ['.$_.']'."\n";
-        }
-        print "\n".$_message;
-        Alerter::slack_alert('<!channel> '.$_message, $opt_slack_alert);
-        exit 1;
-    } else {
-        exit 0;
+    _slack_alert_parallel_run();
+}
+
+sub _slack_alert_parallel_run {
+    if (not ($batch_url && $opt_slack_alert)) {
+        return;
     }
+
+    #
+    # If PENDING is found in the batch results, it is still running.
+    #
+    # If PENDING is not found, it *might* still be running i.e. a new test might be about to be kicked off.
+    #
+    # So ensure that PENDING is not found over a minimum number of attempts before declaring the batch is done.
+    #
+    my $_max = 15*60;
+    my $_pending_not_found_count = 0;
+    my $_pending_not_found_min = 3;
+    my $_try = 0;
+    my $_content = '';
+    my $_pending_found = 0;
+    my $_request = HTTP::Request->new(GET => $batch_url);
+    my $_user_agent = LWP::UserAgent->new;
+    my $_response;
+    ATTEMPT:
+    {
+        $_response = $_user_agent->request($_request);
+        if ($_response->content =~ /PENDING/) {
+            $_pending_found++;
+            $_pending_not_found_count = 0;
+            print "PENDING FOUND: $_pending_found\n";
+        } else {
+            $_pending_found = 0;
+            $_pending_not_found_count++;
+            print "PENDING NOT FOUND: $_pending_not_found_count\n";
+        }
+
+        if ($_try++ < $_max && ($_pending_not_found_count < $_pending_not_found_min || $_pending_found) ) {
+            sleep 1;
+            redo ATTEMPT;
+        }
+    }
+
+    print "BATCH: ".$_response->content;
+
+    my $_twig = XML::Twig->new();
+    $_twig->parse( $_response->content );
+
+    BatchSummary::_calculate_stats($_twig);
+
+    my $_slack_message = BatchSummary::_build_overall_summary_text(
+        $opt_batch,
+        $opt_target,
+        '',
+        ''
+    );
+    $_slack_message = "<$batch_url|$_slack_message>";
+
+    if ($_slack_message =~ /PASS/) {
+        return;
+    }
+
+    Alerter::slack_alert('<!channel> '.$_slack_message, $opt_slack_alert);
+    exit 1;
 }
 
 sub start {
@@ -173,7 +252,7 @@ sub call_test {
 
 #------------------------------------------------------------------
 sub _build_wif_args {
-    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless) = @_;
+    my ($_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless, $_show_batch_url) = @_;
 
     my $_abs_test_file_full = File::Spec->rel2abs( $_test_file_full );
 
@@ -198,6 +277,10 @@ sub _build_wif_args {
         # do not add headless argument
     } else {
         # push @_args, '--headless';
+    }
+
+    if ($_show_batch_url eq '--show-batch-url') {
+        push @_args, $_show_batch_url;
     }
 
     return @_args;

@@ -5,6 +5,9 @@ Tim Buckland, https://github.com/Qarj/WebInjectFramework
 ---------------------------------
 ## Release History:
 
+### Version 1.12.0 - Apr 4, 2019
+* --slack-alert option to tasks file, e.g. `tasks/Examples.pl` will alert to Slack on failure
+
 ### Version 1.11 - Apr 1, 2019
 * option to show the batch url
 * ability to locate a test file from cwd assuming wif.pl started from another folder (e.g. system path)

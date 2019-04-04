@@ -1,4 +1,4 @@
-# WebImblaze Framework 1.11 Manual
+# WebImblaze Framework 1.12.0 Manual
 
 # wif.config
 
@@ -375,10 +375,12 @@ tasks\Examples.pl --check-alive http://www.example.com --env DEV --target team1 
 Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned.
 If there is no response, no tests will be run.
 
-## Example with alert to Slack on failure (only works with call)
+## Example with alert to Slack on failure
+
+Note: If the batch still has not finished after 15 minutes, it will give up waiting and alert the current status.
 
 ```
-tasks\myTests.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
+tasks\Examples.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
 ```
 
 ## Example which only runs a test file if the group matches

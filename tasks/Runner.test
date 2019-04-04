@@ -1,0 +1,2 @@
+step:   Dummy test needed by Runner.pm
+desc:   Runner.pm calls wif.pl with a dummy test to get the batch url
