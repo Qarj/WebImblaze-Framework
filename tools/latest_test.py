@@ -53,5 +53,9 @@ class TestLatest(unittest.TestCase):
         result = latest(['9.9.9-z-v10', '9.9.9-z-v9'])
         self.assertEqual( result, '9.9.9-z-v10')
 
+    def test_non_matching_folder_name(self):
+        result = latest(['shouldBeIgnored', '9.9.9-z-v9'])
+        self.assertEqual( result, '9.9.9-z-v9')
+
 if __name__ == '__main__':
     unittest.main()

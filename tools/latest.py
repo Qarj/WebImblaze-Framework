@@ -12,6 +12,9 @@ def latest(folders):
     
     for folder in folders:
         semantic = folder.split(".")
+        if len(semantic) < 3:
+            continue
+
         semantic[2] = semantic[2].split("-")[0]
 
         major = int(semantic[0])
