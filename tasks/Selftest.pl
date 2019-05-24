@@ -82,6 +82,7 @@ Runner::start('../../WebImblaze/selftest/ssl.test');
 Runner::start('../../WebImblaze/selftest/substitutions.test');
 Runner::start('../../WebImblaze/selftest/unittest.test');
 Runner::start('../../WebImblaze/selftest/useragent.test');
+Runner::start('../../WebImblaze/selftest/UTF-8.test');
 Runner::start('../../WebImblaze/selftest/var.test');
 Runner::start('../../WebImblaze/selftest/verifynegative.test');
 Runner::start('../../WebImblaze/selftest/verifypositive.test');
