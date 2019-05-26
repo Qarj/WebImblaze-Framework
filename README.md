@@ -1,4 +1,4 @@
-# WebImblaze-Framework 1.12.0
+# WebImblaze-Framework 1.13.0
 
 Automated regression testing framework for
 - managing WebImblaze configuration

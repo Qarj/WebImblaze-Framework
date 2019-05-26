@@ -1,4 +1,4 @@
-# WebImblaze Framework 1.12.0 Manual
+# WebImblaze Framework 1.13.0 Manual
 
 # wif.config
 
@@ -28,6 +28,7 @@ testfile_full=../WebImblaze/examples/get.test
 web_server_address=localhost
 web_server_location_full=C:\Apache24\htdocs
 webimblaze_location=../WebImblaze
+output_location=./temp/
 ```
 
 ## [main] config
@@ -60,6 +61,14 @@ Where to find the chromedriver binary. If you do not have Selenium tests, this v
 
 ```
 chromedriver_location_full=C:\selenium\chromedriver.exe
+```
+
+### output_location
+
+Where `wi.pl` should output to.
+
+```
+output_location=./temp/
 ```
 
 ### selenium_location_full

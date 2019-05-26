@@ -1,9 +1,12 @@
 # WebImblaze-Framework change log
 
-Tim Buckland, https://github.com/Qarj/WebInjectFramework
+Tim Buckland, https://github.com/Qarj/WebImblaze-Framework
 
 ---------------------------------
 ## Release History:
+
+### Version 1.13.0 - Jun 24, 2019
+* `wif.config` now supports `output_location=` in the `path` section so that the WebImblaze output folder can be controlled (default is `./temp`)
 
 ### Version 1.12.0 - Apr 4, 2019
 * --slack-alert option to tasks file, e.g. `tasks/Examples.pl` will alert to Slack on failure

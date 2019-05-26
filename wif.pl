@@ -3,12 +3,15 @@
 # $Id$
 # $Revision$
 # $Date$
+# -*- coding: utf-8 -*-
+# perl
 
+use v5.16;
 use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.12.0';
+$VERSION = '1.13.0';
 
 #    WebImblaze-Framework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -52,11 +55,14 @@ local $| = 1; # don't buffer output to STDOUT
 
 my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
+my $DEFAULT_OUTPUT_LOCATION = './temp/';
+my $DEFAULT_WEBIMBLAZE_LOCATION = '../WebImblaze';
+
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config, $opt_show_batch_url);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location, $output_location );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -124,7 +130,7 @@ if ($status) { exit 1; } else { exit 0; }
 sub call_webimblaze_with_testfile {
     my ($_config_file_full, $_this_run_home) = @_;
 
-    my $_temp_folder_name = slash_me( 'temp/' . $temp_folder_name );
+    my $_temp_folder_name = slash_me( $output_location . $temp_folder_name );
     #print {*STDOUT} "config_file_full: [$_config_file_full]\n";
 
     my $_abs_testfile_full = File::Spec->rel2abs( $testfile_full );
@@ -1156,7 +1162,7 @@ sub create_temp_folder {
     $_random = sprintf '%05d', $_random; # add some leading zeros
 
     my $_random_folder = $opt_target . '_' . $testfile_name . '_' . $_random;
-    _make_path ('temp/' . $_random_folder);
+    _make_path ($output_location . $_random_folder);
 
     return $_random_folder;
 }
@@ -1171,16 +1177,12 @@ sub remove_temp_folder {
         return;
     }
 
-    #if (-e "temp/$_remove_folder") {
-    #    unlink glob 'temp/' . $_remove_folder . q{/*} or die "Could not delete temporary files in folder temp/$_remove_folder\n";
-    #}
-
     my $_max = 30;
     my $_try = 0;
 
     ATTEMPT:
     {
-        remove_tree 'temp/' . $_remove_folder, {error =>  \my $_error};
+        remove_tree $output_location . $_remove_folder, {error =>  \my $_error};
 
         if ( @$_error and $_try++ < $_max ) {
             #print "\nError: $@ Failed to remove folder, trying again...\n";
@@ -1193,7 +1195,7 @@ sub remove_temp_folder {
     }
 
     if ($@) {
-        print {*STDOUT} "\nError: $@ Failed to remove folder temp/$_remove_folder after $_max tries\n\n";
+        print {*STDOUT} "\nError: $@ Failed to remove folder $output_location$_remove_folder after $_max tries\n\n";
     }
 
     return;
@@ -1224,7 +1226,8 @@ sub _create_default_config {
     $_config .= 'testfile_full=../WebImblaze/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
     $_config .= $_web_server_location_full;
-    $_config .= 'webimblaze_location=../WebImblaze'."\n";
+    $_config .= "webimblaze_location=$DEFAULT_WEBIMBLAZE_LOCATION\n";
+    $_config .= "output_location=$DEFAULT_OUTPUT_LOCATION\n";
 
     write_file('wif.config', $_config);
 
@@ -1263,6 +1266,10 @@ sub _read_config {
     $web_server_location_full = $config->{path}->{web_server_location_full};
     $web_server_address = $config->{path}->{web_server_address};
     $webimblaze_location = $config->{path}->{webimblaze_location};
+    $output_location = $config->{path}->{output_location};
+
+    $webimblaze_location //= $DEFAULT_WEBIMBLAZE_LOCATION;
+    $output_location //= $DEFAULT_OUTPUT_LOCATION;
 
     # normalise config
     if (lc $config_is_automation_controller eq 'true' ) {
@@ -1290,6 +1297,7 @@ sub _write_config {
     $config->{path}->{web_server_location_full} = $web_server_location_full;
     $config->{path}->{web_server_address} = $web_server_address;
     $config->{path}->{webimblaze_location} = $webimblaze_location;
+    $config->{path}->{output_location} = $output_location;
 
     $config->write( 'wif.config' );
 
