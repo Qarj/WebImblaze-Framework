@@ -12,7 +12,7 @@ chdir dirname(__FILE__);
 use lib '.';
 require Runner;
 
-$VERSION = '1.6.1';
+$VERSION = '1.6.2';
 
 ## Usage:
 ##
@@ -24,12 +24,12 @@ Runner::start_runner();
 my $update = system('..\..\WebImblaze-Selenium\plugins\update.pl');
 
 # start the Selenium based tests first since they are slower
+Runner::start('../../WebImblaze-Selenium/selftest/useragent.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_click.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_keys_to_element.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_move_to.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_wait_visible.test');
 Runner::start('../../WebImblaze-Selenium/selftest/selenium_core.test');
-Runner::start('../../WebImblaze-Selenium/selftest/useragent.test');
 
 # specify the location of the test files relative to this script
 Runner::start('../../WebImblaze/selftest/abort.test');
@@ -50,6 +50,7 @@ Runner::start('../../WebImblaze/selftest/getallhrefs.test');
 Runner::start('../../WebImblaze/selftest/getallsrcs.test');
 Runner::start('../../WebImblaze/selftest/getbackgroundimages.test');
 Runner::start('../../WebImblaze/selftest/gotostep.test');
+Runner::start('../../WebImblaze/selftest/gzip.test');
 Runner::start('../../WebImblaze/selftest/httpauth.test');
 Runner::start('../../WebImblaze/selftest/httppost.test');
 Runner::start('../../WebImblaze/selftest/httppost_form-data.test');

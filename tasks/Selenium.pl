@@ -30,7 +30,6 @@ Runner::start('../../WebImblaze-Selenium/examples/food.gov.uk.test');
 Runner::start('../../WebImblaze-Selenium/examples/govuk.test');
 Runner::call('../../WebImblaze-Selenium/examples/graincorp.test');
 
-Runner::start('../../WebImblaze-Selenium/examples/gumtree.test');
 Runner::start('../../WebImblaze-Selenium/examples/Jobsite.test');
 Runner::start('../../WebImblaze-Selenium/examples/NHSJobs.test');
 Runner::start('../../WebImblaze-Selenium/examples/rightmove.test');
@@ -39,10 +38,8 @@ Runner::call('../../WebImblaze-Selenium/examples/searchimage.test');
 Runner::start('../../WebImblaze-Selenium/examples/selenium.test');
 Runner::start('../../WebImblaze-Selenium/examples/StepStone.test');
 Runner::start('../../WebImblaze-Selenium/examples/test_jobs.test');
-Runner::start('../../WebImblaze-Selenium/examples/trainline.test');
-Runner::call('../../WebImblaze-Selenium/examples/tripadvisor.test');
+Runner::call('../../WebImblaze-Selenium/examples/trainline.test');
 
-Runner::start('../../WebImblaze-Selenium/examples/webimblaze-check.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_click.test');
 Runner::start('../../WebImblaze-Selenium/selftest/substeps/_keys_to_element.test');
 Runner::call('../../WebImblaze-Selenium/selftest/substeps/_move_to.test');
