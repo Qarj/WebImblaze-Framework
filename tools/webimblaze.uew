@@ -38,6 +38,7 @@ decodesmtp
 desc
 donotrunon
 dumpjson
+echo
 errormessage
 file
 firstlooponly
@@ -59,6 +60,7 @@ maxredirect
 method
 postbody
 posttype
+readfile
 repeat
 restartbrowser
 restartbrowseronfail
