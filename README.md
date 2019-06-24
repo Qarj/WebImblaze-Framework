@@ -249,6 +249,11 @@ Copy Material-Dark to `%APPDATA%\Notepad++\themes`
 copy C:\git\WebImblaze-Framework\tools\Material-Dark.xml "%APPDATA%\Notepad++\themes"
 ```
 
+Or on Linux
+```bash
+curl -o /home/$USER/snap/notepad-plus-plus/common/.wine/drive_c/users/$USER/'Application Data'/Notepad++/themes/Material-Dark.xml https://raw.githubusercontent.com/naderi/material-theme-for-npp/master/Material-Dark.xml
+```
+
 Download Monaco font
 ```
 curl -o C:\git\WebImblaze-Framework\tools\monaco.ttf https://raw.githubusercontent.com/todylu/monaco.ttf/master/monaco.ttf
