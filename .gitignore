@@ -5,7 +5,8 @@ storedvalues/
 wif.config
 Material-Dark.xml
 Zenburn-Markdown.xml
-monaco.ttftemp/
+monaco.ttf
+temp/
 session.config
 
 *.nupkg

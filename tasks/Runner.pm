@@ -146,7 +146,7 @@ sub _slack_alert_parallel_run {
         return;
     }
 
-    Alerter::slack_alert('<!channel> '.$_slack_message, $opt_slack_alert);
+    Alerter::slack_alert($_slack_message, $opt_slack_alert);
     exit 1;
 }
 
