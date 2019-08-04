@@ -9,7 +9,7 @@ package Runner;
 use strict;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.7.1';
+$VERSION = '1.8.0';
 
 use Getopt::Long;
 use Cwd;
@@ -23,6 +23,8 @@ use IO::Socket::SSL;
 use XML::Twig;
 local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 'false';
 local $| = 1; # don't buffer output to STDOUT
+
+our $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 require Alerter;
 use lib q{..}; # current folder is not @INC from Perl 5.26
@@ -218,7 +220,7 @@ sub start_test {
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
-    _start_windows_process('perl wif.pl '."@_args");
+    _start_process('perl wif.pl '."@_args");
 
     chdir $_orig_cwd;
 
@@ -287,6 +289,20 @@ sub _build_wif_args {
 }
 
 #------------------------------------------------------------------
+sub _start_process {
+    my ($_command) = @_;
+
+    my $_is_windows = $^O eq 'MSWin32' ? 1 : 0;
+
+    if ($_is_windows) {
+        _start_windows_process($_command);
+    } else {
+        _start_linux_process($_command);
+    }
+
+    return;
+}
+
 sub _start_windows_process {
     my ($_command) = @_;
 
@@ -304,6 +320,15 @@ sub _start_windows_process {
     }
 
     return $_pid;
+}
+
+sub _start_linux_process {
+    my ($_command) = @_;
+
+    my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
+    my $_result = `$_gnome_terminal`;
+
+    return;
 }
 
 #------------------------------------------------------------------
@@ -381,6 +406,19 @@ sub is_available {
     }
     
     return 'true';
+}
+
+#------------------------------------------------------------------
+sub slash_me {
+    my ($_path) = @_;
+
+    if ($is_windows) {
+        $_path =~ s{/}{\\}g;
+    } else {
+        $_path =~ s{\\}{/}g;
+    }
+
+    return $_path;
 }
 
 #------------------------------------------------------------------

@@ -12,7 +12,7 @@ chdir dirname(__FILE__);
 use lib '.';
 require Runner;
 
-$VERSION = '1.6.2';
+$VERSION = '1.6.3';
 
 ## Usage:
 ##
@@ -21,7 +21,7 @@ $VERSION = '1.6.2';
 Runner::start_runner();
 
 #SELFTEST ONLY:
-my $update = system('..\..\WebImblaze-Selenium\plugins\update.pl');
+my $update = system(Runner::slash_me('..\..\WebImblaze-Selenium\plugins\update.pl'));
 
 # start the Selenium based tests first since they are slower
 Runner::start('../../WebImblaze-Selenium/selftest/useragent.test');
