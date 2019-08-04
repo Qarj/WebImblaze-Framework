@@ -1,4 +1,4 @@
-# WebImblaze Framework 1.13.0 Manual
+# WebImblaze Framework 1.13.1 Manual
 
 # wif.config
 
@@ -14,6 +14,7 @@ The `wif.config` file is also used by wif.pl to store some of the command line o
 invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
 An example `wif.config` looks like this:
+
 ```
 [main]
 batch=example_batch
@@ -24,6 +25,7 @@ target=team1
 [path]
 selenium_location_full=C:\selenium\selenium-server-3-standalone.jar
 chromedriver_location_full=C:\selenium\chromedriver.exe
+driver=chromedriver
 testfile_full=../WebImblaze/examples/get.test
 web_server_address=localhost
 web_server_location_full=C:\Apache24\htdocs
@@ -34,12 +36,15 @@ output_location=./temp/
 ## [main] config
 
 ### batch
+
 The batch name to group run results under. Updated by `wif.pl --batch` option.
 
 ### environment
+
 The high level environment name, e.g. DEV, PAT or PROD. Updated by `wif.pl --env` option.
 
 ### is_automation_controller
+
 `true` if this machine is a company automated testing controller, `false` otherwise.
 
 `true` means that WebImblaze `automationcontrolleronly` test steps will be run. Otherwise they
@@ -50,6 +55,7 @@ This feature gives you a way of developing and running your tests on a workstati
 that are not possible to run from your local environment.
 
 ### target
+
 Target 'mini-environment' for the test case file. Update by wif.pl --target option.
 
 For example, the mini environment might be the name of a team within your development environment.
@@ -57,10 +63,19 @@ For example, the mini environment might be the name of a team within your develo
 ## [path] config
 
 ### chromedriver_location_full
+
 Where to find the chromedriver binary. If you do not have Selenium tests, this value does not matter.
 
 ```
 chromedriver_location_full=C:\selenium\chromedriver.exe
+```
+
+### driver
+
+Browser driver to use, current choices are `chrome` (i.e. Selenium Server) or `chromeDriver` (Selenium Server or Java not needed).
+
+```
+driver=chromedriver
 ```
 
 ### output_location
@@ -72,6 +87,7 @@ output_location=./temp/
 ```
 
 ### selenium_location_full
+
 Where to find the Selenium Standalone Server JAR file. If you are not using Selenium WebDriver it is safe to leave this option at the default, even if is not installed.
 
 ```
@@ -79,6 +95,7 @@ selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 ```
 
 ### testfile_full
+
 The last test case file that was run. Updated by wif.pl.
 
 ```
@@ -133,12 +150,12 @@ sub-environments as you need.
 
 Only `_global.config` cannot be renamed.
 
+## Level 1: environment_config/\_global.config
 
-## Level 1: environment_config/_global.config
+\_global.config contains configuration common to all environments.
 
-_global.config contains configuration common to all environments.
+\_global.config example:
 
-_global.config example:
 ```
 [autoassertions]
 autoassertion1=^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error
@@ -168,6 +185,7 @@ stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
 All other .config files directly in this folder refer to high level environment names.
 
 In the provided example, three environments have been defined:
+
 - DEV - development
 - PAT - production acceptance test
 - PROD - production
@@ -175,6 +193,7 @@ In the provided example, three environments have been defined:
 For wif.pl quick start purposes, you can leave this as it is.
 
 DEV.config example:
+
 ```
 [main]
 testonly=true
@@ -202,6 +221,7 @@ Note that for any configuration item provided at a lower level, it will take pre
 over the same configuration specified at a higher level.
 
 Level 3 config example (e.g. DEV/skynet.config):
+
 ```
 [main]
 ntlm=.skynet.com:8020::SKYNET\JXS-SCT001:password
@@ -221,9 +241,11 @@ autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
 ## Sections within the configuration files
 
 ### [main]
+
 Refer to the WebImblaze Manual, Configuration section.
 
 In this section you can specify values for:
+
 - useragent
 - httpauth
 - baseurl, baseurl1, baserurl2
@@ -236,22 +258,26 @@ In this section you can specify values for:
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebImblaze may try to use a null value and fail.
 
 ### [userdefined]
+
 Refer to the WebImblaze Manual, Configuration section.
 
 In a nutshell, you can make up your own configuration items. So if you had `google=www.google.co.uk` you could refer to it in the
 WebImblaze tests as `{GOOGLE}`.
 
 ### [autoassertions] and [smartassertions]
+
 Refer to the WebImblaze Manual, Configuration section.
 
 There examples in the example config - you can just delete them if you do not want them.
 
 ### [baseurl_subs]
+
 WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source
 back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example,
 change https references to http to get around test environment ssl certificate issues.
 
 Here is an example substitution:
+
 ```
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
 ```
@@ -260,6 +286,7 @@ On the LHS of the three bars, we have the LHS of the regex. On the RHS we have t
 in the form of a Perl expression.
 
 ### [content_subs]
+
 To change the step html response content, you can specify regular expressions in this section. They work
 in the same way as described in [baseurl_subs].
 
@@ -267,13 +294,14 @@ Why would you want to do this? Some pages will try to redirect to somewhere else
 desirable since we want to see the actual result. So we do a substitution to break the redirect.
 
 Here is a very common example:
+
 ```
 stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
 ```
 
-## DEV, PAT, PROD/_alias.config
+## DEV, PAT, PROD/\_alias.config
 
-In each of the example environment config folders, there is an example _alias.config file containing
+In each of the example environment config folders, there is an example \_alias.config file containing
 alternate names for the 'mini-environments'.
 
 It is possible to set up as many you want, so long as the value on the right hand side matches
@@ -282,18 +310,21 @@ a .config file in the same folder.
 # wif.pl command line options
 
 Typical example:
+
 ```
 wif.pl example_test --env DEV --target team1 --batch My_Tests
 ```
 
 The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`.
 If it doesn't find it, it will also search (plus subfolders):
+
 ```
 ../WebImblaze
 ../WebImblaze-Selenium
 ```
 
 To run the same test again, just issue:
+
 ```
 wif.pl
 ```
@@ -303,51 +334,65 @@ wif.pl
 ## `wif.pl --help`
 
 ## `wif.pl tests/mytest.xml`
+
 Runs the tests in mytest.xml.
 
 ## `wif.pl mytest`
+
 Will search sub folders of ./ for mytest.xml and will run the first one found.
 
 ## `wif.pl --target my_team`
+
 Sets the 'mini-environment' to `my_team` and runs the last test with the saved options.
 
 ## `wif.pl --batch Priority_1_Tests`
+
 Sets the batch to `Priority_1_Tests` and runs the last test with the saved options.
 
 ## `wif.pl --env PROD`
+
 Sets the environment to PROD and runs the last test with the saved options.
 
 ## `--selenium-host`
+
 Passes the Selenium (Grid) host to `wi.pl`.
 
 ## `--selenium-port`
+
 Passes the Selenium (Grid) port to `wi.pl`.
 
 ## `--headless`
+
 Tells `wi.pl` to run Selenium Chrome tests in headless mode.
 
 ## `--no-retry`
+
 Tells WebImblaze to ignore the `retry` and `retryfromstep` parameters.
 
 ## `--no-update-config`
+
 Tells wif.pl not to update wif.config with the current options. Important for running
 many tests in parallel - otherwise competing instances of wif.pl will try to update the
 wif.config file at the same time - and cause unknown problems.
 
 ## `--capture-stdout`
+
 When running through the command line, you'll see wi.pl and wif.pl go straight
 to the command prompt. However when running a large set of tests from a service account,
 you will want the STDOUT output to be captured.
 
 ## `--keep`
+
 Tells wif.pl not to delete the temporary folder it created for WebImblaze's temporary files.
 For debug purposes.
 
 ## `--keep-session`
+
 Passes this option to `wi.pl` which tells it to remember the Selenium session information
 and not close Selenium and the browser at the end of the run.
 
 ## `--resume-session`
+
 If `--keep-session` was used in the previous run, then `wi.pl` will attempt to connect to the existing
 Selenium session and browser and run the tests from the existing state.
 
@@ -355,9 +400,11 @@ This is useful for debugging very long workflows where there is a problem deep i
 not want to run the entire workflow to try various ideas to get your test step working.
 
 ## `--create-config`
+
 Creates (or overwrites) the wif.config with default values to get you started.
 
 # tasks/ folder
+
 The tasks folder contains a script called `Examples.pl` that runs all of the WebImblaze examples at the same time.
 
 If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
@@ -403,18 +450,23 @@ Runner::start('../tests/regression/profile.xml');
 ```
 
 Then if you ran it with the `--group` parameter:
+
 ```
 tasks\myRegression.pl --group Bear
 ```
+
 It would run:
+
 - `register.xml` - since there is a matching group
 - `purchase.xml` - ditto
-- `profile.xml`  - since no groups are specified, default - run it
+- `profile.xml` - since no groups are specified, default - run it
 
 Another example:
+
 ```
 tasks\myRegression.pl --group Frog
 ```
+
 Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
@@ -432,12 +484,14 @@ certain that you are using the right keyword / parameter.
 _If you've done this previously and are updating - delete the existing WebImblaze language first._
 
 It is worth spending two minutes to set up WebImblaze syntax highlighting in Notepad++
+
 - Select menu `Language -> Define your language ...`
 - Click `Import...`
 - Select file `WebImblaze-Framework/tools/webimblaze_notepad++.xml`
 - Restart Notepad++
 
 It looks much, much better if you use a dark theme.
+
 - Select menu `Settings -> Style Configurator...`
 - Set `Select theme :` to `Plastic Code Wrap`
 - Check `Enable global background colour`
@@ -451,6 +505,7 @@ Note that Material-Dark is a nice theme: https://github.com/naderi/material-them
 The script `tools/transmute.pl` will output an xml test file in the new format.
 
 Example usage (assuming you have `transmute.pl` in path):
+
 ```
 transmute.pl MyTest.xml > MyTest.test
 ```

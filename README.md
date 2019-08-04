@@ -1,4 +1,4 @@
-# WebImblaze-Framework 1.13.0
+# WebImblaze-Framework 1.13.1
 
 Automated regression testing framework for
 

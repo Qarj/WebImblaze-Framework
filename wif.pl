@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '1.13.0';
+$VERSION = '1.13.1';
 
 #    WebImblaze-Framework is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -57,12 +57,14 @@ my $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 my $DEFAULT_OUTPUT_LOCATION = './temp/';
 my $DEFAULT_WEBIMBLAZE_LOCATION = '../WebImblaze';
+my $LEGACY_DEFAULT_DRIVER = 'chrome';
+my $DEFAULT_DRIVER = 'chromedriver';
 
 # start globally read/write variables declaration - only variables declared here will be read/written directly from subs
 my ( $opt_version, $opt_target, $opt_batch, $opt_environment, $opt_selenium_host, $opt_selenium_port, $opt_headless, $opt_no_retry, $opt_help, $opt_keep, $opt_keep_session, $opt_resume_session, $opt_capture_stdout, $opt_no_update_config, $opt_show_batch_url);
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ( $config_is_automation_controller );
-my ( $web_server_location_full, $web_server_address, $selenium_location_full, $chromedriver_location_full, $webimblaze_location, $output_location );
+my ( $web_server_location_full, $web_server_address, $selenium_location_full, $driver, $chromedriver_location_full, $webimblaze_location, $output_location );
 my ( $temp_folder_name );
 my $config = Config::Tiny->new;
 my $target_config = Config::Tiny->new;
@@ -202,9 +204,8 @@ sub call_webimblaze_with_testfile {
         push @_args, '--resume-session';
     }
 
-    # for now we hard code the browser to Chrome
     push @_args, '--driver';
-    push @_args, 'chrome';
+    push @_args, $driver;
 
     # WebImblaze test cases expect the current working directory to be where wi.pl is
     my $_orig_cwd = cwd;
@@ -1222,6 +1223,7 @@ sub _create_default_config {
     $_config .= q{}."\n";
     $_config .= '[path]'."\n";
     $_config .= $_selenium_location_full;
+    $_config .= "driver=$DEFAULT_DRIVER\n";
     $_config .= $_chromedriver_location_full;
     $_config .= 'testfile_full=../WebImblaze/examples/get.xml'."\n";
     $_config .= 'web_server_address=localhost'."\n";
@@ -1262,6 +1264,7 @@ sub _read_config {
     # path
     $testfile_full = $config->{path}->{testfile_full};
     $selenium_location_full = $config->{path}->{selenium_location_full};
+    $driver = $config->{path}->{driver};
     $chromedriver_location_full = $config->{path}->{chromedriver_location_full};
     $web_server_location_full = $config->{path}->{web_server_location_full};
     $web_server_address = $config->{path}->{web_server_address};
@@ -1270,6 +1273,7 @@ sub _read_config {
 
     $webimblaze_location //= $DEFAULT_WEBIMBLAZE_LOCATION;
     $output_location //= $DEFAULT_OUTPUT_LOCATION;
+    $driver //= $LEGACY_DEFAULT_DRIVER;
 
     # normalise config
     if (lc $config_is_automation_controller eq 'true' ) {
@@ -1293,6 +1297,7 @@ sub _write_config {
     # path
     $config->{path}->{testfile_full} = $testfile_full;
     $config->{path}->{selenium_location_full} = $selenium_location_full;
+    $config->{path}->{driver} = $driver;
     $config->{path}->{chromedriver_location_full} = $chromedriver_location_full;
     $config->{path}->{web_server_location_full} = $web_server_location_full;
     $config->{path}->{web_server_address} = $web_server_address;
