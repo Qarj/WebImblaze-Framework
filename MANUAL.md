@@ -495,10 +495,12 @@ It looks much, much better if you use a dark theme.
 - Select menu `Settings -> Style Configurator...`
 - Set `Select theme :` to `Plastic Code Wrap`
 - Check `Enable global background colour`
+- Check `Enable global font`
+- Check `Enable global bold font style`
 - Click `Save & Close`
 - Restart Notepad++
 
-Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp
+Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp (copy it to `%AppData%\Notepad++\themes`)
 
 # Convert WebInject .xml test case files to WebImblaze .test format
 
