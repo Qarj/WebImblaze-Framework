@@ -10,8 +10,7 @@ You can create a config file with default values to get you started as follows:
 wif.pl --create-config
 ```
 
-The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you
-invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
+The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
 An example `wif.config` looks like this:
 
@@ -47,16 +46,14 @@ The high level environment name, e.g. DEV, PAT or PROD. Updated by `wif.pl --env
 
 `true` if this machine is a company automated testing controller, `false` otherwise.
 
-`true` means that WebImblaze `automationcontrolleronly` test steps will be run. Otherwise they
-will be skipped.
+`true` means that WebImblaze `automationcontrolleronly` test steps will be run. Otherwise they will be skipped.
 
-Sometimes only your servers set up to run your automated tests will have the access they need to run all tests.
 This feature gives you a way of developing and running your tests on a workstation while skipping any tests
 that are not possible to run from your local environment.
 
 ### target
 
-Target 'mini-environment' for the test case file. Update by wif.pl --target option.
+Target 'mini-environment' for the test case file. Update by `wif.pl --target` option.
 
 For example, the mini environment might be the name of a team within your development environment.
 
@@ -72,7 +69,7 @@ chromedriver_location_full=C:\selenium\chromedriver.exe
 
 ### driver
 
-Browser driver to use, current choices are `chrome` (i.e. Selenium Server) or `chromeDriver` (Selenium Server or Java not needed).
+Browser driver to use, current choices are `chrome` (i.e. Selenium Server) or `chromedriver` (Selenium Server or Java not needed).
 
 ```
 driver=chromedriver
@@ -104,12 +101,11 @@ testfile_full=tests/totaljobs/mytotaljobs.xml
 
 ### web_server_address
 
-This is the base domain (and optionally port) where you will be able to access the results
-through a web browser.
+This is the base domain (and optionally port) where you will be able to access the results through a web browser.
 
-For testing wif.pl on your own machine, you can simply put in `localhost`
+For testing wif.pl on your own machine, you can simply put in `localhost`.
 
-If you are running the web server on a port other than 80, it can be specified like this `localhost:8080`
+If you are running the web server on a port other than 80, it can be specified like this `localhost:8080`.
 
 ```
 web_server_address=my-server.example.com
@@ -117,36 +113,29 @@ web_server_address=my-server.example.com
 
 ### web_server_location_full
 
-Since wif.pl publishes the test run results to a web server for viewing, you need to
-specify the root folder location.
-
-On Windows, the default IIS server location is at 'C:\inetpub\wwwroot'
+Since wif.pl publishes the test run results to a web server for viewing, you need to specify the root folder location.
 
 ```
-web_server_location_full=C:\inetpub\wwwroot
+web_server_location_full=C:\Apache24\htdocs
 ```
 
 ### webimblaze_location
 
-Where to find wi.pl, relative to where wif.pl is located. If you have placed them
-in the same folder, you can simply specify `.`
+Where to find `wi.pl`, relative to where `wif.pl` is located. If you have placed them in the same folder, you can simply specify `.`.
 
 ```
 webimblaze_location=.
 ```
 
-# environment_config/ folder
+# environment_config folder
 
 In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
 
-The information is specified in a hierarchical way. This means it is possible to have many
-'mini-environments' without having to repeat information that is common to each of the mini-environments.
+The information is specified in a hierarchical way. This means it is possible to have many 'mini-environments' without having to repeat information that is common to each of the mini-environments.
 
-It is often the case in a development environment that you have many teams where each team
-has some of their own components, yet shares many other lesser used or lesser changed components with other teams.
+It is often the case in a development environment that you have many teams where each team has some of their own components, yet shares many other lesser used or lesser changed components with other teams.
 
-You can call the environments and individual config files anything you want. You can have as many environments and
-sub-environments as you need.
+You can call the environments and individual config files anything you want. You can have as many environments and sub-environments as you need.
 
 Only `_global.config` cannot be renamed.
 
@@ -211,14 +200,11 @@ testonly=true
 
 ## Level 3: environment_config/DEV/team1.config etc.
 
-You create sub folders for each high level environment. In there you can create .config
-files for each 'mini-environment' as needed. You need to create at least one
-mini-environment.
+You create sub folders for each high level environment. In there you can create .config files for each 'mini-environment' as needed. You need to create at least one mini-environment.
 
 In the provided example, there is an environment called WebImblaze_examples.config.
 
-Note that for any configuration item provided at a lower level, it will take precedence
-over the same configuration specified at a higher level.
+Note that for any configuration item provided at a lower level, it will take precedence over the same configuration specified at a higher level.
 
 Level 3 config example (e.g. DEV/skynet.config):
 
@@ -254,6 +240,10 @@ In this section you can specify values for:
 - globaljumpbacks
 - autocontrolleronly
 - autoretry
+- windows_sys_temp
+- windows_app_data
+- linux_sys_temp
+- linux_app_data
 
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebImblaze may try to use a null value and fail.
 
@@ -261,8 +251,7 @@ Important - if you do not want to set a value, it is better to delete the value 
 
 Refer to the WebImblaze Manual, Configuration section.
 
-In a nutshell, you can make up your own configuration items. So if you had `google=www.google.co.uk` you could refer to it in the
-WebImblaze tests as `{GOOGLE}`.
+In a nutshell, you can make up your own configuration items. So if you had `google=www.google.co.uk` you would refer to it in the WebImblaze tests as `{GOOGLE}`.
 
 ### [autoassertions] and [smartassertions]
 
@@ -272,9 +261,7 @@ There examples in the example config - you can just delete them if you do not wa
 
 ### [baseurl_subs]
 
-WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source
-back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example,
-change https references to http to get around test environment ssl certificate issues.
+WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example, change https references to http to get around test environment ssl certificate issues.
 
 Here is an example substitution:
 
@@ -282,48 +269,42 @@ Here is an example substitution:
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
 ```
 
-On the LHS of the three bars, we have the LHS of the regex. On the RHS we have the RHS of the regex substitution
-in the form of a Perl expression.
+On the left hand side, LHS, of the three bars, we have the LHS of the regex. On the right hand side, RHS, we have the RHS of the regex substitution in the form of a Perl expression.
 
 ### [content_subs]
 
-To change the step html response content, you can specify regular expressions in this section. They work
-in the same way as described in [baseurl_subs].
+To change the step html response content, you can specify regular expressions in this section. They work in the same way as described in [baseurl_subs].
 
-Why would you want to do this? Some pages will try to redirect to somewhere else. Obviously this is not
-desirable since we want to see the actual result. So we do a substitution to break the redirect.
+Why would you want to do this? Some pages will try to redirect to somewhere else. Obviously this is not desirable since we want to see the actual result. So we do a substitution to break the redirect.
 
 Here is a very common example:
 
 ```
-stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___WIF___"
+stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___REDIRECT_BLOCKED_BY_WEBIMBLAZE___"
 ```
 
 ## DEV, PAT, PROD/\_alias.config
 
-In each of the example environment config folders, there is an example \_alias.config file containing
-alternate names for the 'mini-environments'.
+In each of the example environment config folders, there is an example `_alias.config` file containing alternate names for the 'mini-environments'.
 
-It is possible to set up as many you want, so long as the value on the right hand side matches
-a .config file in the same folder.
+It is possible to set up as many you want, so long as the value on the right hand side matches a `.config` file in the same folder.
 
 # wif.pl command line options
 
-Typical example:
+Typical example
 
 ```
 wif.pl example_test --env DEV --target team1 --batch My_Tests
 ```
 
-The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`.
-If it doesn't find it, it will also search (plus subfolders):
+The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`. If it doesn't find it, it will also search (plus subfolders)
 
 ```
 ../WebImblaze
 ../WebImblaze-Selenium
 ```
 
-To run the same test again, just issue:
+To run the same test again, just issue
 
 ```
 wif.pl
@@ -339,7 +320,7 @@ Runs the tests in mytest.xml.
 
 ## `wif.pl mytest`
 
-Will search sub folders of ./ for mytest.xml and will run the first one found.
+Will search sub folders of `./` for mytest.xml and will run the first one found.
 
 ## `wif.pl --target my_team`
 
@@ -371,33 +352,25 @@ Tells WebImblaze to ignore the `retry` and `retryfromstep` parameters.
 
 ## `--no-update-config`
 
-Tells wif.pl not to update wif.config with the current options. Important for running
-many tests in parallel - otherwise competing instances of wif.pl will try to update the
-wif.config file at the same time - and cause unknown problems.
+Tells wif.pl not to update wif.config with the current options. Important for running many tests in parallel - otherwise competing instances of wif.pl will try to update the wif.config file at the same time - and cause unknown problems.
 
 ## `--capture-stdout`
 
-When running through the command line, you'll see wi.pl and wif.pl go straight
-to the command prompt. However when running a large set of tests from a service account,
-you will want the STDOUT output to be captured.
+When running through the command line, you'll see wi.pl and wif.pl go straight to the command prompt. However when running a large set of tests from a service account, you will want the STDOUT output to be captured.
 
 ## `--keep`
 
-Tells wif.pl not to delete the temporary folder it created for WebImblaze's temporary files.
-For debug purposes.
+Tells wif.pl not to delete the temporary folder it created for WebImblaze's temporary files. For debug purposes.
 
 ## `--keep-session`
 
-Passes this option to `wi.pl` which tells it to remember the Selenium session information
-and not close Selenium and the browser at the end of the run.
+Passes this option to `wi.pl` which tells it to remember the Selenium session information and not close Selenium and the browser at the end of the run.
 
 ## `--resume-session`
 
-If `--keep-session` was used in the previous run, then `wi.pl` will attempt to connect to the existing
-Selenium session and browser and run the tests from the existing state.
+If `--keep-session` was used in the previous run, then `wi.pl` will attempt to connect to the existing Selenium session and browser and run the tests from the existing state.
 
-This is useful for debugging very long workflows where there is a problem deep into the workflow and you do
-not want to run the entire workflow to try various ideas to get your test step working.
+This is useful for debugging very long workflows where there is a problem deep into the workflow and you do not want to run the entire workflow to try various ideas to get your test step working.
 
 ## `--create-config`
 
@@ -407,11 +380,9 @@ Creates (or overwrites) the wif.config with default values to get you started.
 
 The tasks folder contains a script called `Examples.pl` that runs all of the WebImblaze examples at the same time.
 
-If you "start" a test, a new process will be created to run that test. This enables you to run many tests in
-parallel.
+If you "start" a test, a new process will be created to run that test. This enables you to run many tests in parallel.
 
-If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script
-proceeds.
+If you "call" a test, that test will be run 'in-process' meaning that the test must finish before the script proceeds.
 
 ## Minimal Example
 
@@ -419,8 +390,7 @@ proceeds.
 tasks\Examples.pl --env DEV --target team1 --batch Examples
 ```
 
-All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`,
-the target is `environment_config/DEV/team1.config`, the batch name is `Examples`.
+All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`, the target is `environment_config/DEV/team1.config`, the batch name is `Examples`.
 
 ## Example to only run the task if a certain URL is reachable
 
@@ -428,8 +398,7 @@ the target is `environment_config/DEV/team1.config`, the batch name is `Examples
 tasks\Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
 ```
 
-Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned.
-If there is no response, no tests will be run.
+Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
 
 ## Example with alert to Slack on failure
 
@@ -475,9 +444,7 @@ And if you do not specify the --group option at all, then all test files would b
 
 ## UltraEdit
 
-In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use
-with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be
-certain that you are using the right keyword / parameter.
+In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be certain that you are using the right keyword / parameter.
 
 ## Notepad++
 
@@ -497,6 +464,7 @@ It looks much, much better if you use a dark theme.
 - Check `Enable global background colour`
 - Check `Enable global font`
 - Check `Enable global bold font style`
+- If you have it available, `DejaVu Sans Mono` is a nice font
 - Click `Save & Close`
 - Restart Notepad++
 
@@ -504,7 +472,7 @@ Note that Material-Dark is a nice theme: https://github.com/naderi/material-them
 
 # Convert WebInject .xml test case files to WebImblaze .test format
 
-The script `tools/transmute.pl` will output an xml test file in the new format.
+The script `tools/transmute.pl` will output a WebInject style xml test file in the WebImblaze format.
 
 Example usage (assuming you have `transmute.pl` in path):
 
