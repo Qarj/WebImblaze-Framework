@@ -442,9 +442,11 @@ And if you do not specify the --group option at all, then all test files would b
 
 # Syntax Highlighting WebImblaze test case files
 
-## UltraEdit
+## Visual Studio Code
 
-In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be certain that you are using the right keyword / parameter.
+By far the easiest to install - just search for `WebImblaze` in extensions, install, and you are done.
+
+The VSCode syntax highlighting is the most complete, accurate, and best looking out of these options.
 
 ## Notepad++
 
@@ -476,6 +478,10 @@ https://github.com/naderi/material-theme-for-npp
 -   Copy the file `WebInject/tools/Material-Dark.xml` to that location
 -   Restart Notepad++ then select that them from `Settings -> Style Configurator...`
 -   Increase the font size slightly improves the appearance a lot
+
+## UltraEdit
+
+In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be certain that you are using the right keyword / parameter.
 
 # Convert WebInject .xml test case files to WebImblaze .test format
 
