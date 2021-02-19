@@ -175,9 +175,9 @@ All other .config files directly in this folder refer to high level environment 
 
 In the provided example, three environments have been defined:
 
-- DEV - development
-- PAT - production acceptance test
-- PROD - production
+-   DEV - development
+-   PAT - production acceptance test
+-   PROD - production
 
 For wif.pl quick start purposes, you can leave this as it is.
 
@@ -232,18 +232,18 @@ Refer to the WebImblaze Manual, Configuration section.
 
 In this section you can specify values for:
 
-- useragent
-- httpauth
-- baseurl, baseurl1, baserurl2
-- timeout
-- globalretry
-- globaljumpbacks
-- autocontrolleronly
-- autoretry
-- windows_sys_temp
-- windows_app_data
-- linux_sys_temp
-- linux_app_data
+-   useragent
+-   httpauth
+-   baseurl, baseurl1, baserurl2
+-   timeout
+-   globalretry
+-   globaljumpbacks
+-   autocontrolleronly
+-   autoretry
+-   windows_sys_temp
+-   windows_app_data
+-   linux_sys_temp
+-   linux_app_data
 
 Important - if you do not want to set a value, it is better to delete the value rather than set it as blank. Otherwise WebImblaze may try to use a null value and fail.
 
@@ -426,9 +426,9 @@ tasks\myRegression.pl --group Bear
 
 It would run:
 
-- `register.xml` - since there is a matching group
-- `purchase.xml` - ditto
-- `profile.xml` - since no groups are specified, default - run it
+-   `register.xml` - since there is a matching group
+-   `purchase.xml` - ditto
+-   `profile.xml` - since no groups are specified, default - run it
 
 Another example:
 
@@ -452,23 +452,30 @@ _If you've done this previously and are updating - delete the existing WebImblaz
 
 It is worth spending two minutes to set up WebImblaze syntax highlighting in Notepad++
 
-- Select menu `Language -> Define your language ...`
-- Click `Import...`
-- Select file `WebImblaze-Framework/tools/webimblaze_notepad++.xml`
-- Restart Notepad++
+-   Select menu `Language -> Define your language ...`
+-   Click `Import...`
+-   Select file `WebImblaze-Framework/tools/webimblaze_notepad++.xml`
+-   Restart Notepad++
 
 It looks much, much better if you use a dark theme.
 
-- Select menu `Settings -> Style Configurator...`
-- Set `Select theme :` to `Plastic Code Wrap`
-- Check `Enable global background colour`
-- Check `Enable global font`
-- Check `Enable global bold font style`
-- If you have it available, `DejaVu Sans Mono` is a nice font
-- Click `Save & Close`
-- Restart Notepad++
+-   Select menu `Settings -> Style Configurator...`
+-   Set `Select theme :` to `Plastic Code Wrap`
+-   _Important_ - check `Enable global background colour`
+-   _Important_ - check `Enable global font`
+-   _Important_ - check `Enable global bold font style`
+-   If you have it available, `DejaVu Sans Mono` is a nice font
+-   Click `Save & Close`
+-   Restart Notepad++
 
-Note that Material-Dark is a nice theme: https://github.com/naderi/material-theme-for-npp (copy it to `%AppData%\Notepad++\themes`)
+Note that Material-Dark is a nice theme:
+
+https://github.com/naderi/material-theme-for-npp
+
+-   In Windows Explorer, go to `%AppData%\Notepad++\themes`
+-   Copy the file `WebInject/tools/Material-Dark.xml` to that location
+-   Restart Notepad++ then select that them from `Settings -> Style Configurator...`
+-   Increase the font size slightly improves the appearance a lot
 
 # Convert WebInject .xml test case files to WebImblaze .test format
 
