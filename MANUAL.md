@@ -147,8 +147,8 @@ Only `_global.config` cannot be renamed.
 
 ```
 [autoassertions]
-autoassertion1=^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error
-autoassertion2=^((?!HTTP Error 500.0 . Not Found).)*$|||Server error
+autoassertion1=HTTP Error 404.0 . Not Found|||Page not found error
+autoassertion2=HTTP Error 500.0 . Not Found|||Server error
 
 [smartassertions]
 smartassertion1=Set\-Cookies: |||Cache\-Control: private|Cache\-Control: no\-cache|||Must have a Cache-Control of private or no-cache when a cookie is set
@@ -220,8 +220,8 @@ content_server=server666
 adsensemode=,"adtest":"debug"
 
 [autoassertions]
-autoassertion1=^((?!HTTP Error 404.0 . Not Found).)*$|||Page not found error
-autoassertion5=^((?!Java Stacktrace Error).)*$|||Java Abend
+autoassertion1=HTTP Error 404.0 . Not Found|||Page not found error
+autoassertion5=Java Stacktrace Error|||Java Abend
 ```
 
 ## Sections within the configuration files
