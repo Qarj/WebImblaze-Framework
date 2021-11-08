@@ -2,9 +2,9 @@
 
 Automated regression testing framework for
 
-- managing WebImblaze configuration
-- running many WebImblaze automated tests in parallel
-- organising actual test run results for many teams and test case files
+-   managing WebImblaze configuration
+-   running many WebImblaze automated tests in parallel
+-   organising actual test run results for many teams and test case files
 
 This framework is for those with large suites of automated tests. It helps to quickly
 answer the question "Did all of our regression tests pass?".
@@ -135,6 +135,12 @@ curl -o %temp%/VC_redist.x86.exe https://aka.ms/vs/15/release/VC_redist.x86.exe
 %temp%\VC_redist.x86.exe
 ```
 
+May also need to set your server name in `http.conf` to stop 10 second delays, refer to https://serverfault.com/questions/66347/why-is-the-response-on-localhost-so-slow
+
+```
+ServerName my.server.com:80
+```
+
 Now create the `wif.config` file.
 
 ```
@@ -166,9 +172,9 @@ Open the command prompt up as an Administrator.
 
 To run an automated test, wif.pl needs to know the:
 
-- test file to run
-- high level environment
-- target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
+-   test file to run
+-   high level environment
+-   target 'mini-environment' - team name (has own web server, but sharing a development database with other teams)
 
 ```
 perl wif.pl example_test --env DEV --target team1
