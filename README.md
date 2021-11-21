@@ -270,7 +270,11 @@ completions.
 On a pending result, you can click on the Started date/time for a test file and see where it is up to. Again
 just press F5 to get the latest update.
 
-# Syntax Highlighting
+# Syntax Hightlighting - Visual Studio Code
+
+Search extensions for `WebImblaze` then install `WebImblaze Syntax Highlighting`.
+
+# Syntax Highlighting - Notepad++
 
 Syntax Highlights of WebImblaze `.test` files works will with Material-Dark theme and Monaco font.
 
@@ -286,10 +290,10 @@ Copy Material-Dark to `%APPDATA%\Notepad++\themes`
 copy C:\git\WebImblaze-Framework\tools\Material-Dark.xml "%APPDATA%\Notepad++\themes"
 ```
 
-Or on Linux
+Or on Linux, assuming Notepad++ is installed in a wine bottle of `/home/$USER/wine/wine64`
 
 ```bash
-curl -o /home/$USER/snap/notepad-plus-plus/common/.wine/drive_c/users/$USER/'Application Data'/Notepad++/themes/Material-Dark.xml https://raw.githubusercontent.com/naderi/material-theme-for-npp/master/Material-Dark.xml
+curl -o /home/$USER/wine/wine64/drive_c/users/$USER/AppData/Roaming/Notepad++/themes/Material-Dark.xml https://raw.githubusercontent.com/naderi/material-theme-for-npp/master/Material-Dark.xml
 ```
 
 Download Monaco font
