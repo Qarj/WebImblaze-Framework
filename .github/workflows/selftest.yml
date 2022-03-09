@@ -58,6 +58,9 @@ jobs:
             - name: Install XML::Simple
               run: cpanm XML::Simple
 
+            - name: Install XML::Twig
+              run: cpanm XML::Twig
+
             - name: Install Config::Tiny
               run: cpanm Config::Tiny
 
