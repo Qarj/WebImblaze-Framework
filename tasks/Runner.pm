@@ -325,8 +325,10 @@ sub _start_windows_process {
 sub _start_linux_process {
     my ($_command) = @_;
 
-    my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
-    my $_result = `$_gnome_terminal`;
+    # my $_gnome_terminal = qq{(gnome-terminal -e "$_command" &)}; #
+    # my $_result = `$_gnome_terminal`;
+    my $_nohup_bash = qq{(nohup bash -c "$_command" > /dev/null 2>&1 &)}; #
+    my $_result = `$_nohup_bash`;
 
     return;
 }

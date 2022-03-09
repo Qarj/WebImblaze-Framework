@@ -6,6 +6,10 @@ Tim Buckland, https://github.com/Qarj/WebImblaze-Framework
 
 ## Release History:
 
+### Version 1.13.2 - Mar, 2022
+
+- add GitHub Actions, spawn sub processes using nohup instead of gnome-terminal
+
 ### Version 1.13.1 - Aug 4, 2019
 
 - `wif.config` now supports `driver=` to specify either `chrome` (Selenium Server) or `chromedriver` (use chromedriver directly)
