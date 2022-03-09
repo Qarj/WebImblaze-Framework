@@ -1,5 +1,8 @@
 # WebImblaze-Framework 1.13.1
 
+[![GitHub Super-Linter](https://github.com/Qarj/WebImblaze-Framework/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+![Canary test](https://github.com/Qarj/WebImblaze-Framework/workflows/Canary%20test/badge.svg)
+
 Automated regression testing framework for
 
 -   managing WebImblaze configuration
@@ -19,59 +22,56 @@ You can see WebImblaze example output here: http://qarj.github.io/WebInject-Exam
 
 ## Linux
 
-Open a terminal then install system packages root.
+After installing [WebImblaze](https://github.com/Qarj/WebImblaze) to `$HOME/git/WebImblaze`, clone companion project
 
+```sh
+cd $HOME/git
+git clone https://github.com/Qarj/WebImblaze-Framework.git
 ```
+
+Open a terminal then install gnome-terminal and Apache.
+
+```sh
 sudo apt update
 sudo apt --yes install gnome-terminal
 sudo apt --yes install apache2
 sudo apt --yes install apache2-dev
 ```
 
-Install WebImblaze (refer to https://github.com/Qarj/WebImblaze).
+Restart Apache and make sure there are no error messages.
 
-Clone the project.
-
-```
-cd /usr/local/bin
-sudo git clone https://github.com/Qarj/WebImblaze-Framework.git
+```sh
+sudo systemctl restart apache2
 ```
 
-Set permissions.
+Fix permissions for Apache.
 
-```
-cd /usr/local/bin/WebImblaze-Framework
-sudo find . -type d -exec chmod a+rwx {} \;
-sudo find . -type f -exec chmod a+rw {} \;
+```sh
 sudo chgrp -R www-data /var/www/html
 sudo find /var/www/html -type d -exec chmod g+rwx {} +
 sudo find /var/www/html -type d -exec chmod a+rwx {} +
 sudo find /var/www/html -type f -exec chmod g+rw {} +
 ```
 
-Restart Apache and make sure there are no error messages.
-
-```
-sudo systemctl restart apache2
-```
-
 Install Perl packages required by `wif.pl`.
 
 ```
-sudo cpan Config::Tiny
-sudo cpan File::Find::Rule
+cpan Config::Tiny
+cpan File::Find::Rule
+cpan File::Slurp
 ```
 
 Create `wif.config`.
 
-```
+```sh
+cd $HOME/git/WebImblaze-Framework
 perl wif.pl --create-config
 ```
 
 Optional - edit the config file, and change the `web_server_address` parameter from `localhost` to the DNS name of the server.
 
 ```
-vi wif.config
+nano wif.config
 ```
 
 If you don't do this, you won't be able to access the results from outside this server.
