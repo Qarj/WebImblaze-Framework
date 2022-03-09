@@ -95,7 +95,7 @@ jobs:
               run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" --version
 
             - name: Check WebImblaze-FrameWork version
-              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wi.pl" --version
+              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --version
 
             - name: Create wif.config
               run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --create-config
