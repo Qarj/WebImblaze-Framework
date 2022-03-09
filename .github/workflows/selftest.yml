@@ -118,16 +118,20 @@ jobs:
                   name: html-results-report
                   path: WebImblaze/output/Results.html
 
-            - name: Zip main test output
+            - name: Check files in temp output - probably none
               if: always()
-              run: zip -r output-main.zip "$GITHUB_WORKSPACE/WebImblaze/output"
+              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
 
-            - name: Archive main test output
+            - name: Zip temp output
+              if: always()
+              run: zip -r output-temp.zip "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
+
+            - name: Archive temp output
               if: always()
               uses: actions/upload-artifact@v2
               with:
                   name: main-test-output
-                  path: output-main.zip
+                  path: output-temp.zip
 
             - name: Zip Apache output
               if: always()
