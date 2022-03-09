@@ -71,25 +71,25 @@ jobs:
               run: perl --version
 
             - name: Install Apache
-               run: sudo apt-get install -y apache2
+              run: sudo apt-get install -y apache2
 
             - name: Install Apache Dev
-               run: sudo apt-get install -y apache2-dev
+              run: sudo apt-get install -y apache2-dev
 
             - name: Restart Apache
-               run: sudo systemctl restart apache2
+              run: sudo systemctl restart apache2
 
             - name: Fix permissions Apache - part 1
-               run: sudo chgrp -R www-data /var/www/html
+              run: sudo chgrp -R www-data /var/www/html
 
             - name: Fix permissions Apache - part 2
-               run: sudo find /var/www/html -type d -exec chmod g+rwx {} +
+              run: sudo find /var/www/html -type d -exec chmod g+rwx {} +
 
             - name: Fix permissions Apache - part 3
-               run: sudo find /var/www/html -type d -exec chmod a+rwx {} +
+              run: sudo find /var/www/html -type d -exec chmod a+rwx {} +
 
             - name: Fix permissions Apache - part 4
-               run: sudo find /var/www/html -type f -exec chmod g+rw {} +
+              run: sudo find /var/www/html -type f -exec chmod g+rw {} +
 
             - name: Check WebImblaze version
               run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" --version
@@ -98,7 +98,7 @@ jobs:
               run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wi.pl" --version
 
             - name: Create wif.config
-               run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --create-config
+              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --create-config
 
             - name: Canary test
               run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" canary/canary.test
@@ -106,7 +106,7 @@ jobs:
             - name: Task test
               run: perl ./WebImblaze-Framework/tasks/Canary.test
 
-# Still need to check that all the tests passed in the batch
+            # Still need to check that all the tests passed in the batch
 
             - name: Archive test report
               if: always()
