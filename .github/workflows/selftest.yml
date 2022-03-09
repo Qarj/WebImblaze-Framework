@@ -107,7 +107,7 @@ jobs:
               run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" canary/canary.test
 
             - name: Task test
-              run: perl ./WebImblaze-Framework/tasks/Canary.test
+              run: perl ./WebImblaze-Framework/tasks/Canary.pl
 
             # Still need to check that all the tests passed in the batch
 
