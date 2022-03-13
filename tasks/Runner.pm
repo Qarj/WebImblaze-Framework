@@ -22,20 +22,19 @@ use HTTP::Request::Common;
 use IO::Socket::SSL;
 use XML::Twig;
 local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 'false';
-local $|                                 = 1;    # don't buffer output to STDOUT
+local $| = 1;                                         # don't buffer output to STDOUT
 
 our $is_windows = $^O eq 'MSWin32' ? 1 : 0;
 
 require Alerter;
-use lib q{..};    # current folder is not @INC from Perl 5.26
+use lib q{..};                                        # current folder is not @INC from Perl 5.26
 require lib::BatchSummary;
 
 my ( $script_name, $script_path ) = fileparse( $0, '.pl' );
 
 my $config_wif_location = '../';
-my $opt_batch = $script_name;    # default the batch name to the script name
-our ( $opt_target, $opt_environment ) =
-  read_wif_config( $config_wif_location . 'wif.config' );
+my $opt_batch           = $script_name;               # default the batch name to the script name
+our ( $opt_target, $opt_environment ) = read_wif_config( $config_wif_location . 'wif.config' );
 my ( $opt_check_alive, $opt_slack_alert );
 my $opt_group;
 
@@ -48,14 +47,8 @@ sub start_runner {
 
     my $_trial_test_file = '../tasks/Runner.test';
 
-    (
-        $opt_target,      $opt_batch,       $opt_environment,
-        $opt_check_alive, $opt_slack_alert, $opt_group
-      )
-      = get_options(
-        $opt_target,      $opt_batch,       $opt_environment,
-        $opt_check_alive, $opt_slack_alert, $opt_group
-      );
+    ( $opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group ) =
+      get_options( $opt_target, $opt_batch, $opt_environment, $opt_check_alive, $opt_slack_alert, $opt_group );
     $opt_target      = lc $opt_target;
     $opt_environment = uc $opt_environment;
 
@@ -65,15 +58,15 @@ sub start_runner {
             # all systems go
         }
         else {
- # check-alive url returned no response, target server is down, do not run tests
+            # check-alive url returned no response, target server is down, do not run tests
             exit;
         }
     }
 
-# add a random number to the batch name so this run will have a different name to a previous run
+    # add a random number to the batch name so this run will have a different name to a previous run
     $opt_batch .= random(99_999);
 
-# to find out the batch_url we need the location of any valid test file - the test will not be run
+    # to find out the batch_url we need the location of any valid test file - the test will not be run
     if ( defined $_trial_test_file ) {
         my @_args = _build_wif_args( $_trial_test_file, $opt_target, $opt_batch,
             $opt_environment, $config_wif_location, '', '--show-batch-url' );
@@ -107,13 +100,13 @@ sub _slack_alert_parallel_run {
         return;
     }
 
-#
-# If PENDING is found in the batch results, it is still running.
-#
-# If PENDING is not found, it *might* still be running i.e. a new test might be about to be kicked off.
-#
-# So ensure that PENDING is not found over a minimum number of attempts before declaring the batch is done.
-#
+    #
+    # If PENDING is found in the batch results, it is still running.
+    #
+    # If PENDING is not found, it *might* still be running i.e. a new test might be about to be kicked off.
+    #
+    # So ensure that PENDING is not found over a minimum number of attempts before declaring the batch is done.
+    #
     my $_max                     = 15 * 60;
     my $_pending_not_found_count = 0;
     my $_pending_not_found_min   = 3;
@@ -155,8 +148,7 @@ sub _slack_alert_parallel_run {
 
     BatchSummary::_calculate_stats($_twig);
 
-    my $_slack_message = BatchSummary::_build_overall_summary_text( $opt_batch,
-        $opt_target, '', '' );
+    my $_slack_message = BatchSummary::_build_overall_summary_text( $opt_batch, $opt_target, '', '' );
     $_slack_message = "<$batch_url|$_slack_message>";
 
     if ( $_slack_message =~ /PASS/ ) {
@@ -172,8 +164,7 @@ sub start {
 
     if ( not _group_match($_groups) ) { return; }
 
-    start_test( $_test, $opt_target, $opt_batch, $opt_environment,
-        $config_wif_location, $_no_headless );
+    start_test( $_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless );
 
     return;
 }
@@ -184,8 +175,7 @@ sub call {
     if ( not _group_match($_groups) ) { return; }
 
     my $_status =
-      Runner::call_test( $_test, $opt_target, $opt_batch, $opt_environment,
-        $config_wif_location, $_no_headless );
+      Runner::call_test( $_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless );
 
     my ( $_test_name, undef ) = fileparse( $_test, '.test' );
 
@@ -233,8 +223,7 @@ sub repeat {
 }
 
 sub start_test {
-    my ( $_test_file_full, $_config_target, $_config_batch,
-        $_config_environment, $_config_wif_location, $_no_headless )
+    my ( $_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless )
       = @_;
 
     my @_args =
@@ -254,8 +243,7 @@ sub start_test {
 
 #------------------------------------------------------------------
 sub call_test {
-    my ( $_test_file_full, $_config_target, $_config_batch,
-        $_config_environment, $_config_wif_location, $_no_headless )
+    my ( $_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless )
       = @_;
 
     my @_args =
@@ -284,8 +272,7 @@ sub call_test {
 
 #------------------------------------------------------------------
 sub _build_wif_args {
-    my ( $_test_file_full, $_config_target, $_config_batch,
-        $_config_environment, $_config_wif_location, $_no_headless,
+    my ( $_test_file_full, $_config_target, $_config_batch, $_config_environment, $_config_wif_location, $_no_headless,
         $_show_batch_url )
       = @_;
 
@@ -343,7 +330,7 @@ sub _start_windows_process {
     my ($_command) = @_;
 
     my $_cwd  = cwd;
-    my $_wmic = "wmic process call create 'cmd /c cd /D $_cwd & $_command'";   #
+    my $_wmic = "wmic process call create 'cmd /c cd /D $_cwd & $_command'";    #
 
     my $_result;
     $_result = `$_wmic`;
@@ -375,7 +362,7 @@ sub random {
     my ($_max) = @_;
 
     my $_random = int rand $_max;
-    $_random = sprintf '%05d', $_random;    # add some leading zeros
+    $_random = sprintf '%05d', $_random;                                     # add some leading zeros
 
     return '_' . $_random;
 }
@@ -419,11 +406,10 @@ sub is_available {
     $useragent->agent('WebGet');
     $useragent->timeout(20);    # default timeout of 360 seconds
 
-    $useragent->max_redirect('0')
-      ; #don't follow redirects for GET's (POST's already don't follow, by default)
+    $useragent->max_redirect('0');    #don't follow redirects for GET's (POST's already don't follow, by default)
     eval {
         $useragent->ssl_opts( verify_hostname => 0 )
-          ; ## stop SSL Certs from being validated - only works on newer versions of of LWP so in an eval
+          ;    ## stop SSL Certs from being validated - only works on newer versions of of LWP so in an eval
         $useragent->ssl_opts( SSL_verify_mode => 'SSL_VERIFY_NONE' )
           ;    ## from Perl 5.16.3 need this to prevent ugly warnings
     };
@@ -468,10 +454,7 @@ sub slash_me {
 
 #------------------------------------------------------------------
 sub get_options {
-    my (
-        $_opt_target,      $_opt_batch,       $_opt_environment,
-        $_opt_check_alive, $_opt_slack_alert, $_opt_group
-    ) = @_;
+    my ( $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert, $_opt_group ) = @_;
 
     my ( $_opt_version, $_opt_help );
 
@@ -504,13 +487,11 @@ sub get_options {
         exit;
     }
 
-    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive,
-      $_opt_slack_alert, $_opt_group;
+    return $_opt_target, $_opt_batch, $_opt_environment, $_opt_check_alive, $_opt_slack_alert, $_opt_group;
 }
 
 sub print_version {
-    print {*STDOUT}
-"\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Framework\n";
+    print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Framework\n";
     return;
 }
 

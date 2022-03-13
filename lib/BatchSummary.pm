@@ -252,8 +252,7 @@ sub _get_earliest_start_time {
     # example tag: <startdatetime>2016-04-05T20:50:59</startdatetime>
     # the very first run in the batch will always contain the earliest start time
 
-    my $_start_time = 
-      $_root->first_child('run')->first_child_text('start_date_time');
+    my $_start_time = $_root->first_child('run')->first_child_text('start_date_time');
 
     # just return the time portion of the date time string
     return substr $_start_time, 11;

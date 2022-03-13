@@ -1,0 +1,7 @@
+step:               Check /var/www/html/Summary.xml
+readfile:           /var/www/html/Summary.xml
+verifypositive1:    PASS
+verifypositive2:    ALL [\d]+ steps OK
+verifynegative1:    CORRUPT
+verifynegative2:    FAIL
+verifynegative3:    PEND
