@@ -9,7 +9,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.0.1';
+$VERSION = '0.0.2';
 
 use Storable 'dclone';
 use File::Basename;
@@ -151,7 +151,7 @@ sub output_includes_less_than_testnum {
 
     my $_include_index;
     for ( $_include_index = 0 ; $_include_index < $_numincludes ; $_include_index++ )
-    {    ## no critic(ProhibitCStyleForLoops)
+    {
         my $_includenum = $_include_steps[$_include_index];
 
         if ( $_includenum < $previous_testnum ) {
@@ -162,7 +162,7 @@ sub output_includes_less_than_testnum {
             next;
         }
 
-        $_out .= sprintf( '%-' . $SPACES . 's', 'include: ' );
+        $_out .= sprintf( q{%-} . $SPACES . 's', 'include: ' );
         $_out .= $xml_test_cases->{include}->{$_includenum}->{file} . "\n\n";
 
     }
@@ -180,14 +180,14 @@ sub output_includes_more_than_testnum {
 
     my $_include_index;
     for ( $_include_index = 0 ; $_include_index < $_numincludes ; $_include_index++ )
-    {    ## no critic(ProhibitCStyleForLoops)
+    {
         my $_includenum = $_include_steps[$_include_index];
 
         if ( $_includenum < $testnum ) {
             next;
         }
 
-        $_out .= sprintf( '%-' . $SPACES . 's', 'include: ' );
+        $_out .= sprintf( q{%-} . $SPACES . 's', 'include: ' );
         $_out .= $xml_test_cases->{include}->{$_includenum}->{file} . "\n\n";
 
     }
@@ -305,7 +305,7 @@ sub output_parameter {
         return q{};
     }
 
-    my $_out = sprintf( '%-' . $SPACES . 's', $_parameter . ': ' );
+    my $_out = sprintf( q{%-} . $SPACES . 's', $_parameter . ': ' );
     $_out .= $case{$_parameter} . "\n";
     delete $case{$_parameter};
 

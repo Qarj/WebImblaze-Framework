@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-version = "0.1.0"
-
 import unittest
 
 from latest import latest
+
+version = "0.1.1"
 
 
 class TestLatest(unittest.TestCase):

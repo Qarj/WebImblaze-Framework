@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-
-version = "0.3.0"
-
 import argparse
 import os
 import stat
 import time
 from os.path import splitext
+
+version = "0.3.1"
 
 
 def flushdir(dir, days_old, verbose, exclude):

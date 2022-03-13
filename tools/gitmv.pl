@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use vars qw/ $VERSION /;
 
-$VERSION = '0.01';
+$VERSION = '0.0.2';
 
 my $src =$ARGV[0];
 my $dest = $ARGV[1];

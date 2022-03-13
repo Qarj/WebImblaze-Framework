@@ -9,7 +9,7 @@ use warnings;
 use vars qw/ $VERSION /;
 use File::Copy qw(copy), qw(move);
 
-$VERSION = '0.01';
+$VERSION = '0.0.2';
 
 local $| = 1; # don't buffer output to STDOUT
 
