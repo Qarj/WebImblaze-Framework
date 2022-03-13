@@ -2,7 +2,7 @@
 
 ## One time setup
 
-```
+```sh
 npm install
 ```
 
@@ -11,13 +11,13 @@ In an organisation with SSL interception, you may need to:
 -   `npm config set strict-ssl false`
 -   `npm cache verify`
 
-# Run the tests
+## Run the tests
 
-```
+```sh
 npm test
 ```
 
-# Run via Karma
+## Run via Karma
 
 Change to the folder where karma.conf.js resides, then:
 
@@ -28,7 +28,7 @@ For CI:
 
 -   `karma start --single-run`
 
-# Setting up a Karma project
+## Setting up a Karma project
 
 You can create your own JavaScript unit test config by changing directory to your project, then:
 
