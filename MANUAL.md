@@ -1,6 +1,6 @@
 # WebImblaze Framework 1.13.2 Manual
 
-# wif.config
+## wif.config
 
 This configuration file tells wif.pl where to find various components that it needs.
 
@@ -10,7 +10,7 @@ You can create a config file with default values to get you started as follows:
 wif.pl --create-config
 ```
 
-The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
+The `wif.config` file is also used by wif.pl to store some of the command-line options you chose the last time you invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
 An example `wif.config` looks like this:
 
@@ -129,7 +129,7 @@ webimblaze_location=.
 
 # environment_config folder
 
-In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
+In this folder you can give wif.pl information about your "site under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
 
 The information is specified in a hierarchical way. This means it is possible to have many 'mini-environments' without having to repeat information that is common to each of the mini-environments.
 
@@ -261,7 +261,7 @@ There examples in the example config - you can just delete them if you do not wa
 
 ### [baseurl_subs]
 
-WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example, change https references to http to get around test environment ssl certificate issues.
+WebImblaze creates an HTML file for every step result. WebImblaze will remap the HTTP references in the HTML source back to the web server under test using the page baseurl. Sometimes you may want to tweak the URLs - for example, change HTTPS references to HTTP to get around test environment SSL certificate issues.
 
 Here is an example substitution:
 
@@ -269,11 +269,11 @@ Here is an example substitution:
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
 ```
 
-On the left hand side, LHS, of the three bars, we have the LHS of the regex. On the right hand side, RHS, we have the RHS of the regex substitution in the form of a Perl expression.
+On the left hand side, LHS, of the three bars, we have the LHS of the regular expression. On the right hand side, RHS, we have the RHS of the regular expression substitution in the form of a Perl expression.
 
 ### [content_subs]
 
-To change the step html response content, you can specify regular expressions in this section. They work in the same way as described in [baseurl_subs].
+To change the step HTML response content, you can specify regular expressions in this section. They work in the same way as described in [baseurl_subs].
 
 Why would you want to do this? Some pages will try to redirect to somewhere else. Obviously this is not desirable since we want to see the actual result. So we do a substitution to break the redirect.
 
@@ -289,7 +289,7 @@ In each of the example environment config folders, there is an example `_alias.c
 
 It is possible to set up as many you want, so long as the value on the right hand side matches a `.config` file in the same folder.
 
-# wif.pl command line options
+## wif.pl command-line options
 
 Typical example
 
@@ -398,7 +398,7 @@ All the tests referred to in Examples.pl will be run. The environment is `enviro
 tasks/Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
 ```
 
-Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
+Before the tests are run, the URL `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
 
 ## Example with alert to Slack on failure
 
@@ -440,15 +440,15 @@ Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
 
-# Syntax Highlighting WebImblaze test case files
+## Syntax Highlighting WebImblaze test case files
 
-## Visual Studio Code
+### Visual Studio Code
 
 By far the easiest to install - just search for `WebImblaze` in extensions, install, and you are done.
 
 The VSCode syntax highlighting is the most complete, accurate, and best looking out of these options.
 
-## Notepad++
+### Notepad++
 
 _If you've done this previously and are updating - delete the existing WebImblaze language first._
 
@@ -479,11 +479,11 @@ https://github.com/naderi/material-theme-for-npp
 -   Restart Notepad++ then select that them from `Settings -> Style Configurator...`
 -   Increase the font size slightly improves the appearance a lot
 
-## UltraEdit
+### UltraEdit
 
 In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be certain that you are using the right keyword / parameter.
 
-# Convert WebInject .xml test case files to WebImblaze .test format
+## Convert WebInject .xml test case files to WebImblaze .test format
 
 The script `tools/transmute.pl` will output a WebInject style xml test file in the WebImblaze format.
 

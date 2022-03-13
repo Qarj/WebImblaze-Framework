@@ -16,11 +16,11 @@ If the answer is no, you can very quickly drill into what went wrong.
 Since an organised history of previous run results are kept,
 you can compare a failed result easily against a previous successful run.
 
-You can see WebImblaze example output here: http://qarj.github.io/WebInject-Example/
+You can see WebImblaze example output here: [WebImblaze-Example](http://qarj.github.io/WebInject-Example/)
 
-# Quick Start Guide - 5 minutes to install and use!
+## Quick Start Guide - 5 minutes to install and use!
 
-## Linux
+### Linux
 
 After installing [WebImblaze](https://github.com/Qarj/WebImblaze) to `$HOME/git/WebImblaze`, clone companion project
 
@@ -88,7 +88,7 @@ Run the canary checks too.
 perl wif.pl canary/canary.test
 ```
 
-## Windows Installation
+### Windows Installation
 
 Install WebImblaze. Refer to [WebImblaze](https://github.com/Qarj/WebImblaze).
 
@@ -166,7 +166,7 @@ If you don't do this, you won't be able to access the results from outside this 
 
 That's it! You are now ready to run your first WebImblaze test using the WebImblaze Framework.
 
-## running wif.pl - minimal example
+### running wif.pl - minimal example
 
 To run an automated test, wif.pl needs to know the:
 
@@ -215,7 +215,7 @@ Finally, run another example, but store the result under a batch name:
 perl wif.pl examples/post.xml --batch my_team_results
 ```
 
-## Viewing the test run results
+### Viewing the test run results
 
 You can view and drill into the results from this url:
 
@@ -225,9 +225,9 @@ Click on a batch to see individual test results for the batch.
 
 Click on the Run number (first column) to see the individual step results for a test case file.
 
-From the test case file results, click on the id number (first column), to see that step actual result.
+From the test case file results, click on the ID number (first column), to see that step actual result.
 
-# Running tests in parallel
+## Running tests in parallel
 
 The point of the WebImblaze-Framework is to run a lot of tests quickly and check that there are no failures.
 
@@ -259,7 +259,7 @@ Note that the tasks\ scripts can take parameters too
 perl tasks/Examples.pl --env DEV --target team2 --batch My_Examples
 ```
 
-## Pending results
+### Pending results
 
 While the tests are running, you can see intermediate results. Just go the results Summary page, click
 on the batch, and see the pending results. You can press F5 as results complete to see the latest
@@ -268,11 +268,11 @@ completions.
 On a pending result, you can click on the Started date/time for a test file and see where it is up to. Again
 just press F5 to get the latest update.
 
-# Syntax Hightlighting - Visual Studio Code
+## Syntax Hightlighting - Visual Studio Code
 
 Search extensions for `WebImblaze` then install `WebImblaze Syntax Highlighting`.
 
-# Syntax Highlighting - Notepad++
+## Syntax Highlighting - Notepad++
 
 Syntax Highlights of WebImblaze `.test` files works will with Material-Dark theme and Monaco font.
 
@@ -321,7 +321,7 @@ curl -o C:\git\WebImblaze-Framework\tools\Zenburn-Markdown.xml https://raw.githu
 
 Then import the language.
 
-# The WebImblaze Framework Manual
+## The WebImblaze Framework Manual
 
 The manual contains full details on how to setup WebImblaze Framework.
 

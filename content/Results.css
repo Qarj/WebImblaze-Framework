@@ -13,10 +13,12 @@ body {
 }
 
 /* heading area */
+
 /* unvisited link */
 h1 a:link {
     color: SlateGray;
 }
+
 h2 a:link {
     color: SlateGray;
 }
@@ -25,6 +27,7 @@ h2 a:link {
 h1 a:visited {
     color: SlateGray;
 }
+
 h2 a:visited {
     color: SlateGray;
 }
@@ -32,9 +35,10 @@ h2 a:visited {
 div#heading {
     padding: 1em 1em 0 1em;
     border: 1px solid #ddd;
-    background: DarkSlateGray;
+    background: darkslategray;
     margin: 0 2em 2em 0;
 }
+
 div#heading h1 {
     font-weight: normal;
     font-size: 2.5em;
@@ -43,11 +47,13 @@ div#heading h1 {
     color: #d1e6e7;
     line-height: 1em;
 }
+
 div#heading h2 {
     font-weight: normal;
     margin-bottom: 0.3em;
     color: #d1e6e7;
 }
+
 div#heading h3 {
     font-weight: normal;
     font-size: 1.5em;
@@ -59,6 +65,7 @@ div#heading h3 {
 .alignleft {
     float: left;
 }
+
 .alignright {
     float: right;
 }
@@ -68,6 +75,7 @@ a {
     text-decoration: none;
     font-weight: bolder;
 }
+
 a:hover {
     color: #5bab03;
     text-decoration: underline;
@@ -82,18 +90,22 @@ div {
     color: #5bab03;
     font-weight: bold;
 }
+
 .fail {
     color: #ff5940;
     font-weight: bold;
 }
+
 .abort {
     color: Fuchsia;
     font-weight: bold;
 }
+
 .corrupt {
     color: Black;
     font-weight: bold;
 }
+
 .pend {
     color: SteelBlue;
     font-weight: bold;
@@ -106,12 +118,6 @@ div {
 table {
     border-collapse: collapse;
 }
-
-/*
-table, th, td {
-    border: 1px solid black;
-}
-*/
 
 table {
     width: 90%;
@@ -129,7 +135,7 @@ td {
 }
 
 td {
-    color: DarkSlateGray;
+    color: darkslategray;
 }
 
 .link_number {
@@ -139,7 +145,7 @@ td {
 
 .header_row,
 .footer_row {
-    background: linear-gradient(to bottom, DarkSlateGray, #5b7778);
+    background: linear-gradient(to bottom, darkslategray, #5b7778);
     font-family: Verdana;
     color: #d1e6e7;
     text-decoration: none;
@@ -158,7 +164,7 @@ td {
 /* buttons for filter of results */
 .btn {
     border: none;
-    background: linear-gradient(to bottom, DarkSlateGray, #5b7778);
+    background: linear-gradient(to bottom, darkslategray, #5b7778);
     border-radius: 3px;
     font-family: Arial;
     color: #d1e6e7;
@@ -181,13 +187,14 @@ td {
     margin-top: 0.3em;
     border: none;
 }
+
 #live-filter {
     width: 100%;
     border: none;
     font: 110% Verdana;
     font-weight: bold;
     background: #d1e6e7;
-    color: DarkSlateGray;
+    color: darkslategray;
     padding: 0.2em 0.5em 0.2em 0.5em;
     box-sizing: border-box;
 }
@@ -199,14 +206,14 @@ td {
 .section {
     background: #d1e6e7;
     font-family: Arial;
-    color: DarkSlateGray;
+    color: darkslategray;
     font-weight: bold;
     text-decoration: none;
     border-top-style: solid;
     border-right-style: none;
     border-bottom-style: none;
     border-left-style: none;
-    border-color: DarkSlateGray;
+    border-color: darkslategray;
 }
 
 .abort_row {
@@ -227,14 +234,17 @@ td {
     background: #c11b17;
     color: #d1e6e7;
 }
+
 .veryslow {
     background: Orange;
     color: #d1e6e7;
 }
+
 .slow {
     background: Blue;
     color: #d1e6e7;
 }
+
 .normal {
 }
 
@@ -253,12 +263,15 @@ table {
 .fail_info {
     background: #ff5940;
 }
+
 .auto_fail_info {
     background: Maroon;
 }
+
 .skip_info {
     background: Blue;
 }
+
 .time_info {
     background: Grey;
 }

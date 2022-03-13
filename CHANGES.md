@@ -1,10 +1,10 @@
-# WebImblaze-Framework change log
+# WebImblaze-Framework changelog
 
 [WebImblaze-Framework](https://github.com/Qarj/WebImblaze-Framework)
 
 ---
 
-## Release History:
+## Release History
 
 ### Version 1.13.2 - Mar, 2022
 
@@ -24,7 +24,7 @@
 
 ### Version 1.11 - Apr 1, 2019
 
--   option to show the batch url
+-   option to show the batch URL
 -   ability to locate a test file from cwd assuming wif.pl started from another folder (e.g. system path)
 
 ### Version 1.10 - Nov 12, 2018
@@ -74,7 +74,7 @@
 ### Version 1.01 - May 4, 2016
 
 -   find test case file when folder not specified, and also without xml extension
--   command line options now accepted for tasks --target and --batch
+-   command-line options now accepted for tasks --target and --batch
 -   tweaks to robustness with many parallel instances of wif.pl
 
 ### Version 1.00 - May 2, 2016
@@ -88,7 +88,7 @@
 ### Version 0.03 - Apr 25, 2016
 
 -   improved file locking logic
--   improved css styles
+-   improved CSS styles
 -   introduced an option to capture STDOUT for both wif.pl and webinject.pl
 -   introduced Runner.pm can now run tests "in process" as well as starting a new process for each test
 
