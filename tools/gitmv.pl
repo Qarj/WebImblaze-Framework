@@ -14,7 +14,7 @@ my $src =$ARGV[0];
 my $dest = $ARGV[1];
 
 if (not defined $dest) {
-    die "Usage: gitmv.pl source dest";
+    die 'Usage: gitmv.pl source dest';
 }
 
 my @src_files = glob $src;

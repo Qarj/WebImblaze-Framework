@@ -302,7 +302,7 @@ sub _build_overall_summary_text {
         $_mm = $mm;
     }
 
-    my $_summary_text = '';
+    my $_summary_text = q{};
 
     my $_overall = 'PASS';
     if ( $number_of_pending_items > 0 ) { $_overall = 'PEND'; }

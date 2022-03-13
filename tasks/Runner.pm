@@ -69,7 +69,7 @@ sub start_runner {
     # to find out the batch_url we need the location of any valid test file - the test will not be run
     if ( defined $_trial_test_file ) {
         my @_args = _build_wif_args( $_trial_test_file, $opt_target, $opt_batch,
-            $opt_environment, $config_wif_location, '', '--show-batch-url' );
+            $opt_environment, $config_wif_location, q{}, '--show-batch-url' );
 
         # change dir to wif.pl location
         my $_orig_cwd = cwd;
@@ -141,14 +141,14 @@ sub _slack_alert_parallel_run {
         }
     }
 
-    print "BATCH: " . $_response->content;
+    print 'BATCH: ' . $_response->content;
 
     my $_twig = XML::Twig->new();
     $_twig->parse( $_response->content );
 
     BatchSummary::_calculate_stats($_twig);
 
-    my $_slack_message = BatchSummary::_build_overall_summary_text( $opt_batch, $opt_target, '', '' );
+    my $_slack_message = BatchSummary::_build_overall_summary_text( $opt_batch, $opt_target, q{}, q{} );
     $_slack_message = "<$batch_url|$_slack_message>";
 
     if ( $_slack_message =~ /PASS/ ) {
@@ -254,8 +254,8 @@ sub call_test {
     my $_orig_cwd = cwd;
     chdir $_config_wif_location;
 
-    printf "%-69s ", $_test_file_full;
-    print "...";
+    printf '%-69s ', $_test_file_full;
+    print q{...};
 
     my $_status = system( 'perl wif.pl ' . "@_args" );
     if ($_status) {

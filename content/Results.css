@@ -12,28 +12,36 @@ body {
     padding: 25px 0 0 35px;
 }
 
-/* heading area */
+a {
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+a:hover {
+    color: #5bab03;
+    text-decoration: underline;
+}
 
 /* unvisited link */
 h1 a:link {
-    color: SlateGray;
+    color: slategray;
 }
 
 h2 a:link {
-    color: SlateGray;
+    color: slategray;
 }
 
 /* visited link */
 h1 a:visited {
-    color: SlateGray;
+    color: slategray;
 }
 
 h2 a:visited {
-    color: SlateGray;
+    color: slategray;
 }
 
 div#heading {
-    padding: 1em 1em 0 1em;
+    padding: 1em 1em 0;
     border: 1px solid #ddd;
     background: darkslategray;
     margin: 0 2em 2em 0;
@@ -68,17 +76,6 @@ div#heading h3 {
 
 .alignright {
     float: right;
-}
-
-/* hyperlink styles */
-a {
-    text-decoration: none;
-    font-weight: bolder;
-}
-
-a:hover {
-    color: #5bab03;
-    text-decoration: underline;
 }
 
 div {
@@ -117,9 +114,6 @@ div {
 
 table {
     border-collapse: collapse;
-}
-
-table {
     width: 90%;
 }
 
@@ -139,14 +133,14 @@ td {
 }
 
 .link-number {
-    color: SlateGray;
+    color: slategray;
     font-weight: bolder;
 }
 
 .header-row,
 .footer-row {
     background: linear-gradient(to bottom, darkslategray, #5b7778);
-    font-family: Verdana;
+    font-family: Verdana, sans-serif;
     color: #d1e6e7;
     text-decoration: none;
 }
@@ -166,9 +160,9 @@ td {
     border: none;
     background: linear-gradient(to bottom, darkslategray, #5b7778);
     border-radius: 3px;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     color: #d1e6e7;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 10px;
     text-decoration: none;
     margin: 5px;
 }
@@ -191,11 +185,11 @@ td {
 #live-filter {
     width: 100%;
     border: none;
-    font: 110% Verdana;
+    font: 110% Verdana, sans-serif;
     font-weight: bold;
     background: #d1e6e7;
     color: darkslategray;
-    padding: 0.2em 0.5em 0.2em 0.5em;
+    padding: 0.2em 0.5em;
     box-sizing: border-box;
 }
 
@@ -205,28 +199,29 @@ td {
 
 .section {
     background: #d1e6e7;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     color: darkslategray;
     font-weight: bold;
     text-decoration: none;
     border-top-style: solid;
-    border-right-style: none;
+    /* border-right-style: none;
     border-bottom-style: none;
-    border-left-style: none;
+    border-left-style: none; */
+    border-style: solid, none, none, none;
     border-color: darkslategray;
 }
 
-.abort_row {
+.abort-row {
     background: #7d1b7e;
-    font-family: Arial;
-    color: White;
+    font-family: Arial, sans-serif;
+    color: white;
     font-weight: bold;
     text-decoration: none;
 }
 
 /* retry was invoked */
 .retry {
-    color: Orange;
+    color: orange;
 }
 
 /* response time */
@@ -236,42 +231,39 @@ td {
 }
 
 .veryslow {
-    background: Orange;
+    background: orange;
     color: #d1e6e7;
 }
 
 .slow {
-    background: Blue;
+    background: blue;
     color: #d1e6e7;
-}
-
-.normal {
 }
 
 table {
     width: 98%;
 }
 
-.fail_info,
-.auto_fail_info,
-.skip_info,
-.time_info {
+.fail-info,
+.auto-fail-info,
+.skip-info,
+.time-info {
     color: #d1e6e7;
     font-weight: bold;
 }
 
-.fail_info {
+.fail-info {
     background: #ff5940;
 }
 
-.auto_fail_info {
-    background: Maroon;
+.auto-fail-info {
+    background: maroon;
 }
 
-.skip_info {
-    background: Blue;
+.skip-info {
+    background: blue;
 }
 
-.time_info {
-    background: Grey;
+.time-info {
+    background: grey;
 }

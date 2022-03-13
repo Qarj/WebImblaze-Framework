@@ -81,7 +81,7 @@ my ($std_fh);
 
 # start globally read variables  - will only be written to from the main script
 my ( $yyyy, $mm, $dd, $hour, $minute, $second, $seconds ) =
-  get_date(0);    ## no critic(NamingConventions::ProhibitAmbiguousNames)
+  get_date(0);
 
 # get date for yesterday - needs to be calculated at script start, not at script end where it is used since it may run past midnight
 my ( $yesterday_yyyy, $yesterday_mm, $yesterday_dd ) = get_date(-86_400);
@@ -253,7 +253,7 @@ sub capture_stdout {
 
     if ( defined $opt_capture_stdout ) {
         open $std_fh, '>>', $_output_location . 'wif_stdout.txt'
-          or warn "Could not create a file for WIF STDOUT\n";    ## no critic(InputOutput::RequireBriefOpen)
+          or warn "Could not create a file for WIF STDOUT\n";
         *STDOUT = $std_fh;    ## no critic(Variables::RequireLocalizedPunctuationVars)
         *STDERR = $std_fh;    ## no critic(Variables::RequireLocalizedPunctuationVars)
 
@@ -698,7 +698,7 @@ qq|      <link>http://$web_server_address/$opt_environment/$yesterday_yyyy/$yest
     $_record .= qq|      <description>WebImblaze Framework Batch Summary</description>\n|;
     $_record .= qq|      <item>\n|;
 
-    $_record .= qq|         <title>|;
+    $_record .= q|         <title>|;
     $_record .= BatchSummary::_build_overall_summary_text( $opt_batch, $opt_target, $dd, $mm );
     $_record .= qq|</title>\n|;
 
@@ -1076,7 +1076,7 @@ sub _check_target {
     # ok, maybe the target is for another environment, lets check them all and switch to that environment if found
     my @_files = glob 'environment_config/*';
     foreach (@_files) {
-        if ( -d $_ ) {
+        if ( -d ) { # -d $_
             my $_candidate = $_;
             $_candidate =~ s{.*/}{};    # remove environment_config/
             if ( -e "environment_config/$_candidate/$_orig_target.config" ) {
@@ -1381,8 +1381,8 @@ sub linux_me {
 sub _locate_file {
     my ($_file) = @_;
 
-    if ( -e $start_folder_full . '/' . $testfile_full ) {
-        return $start_folder_full . '/' . $testfile_full;
+    if ( -e $start_folder_full . q{/} . $testfile_full ) {
+        return $start_folder_full . q{/} . $testfile_full;
     }
 
     require File::Find::Rule;

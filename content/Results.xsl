@@ -162,7 +162,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
                 <xsl:choose>
                   <xsl:when test="verifyresponsecode-success='false'">
-                    <td class="auto_fail_info">
+                    <td class="auto-fail-info">
                       <xsl:value-of select="verifyresponsecode-message"/>
                     </td>
                   </xsl:when>
@@ -171,7 +171,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "searchimage")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="fail_info">
+                       <td class="fail-info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -189,7 +189,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "verifynegative")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="fail_info">
+                       <td class="fail-info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -207,7 +207,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "verifypositive")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="fail_info">
+                       <td class="fail-info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -225,7 +225,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "autoassertion")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="auto_fail_info">
+                       <td class="auto-fail-info">
                          <xsl:text>AUTO ASSERTION FAILED: </xsl:text>
                          <xsl:choose>
                            <xsl:when test="descendant::message">
@@ -243,7 +243,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "smartassertion")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="auto_fail_info">
+                       <td class="auto-fail-info">
                          <xsl:text>SMART ASSERTION FAILED: </xsl:text>
                          <xsl:choose>
                            <xsl:when test="descendant::message">
@@ -261,7 +261,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "assertcount")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="auto_fail_info">
+                       <td class="auto-fail-info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -278,7 +278,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
                  <xsl:for-each select='*[contains(name(), "assertnear")]'>
                    <xsl:choose>
                      <xsl:when test="descendant::success='false'">
-                       <td class="auto_fail_info">
+                       <td class="auto-fail-info">
                          <xsl:choose>
                            <xsl:when test="descendant::message">
                              <xsl:value-of select="descendant::message"/>
@@ -294,21 +294,21 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
                   <xsl:choose>
                       <xsl:when test="verifyresponsetime-success='false'">
-                       <td class="time_info">
+                       <td class="time-info">
                       	 <xsl:choose>
                             <xsl:when test="verifyresponsetime-message">
                                 <xsl:value-of select="verifyresponsetime-message"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:text>response time verification failed</xsl:text>
-                            </xsl:otherwise>
+                            </xsl:otherwise>_
                          </xsl:choose>
                        </td></xsl:when>
                   </xsl:choose>
 
                 	<xsl:choose>
                      <xsl:when test="assertionskips='true'">
-                      <td class="skip_info">
+                      <td class="skip-info">
                       	 <xsl:choose>
                             <xsl:when test="assertionskips-message">
                                 <xsl:value-of select="assertionskips-message"/>
@@ -325,9 +325,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
   <xsl:choose>
     <xsl:when test="results/test-summary/execution-aborted='true'">
-        <tr class="abort_row">
+        <tr class="abort-row">
             <td></td>
-            <td class="abort_row">TEST EXECUTION ABORTED</td>
+            <td class="abort-row">TEST EXECUTION ABORTED</td>
             <td></td>
             <td></td>
             <xsl:choose>
