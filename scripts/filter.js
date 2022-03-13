@@ -1,73 +1,64 @@
-$(document).ready(function() {
-
+$(document).ready(function () {
     updateGroups(); //Reads the groups (Tribes) which are in format TribeName-OtherText_<somenumber>, then adds a filter for them
     makeSupersededGrey();
 
     var $batches = $("#results > ul > div.article > li > a.result");
-    var $buttons = $(".btn").on("click", function() {
-
-        var active = $buttons.removeClass("active")
-                     .filter(this)
-                     .addClass("active")
-                     .data("filter");
+    var $buttons = $(".btn").on("click", function () {
+        var active = $buttons.removeClass("active").filter(this).addClass("active").data("filter");
 
         $batches
-         .hide()
-         .filter( "." + active )
-         .fadeIn(450);
-
+            .hide()
+            .filter("." + active)
+            .fadeIn(450);
     });
-	
-	var queryfilter = getParameterByName('filter');
-	if (queryfilter) {
-   		$("#live-filter").val(queryfilter);
+
+    var queryfilter = getParameterByName("filter");
+    if (queryfilter) {
+        $("#live-filter").val(queryfilter);
         updateFilter(queryfilter);
     }
 
-    $("#live-filter").keyup(function(){
- 
+    $("#live-filter").keyup(function () {
         // Retrieve the input field text
         var filter = $(this).val();
 
         updateFilter(filter);
- 
     });
 
     function updateFilter(filter) {
         // Loop through the article list
-        $(".row").each(function(){
- 
+        $(".row").each(function () {
             // If the list item does not contain the text phrase fade it out
             if ($(this).text().search(new RegExp(filter, "i")) < 0) {
                 $(this).fadeOut();
- 
-            // Show the list item if the phrase matches
+
+                // Show the list item if the phrase matches
             } else {
                 $(this).show();
             }
         });
     }
-
 });
 
 function submitFilter() {
-    var url = location.protocol + '//' + location.host + location.pathname;
-    var filter = $('#live-filter').val();
+    var url = location.protocol + "//" + location.host + location.pathname;
+    var filter = $("#live-filter").val();
     var urlFilter = url;
     if (filter) {
-        urlFilter = urlFilter.concat('?filter=' + filter);
+        urlFilter = urlFilter.concat("?filter=" + filter);
     }
     window.location = urlFilter;
     return false;
 }
 
-function getParameterByName(name, url) { //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+function getParameterByName(name, url) {
+    //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
-    if (!results[2]) return '';
+    if (!results[2]) return "";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
@@ -87,7 +78,7 @@ function insertGroups(doc) {
     // Add a class for the group name to the link
     for (var i = 0; i < nodes.length; i++) {
         var matchGroup = matchesGroups(groups, nodes[i].textContent);
-        if ( matchGroup ) {
+        if (matchGroup) {
             var existingClass = nodes[i].getAttribute("class");
             nodes[i].setAttribute("class", existingClass + " " + matchGroup);
             //console.log("Set class to " + existingClass + " " + matchGroup);
@@ -100,11 +91,11 @@ function insertGroups(doc) {
         var button = doc.createElement("button");
         var passes = countRegressionPasses(groups[i], nodesText);
         var total = countRegressions(groups[i], nodesText);
-        var node = doc.createTextNode(groups[i] + " " + passes + "/" + total );
+        var node = doc.createTextNode(groups[i] + " " + passes + "/" + total);
         button.appendChild(node);
         if (passes === 0) {
             button.setAttribute("class", "btn red");
-        } else if (passes < total){
+        } else if (passes < total) {
             button.setAttribute("class", "btn orange");
         } else {
             button.setAttribute("class", "btn green");
@@ -116,8 +107,8 @@ function insertGroups(doc) {
 }
 
 function countRegressionPasses(group, list) {
-    // first build up the regressions for the group    
-    var regEx = new RegExp(" " + group + '-([^ ]+)_\\d+: ');  // need an additional escape for \ in this form
+    // first build up the regressions for the group
+    var regEx = new RegExp(" " + group + "-([^ ]+)_\\d+: "); // need an additional escape for \ in this form
 
     var regressions = [];
 
@@ -129,7 +120,7 @@ function countRegressionPasses(group, list) {
         }
     }
 
-    regressions.sort( sort_by('batchTeam', {name:'start', reverse: false}) );
+    regressions.sort(sort_by("batchTeam", { name: "start", reverse: false }));
 
     var count = 0;
     var batchTeam;
@@ -137,7 +128,7 @@ function countRegressionPasses(group, list) {
         if (regressions[i].batchTeam !== batchTeam) {
             batchTeam = regressions[i].batchTeam;
             if (i > 0) {
-                if (regressions[i-1].pass) {
+                if (regressions[i - 1].pass) {
                     count += 1;
                 }
             }
@@ -145,7 +136,7 @@ function countRegressionPasses(group, list) {
     }
     // Don't forget last batchTeam
     if (i > 0) {
-        if (regressions[i-1].pass) {
+        if (regressions[i - 1].pass) {
             count += 1;
         }
     }
@@ -154,9 +145,8 @@ function countRegressionPasses(group, list) {
 }
 
 function _get_run_results(name, i, list) {
-
     var _debug = name + " ";
-    
+
     // first find out if it was a PASS, or not (not PASS = FAIL e.g. PEND, ABORTED, whatever)
     var passRegEx = new RegExp("(PASS )");
     var pass = 0;
@@ -169,7 +159,7 @@ function _get_run_results(name, i, list) {
     } else {
         _debug += "Failed ";
     }
-    
+
     // find the team / target server
     var teamRegEx = new RegExp(" mins[ ]+\\*([^*]+)\\*");
     var team = "noteam";
@@ -186,7 +176,7 @@ function _get_run_results(name, i, list) {
     var startMatch = startRegEx.exec(list[i]);
     if (startMatch !== null) {
         startStr = startMatch[1];
-        start = new Date('2017-01-01T'+startStr+'Z');
+        start = new Date("2017-01-01T" + startStr + "Z");
         _debug += startStr + " " + start;
     }
 
@@ -201,16 +191,16 @@ function _get_run_results(name, i, list) {
 
     //console.log(_debug);
     return {
-        batchTeam : name+team,
-        pass : pass,
-        start : start.getTime(),
-        fullBatchName : fullName
-    }
+        batchTeam: name + team,
+        pass: pass,
+        start: start.getTime(),
+        fullBatchName: fullName,
+    };
 }
 
 function countRegressions(group, list) {
     // need an additional escape for \ in this form
-    var regEx = new RegExp(" " + group + '-([^ ]+)_\\d+: ');
+    var regEx = new RegExp(" " + group + "-([^ ]+)_\\d+: ");
 
     var count = 0;
     var names = [];
@@ -225,11 +215,11 @@ function countRegressions(group, list) {
             if (teamMatch !== null) {
                 team = teamMatch[1];
             }
-            if (inList(names, match[1]+team)) {
+            if (inList(names, match[1] + team)) {
                 //console.log("Existing batchTeam found [" + match[1]+team + "]");
             } else {
                 //console.log("New batchTeam name found [" + match[1]+team + "]");
-                names.push(match[1]+team);
+                names.push(match[1] + team);
                 count += 1;
             }
         } else {
@@ -272,33 +262,33 @@ function inList(groups, group) {
 
 function matchesGroups(groups, resultText) {
     for (var i = 0; i < groups.length; i++) {
-        if ( resultText.search(groups[i]+"-") > -1 ) {
+        if (resultText.search(groups[i] + "-") > -1) {
             //console.log("found a match");
             return groups[i];
         }
     }
     return "";
 }
-  
+
 // https://stackoverflow.com/questions/6913512/how-to-sort-an-array-of-objects-by-multiple-fields/6913821#6913821
 // homes.sort(sort_by('city', {name:'price', primer: parseInt, reverse: true}));
 var sort_by;
-(function() {
+(function () {
     // utility functions
-    var default_cmp = function(a, b) {
+    var default_cmp = function (a, b) {
             if (a == b) return 0;
             return a < b ? -1 : 1;
         },
-        getCmpFunc = function(primer, reverse) {
+        getCmpFunc = function (primer, reverse) {
             var dfc = default_cmp, // closer in scope
                 cmp = default_cmp;
             if (primer) {
-                cmp = function(a, b) {
+                cmp = function (a, b) {
                     return dfc(primer(a), primer(b));
                 };
             }
             if (reverse) {
-                return function(a, b) {
+                return function (a, b) {
                     return -1 * cmp(a, b);
                 };
             }
@@ -306,30 +296,32 @@ var sort_by;
         };
 
     // actual implementation
-    sort_by = function() {
+    sort_by = function () {
         var fields = [],
             n_fields = arguments.length,
-            field, name, reverse, cmp;
+            field,
+            name,
+            reverse,
+            cmp;
 
         // preprocess sorting options
         for (var i = 0; i < n_fields; i++) {
             field = arguments[i];
-            if (typeof field === 'string') {
+            if (typeof field === "string") {
                 name = field;
                 cmp = default_cmp;
-            }
-            else {
+            } else {
                 name = field.name;
                 cmp = getCmpFunc(field.primer, field.reverse);
             }
             fields.push({
                 name: name,
-                cmp: cmp
+                cmp: cmp,
             });
         }
 
         // final comparison function
-        return function(A, B) {
+        return function (A, B) {
             var a, b, name, result;
             for (var i = 0; i < n_fields; i++) {
                 result = 0;
@@ -340,9 +332,9 @@ var sort_by;
                 if (result !== 0) break;
             }
             return result;
-        }
-    }
-}());
+        };
+    };
+})();
 
 function makeSupersededGrey() {
     makeSupersededResultsGrey(document);
@@ -356,8 +348,8 @@ function makeSupersededResultsGrey(doc) {
         nodesText.push(nodes[i].textContent);
     }
 
-    // find the unique batch targets    
-    var regEx = new RegExp(" ([^ ]+)_\\d+: ");  // need an additional escape for \ in this form
+    // find the unique batch targets
+    var regEx = new RegExp(" ([^ ]+)_\\d+: "); // need an additional escape for \ in this form
 
     var regressions = [];
 
@@ -369,7 +361,7 @@ function makeSupersededResultsGrey(doc) {
         }
     }
 
-    regressions.sort( sort_by('batchTeam', {name:'start', reverse: true}) );
+    regressions.sort(sort_by("batchTeam", { name: "start", reverse: true }));
 
     // for each batchTeam, the first result is current, the rest are superseded
     var count = 0;
@@ -383,7 +375,6 @@ function makeSupersededResultsGrey(doc) {
             makeGrey(nodes, regressions[i].fullBatchName);
         }
     }
-
 }
 
 function makeGrey(nodes, fullName) {
@@ -391,11 +382,10 @@ function makeGrey(nodes, fullName) {
 
     // Add a class for grey to the link
     for (var i = 0; i < nodes.length; i++) {
-        if ( nodes[i].textContent.indexOf(fullName) > -1 ) {
+        if (nodes[i].textContent.indexOf(fullName) > -1) {
             var existingClass = nodes[i].getAttribute("class");
             nodes[i].setAttribute("class", existingClass + " grey");
             //console.log("Set class to " + existingClass + " grey");
         }
     }
-
 }

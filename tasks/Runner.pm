@@ -32,7 +32,7 @@ require lib::BatchSummary;
 
 my ($script_name, $script_path) = fileparse($0,'.pl');
 
-my $config_wif_location = "../";
+my $config_wif_location = '../';
 my $opt_batch = $script_name; # default the batch name to the script name
 our ($opt_target, $opt_environment) = read_wif_config($config_wif_location.'wif.config');
 my ($opt_check_alive, $opt_slack_alert);
@@ -41,7 +41,7 @@ my $opt_group;
 my $failed_test_files_count = 0;
 my $passed_test_files_count = 0;
 my @failed_test_files;
-my $batch_url = '';
+my $batch_url = q{};
 
 sub start_runner {
 
@@ -83,10 +83,11 @@ sub start_runner {
         chdir $_orig_cwd;
     }
 
+    return;
 }
 
 sub stop_runner {
-    _slack_alert_parallel_run();
+    return _slack_alert_parallel_run();
 }
 
 sub _slack_alert_parallel_run {
@@ -149,7 +150,7 @@ sub _slack_alert_parallel_run {
     }
 
     Alerter::slack_alert($_slack_message, $opt_slack_alert);
-    exit 1;
+    return exit 1;
 }
 
 sub start {
@@ -209,6 +210,8 @@ sub repeat {
     for my $_idx (1..$_repeats) {
         call($_test);
     }
+
+    return;
 }
 
 sub start_test {

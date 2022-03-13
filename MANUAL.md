@@ -6,7 +6,7 @@ This configuration file tells wif.pl where to find various components that it ne
 
 You can create a config file with default values to get you started as follows:
 
-```
+```sh
 wif.pl --create-config
 ```
 
@@ -14,7 +14,7 @@ The `wif.config` file is also used by wif.pl to store some of the command line o
 
 An example `wif.config` looks like this:
 
-```
+```ini
 [main]
 batch=example_batch
 environment=DEV
@@ -63,7 +63,7 @@ For example, the mini environment might be the name of a team within your develo
 
 Where to find the chromedriver binary. If you do not have Selenium tests, this value does not matter.
 
-```
+```ini
 chromedriver_location_full=C:\selenium\chromedriver.exe
 ```
 
@@ -71,7 +71,7 @@ chromedriver_location_full=C:\selenium\chromedriver.exe
 
 Browser driver to use, current choices are `chrome` (i.e. Selenium Server) or `chromedriver` (Selenium Server or Java not needed).
 
-```
+```ini
 driver=chromedriver
 ```
 
@@ -79,7 +79,7 @@ driver=chromedriver
 
 Where `wi.pl` should output to.
 
-```
+```ini
 output_location=./temp/
 ```
 
@@ -87,7 +87,7 @@ output_location=./temp/
 
 Where to find the Selenium Standalone Server JAR file. If you are not using Selenium WebDriver it is safe to leave this option at the default, even if is not installed.
 
-```
+```ini
 selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 ```
 
@@ -95,7 +95,7 @@ selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 
 The last test case file that was run. Updated by wif.pl.
 
-```
+```ini
 testfile_full=tests/totaljobs/mytotaljobs.xml
 ```
 
@@ -107,7 +107,7 @@ For testing wif.pl on your own machine, you can simply put in `localhost`.
 
 If you are running the web server on a port other than 80, it can be specified like this `localhost:8080`.
 
-```
+```ini
 web_server_address=my-server.example.com
 ```
 
@@ -115,7 +115,7 @@ web_server_address=my-server.example.com
 
 Since wif.pl publishes the test run results to a web server for viewing, you need to specify the root folder location.
 
-```
+```ini
 web_server_location_full=C:\Apache24\htdocs
 ```
 
@@ -123,7 +123,7 @@ web_server_location_full=C:\Apache24\htdocs
 
 Where to find `wi.pl`, relative to where `wif.pl` is located. If you have placed them in the same folder, you can simply specify `.`.
 
-```
+```ini
 webimblaze_location=.
 ```
 
@@ -145,7 +145,7 @@ Only `_global.config` cannot be renamed.
 
 \_global.config example:
 
-```
+```ini
 [autoassertions]
 autoassertion1=HTTP Error 404.0 . Not Found|||Page not found error
 autoassertion2=HTTP Error 500.0 . Not Found|||Server error
@@ -183,7 +183,7 @@ For wif.pl quick start purposes, you can leave this as it is.
 
 DEV.config example:
 
-```
+```ini
 [main]
 testonly=true
 ntlm=.dev.com:8020::DEV\JXS-SCT001:password
@@ -208,7 +208,7 @@ Note that for any configuration item provided at a lower level, it will take pre
 
 Level 3 config example (e.g. DEV/skynet.config):
 
-```
+```ini
 [main]
 ntlm=.skynet.com:8020::SKYNET\JXS-SCT001:password
 deny_access=true
@@ -265,7 +265,7 @@ WebImblaze creates an html file for every step result. WebImblaze will remap the
 
 Here is an example substitution:
 
-```
+```ini
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
 ```
 
@@ -279,7 +279,7 @@ Why would you want to do this? Some pages will try to redirect to somewhere else
 
 Here is a very common example:
 
-```
+```ini
 stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___REDIRECT_BLOCKED_BY_WEBIMBLAZE___"
 ```
 
@@ -293,20 +293,20 @@ It is possible to set up as many you want, so long as the value on the right han
 
 Typical example
 
-```
+```sh
 wif.pl example_test --env DEV --target team1 --batch My_Tests
 ```
 
 The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`. If it doesn't find it, it will also search (plus subfolders)
 
-```
+```sh
 ../WebImblaze
 ../WebImblaze-Selenium
 ```
 
-To run the same test again, just issue
+To run the same test again no parameters are needed
 
-```
+```sh
 wif.pl
 ```
 
@@ -386,16 +386,16 @@ If you "call" a test, that test will be run 'in-process' meaning that the test m
 
 ## Minimal Example
 
-```
-tasks\Examples.pl --env DEV --target team1 --batch Examples
+```sh
+tasks/Examples.pl --env DEV --target team1 --batch Examples
 ```
 
 All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`, the target is `environment_config/DEV/team1.config`, the batch name is `Examples`.
 
 ## Example to only run the task if a certain URL is reachable
 
-```
-tasks\Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
+```sh
+tasks/Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
 ```
 
 Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
@@ -404,15 +404,15 @@ Before the tests are run, the url `http://www.example.com` will be checked to en
 
 Note: If the batch still has not finished after 15 minutes, it will give up waiting and alert the current status.
 
-```
-tasks\Examples.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
+```sh
+tasks/Examples.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
 ```
 
 ## Example which only runs a test file if the group matches
 
 Say you had a tasks file called `tasks\myRegression.pl` with the following content:
 
-```
+```pl
 Runner::start('../tests/regression/register.xml', ['Bear', 'Frog']  );
 Runner::start('../tests/regression/purchase.xml', ['Bear'] );
 Runner::start('../tests/regression/profile.xml');
@@ -420,8 +420,8 @@ Runner::start('../tests/regression/profile.xml');
 
 Then if you ran it with the `--group` parameter:
 
-```
-tasks\myRegression.pl --group Bear
+```sh
+tasks/myRegression.pl --group Bear
 ```
 
 It would run:
@@ -432,8 +432,8 @@ It would run:
 
 Another example:
 
-```
-tasks\myRegression.pl --group Frog
+```sh
+tasks/myRegression.pl --group Frog
 ```
 
 Would run `register.xml` and `profile.xml` but not `purchase.xml`.
@@ -489,6 +489,6 @@ The script `tools/transmute.pl` will output a WebInject style xml test file in t
 
 Example usage (assuming you have `transmute.pl` in path):
 
-```
+```sh
 transmute.pl MyTest.xml > MyTest.test
 ```
