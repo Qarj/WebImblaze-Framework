@@ -109,7 +109,8 @@ jobs:
             - name: Task test
               run: perl ./WebImblaze-Framework/tasks/Canary.pl
 
-            # Still need to check that all the tests passed in the batch
+            - name: Check that there are no errors in Summary.xml
+              run: perl ./WebImblaze-Framework/wif.pl canary/check_summary.test
 
             - name: Archive test report
               if: always()
