@@ -1,0 +1,3 @@
+-l=120 # Max line width is 120 cols
+-i=4 # Indent level is 4 cols
+-ci=2 # Continuation indent is 2 cols

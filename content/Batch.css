@@ -14,7 +14,27 @@ body {
 
 /* heading area */
 
+/* hyperlink styles */
+a {
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+a:hover {
+    color: #5bab03;
+    text-decoration: underline;
+}
+
 /* unvisited link */
+a:link {
+    color: slategray;
+}
+
+/* visited link */
+a:visited {
+    color: slategray;
+}
+
 h1 a:link {
     color: slategray;
 }
@@ -33,7 +53,7 @@ h2 a:visited {
 }
 
 div#heading {
-    padding: 1em 1em 0 1em;
+    padding: 1em 1em 0;
     border: 1px solid #ddd;
     background: darkslategray;
     margin: 0 2em 2em 0;
@@ -70,17 +90,6 @@ div#heading h3 {
     float: right;
 }
 
-/* hyperlink styles */
-a {
-    text-decoration: none;
-    font-weight: bolder;
-}
-
-a:hover {
-    color: #5bab03;
-    text-decoration: underline;
-}
-
 div {
     line-height: 1.6em;
 }
@@ -97,17 +106,17 @@ div {
 }
 
 .abort {
-    color: Fuchsia;
+    color: fuchsia;
     font-weight: bold;
 }
 
 .corrupt {
-    color: Black;
+    color: black;
     font-weight: bold;
 }
 
 .pend {
-    color: SteelBlue;
+    color: steelblue;
     font-weight: bold;
 }
 
@@ -133,11 +142,11 @@ div {
 #live-filter {
     width: 100%;
     border: none;
-    font: 110% Verdana;
+    font: 110% Verdana, 110% sans-serif;
     font-weight: bold;
     background: #d1e6e7;
     color: darkslategray;
-    padding: 0.2em 0.5em 0.2em 0.5em;
+    padding: 0.2em 0.5em;
     box-sizing: border-box;
 }
 
@@ -147,6 +156,7 @@ div {
 
 table {
     border-collapse: collapse;
+    width: 90%;
 }
 
 /*
@@ -154,10 +164,6 @@ table, th, td {
     border: 1px solid black;
 }
 */
-
-table {
-    width: 90%;
-}
 
 th {
     height: 1.5em;
@@ -174,26 +180,17 @@ td {
     color: darkslategray;
 }
 
-.link_number {
+.link-number {
     color: slategray;
     font-weight: bolder;
 }
 
-.header_row,
-.footer_row {
+.header-row,
+.footer-row {
     background: linear-gradient(to bottom, darkslategray, #5b7778);
-    font-family: Verdana;
+    font-family: Verdana, sans-serif;
     color: #d1e6e7;
     text-decoration: none;
 }
 
 /* END BASE TABLE CSS */
-
-a:link {
-    color: slategray;
-}
-
-/* visited link */
-a:visited {
-    color: slategray;
-}

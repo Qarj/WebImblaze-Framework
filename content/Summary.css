@@ -97,17 +97,17 @@ div {
 }
 
 .abort {
-    color: Fuchsia;
+    color: fuchsia;
     font-weight: bold;
 }
 
 .corrupt {
-    color: Black;
+    color: black;
     font-weight: bold;
 }
 
 .pend {
-    color: SteelBlue;
+    color: steelblue;
     font-weight: bold;
 }
 

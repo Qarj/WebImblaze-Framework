@@ -97,17 +97,17 @@ div {
 }
 
 .abort {
-    color: Fuchsia;
+    color: fuchsia;
     font-weight: bold;
 }
 
 .corrupt {
-    color: Black;
+    color: black;
     font-weight: bold;
 }
 
 .pend {
-    color: SteelBlue;
+    color: steelblue;
     font-weight: bold;
 }
 
@@ -138,13 +138,13 @@ td {
     color: darkslategray;
 }
 
-.link_number {
+.link-number {
     color: SlateGray;
     font-weight: bolder;
 }
 
-.header_row,
-.footer_row {
+.header-row,
+.footer-row {
     background: linear-gradient(to bottom, darkslategray, #5b7778);
     font-family: Verdana;
     color: #d1e6e7;

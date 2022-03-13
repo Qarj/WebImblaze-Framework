@@ -18,7 +18,7 @@ you can compare a failed result easily against a previous successful run.
 
 You can see WebImblaze example output here: [WebImblaze-Example](http://qarj.github.io/WebInject-Example/)
 
-## Quick Start Guide - 5 minutes to install and use!
+## Quick Start Guide - 5 minutes to install and use
 
 ### Linux
 
@@ -55,7 +55,7 @@ sudo find /var/www/html -type f -exec chmod g+rw {} +
 
 Install Perl packages required by `wif.pl`.
 
-```
+```sh
 cpan Config::Tiny
 cpan File::Find::Rule
 cpan File::Slurp
@@ -111,7 +111,7 @@ First ensure that IIS isn't installed and running.
 Press the Windows key and type `Turn Windows` then select the menu item `Turn Windows Features on or Off`.
 Ensure `Internet Information Services` (IIS) is turned off. (On Windows 10 it is turned off by default).
 
-From Apache Lounge https://www.apachelounge.com/download/ download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
+From Apache Lounge [Apache Lounge](https://www.apachelounge.com/download/) download Win32 zip file - not 64 bit, then extract so C:\Apache24\bin folder is available.
 
 Administrator Command Prompt
 

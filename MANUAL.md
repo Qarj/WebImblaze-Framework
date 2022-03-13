@@ -127,7 +127,7 @@ Where to find `wi.pl`, relative to where `wif.pl` is located. If you have placed
 webimblaze_location=.
 ```
 
-# environment_config folder
+## environment_config folder
 
 In this folder you can give wif.pl information about your "site under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
 
@@ -198,7 +198,7 @@ client_id=AABBCCEA-AECD-432F-84B2-07214F3C12E2
 testonly=true
 ```
 
-## Level 3: environment_config/DEV/team1.config etc.
+## Level 3: environment_config/DEV/team1.config et al
 
 You create sub folders for each high level environment. In there you can create .config files for each 'mini-environment' as needed. You need to create at least one mini-environment.
 
@@ -376,7 +376,7 @@ This is useful for debugging very long workflows where there is a problem deep i
 
 Creates (or overwrites) the wif.config with default values to get you started.
 
-# tasks/ folder
+## tasks/ folder
 
 The tasks folder contains a script called `Examples.pl` that runs all of the WebImblaze examples at the same time.
 
@@ -472,7 +472,7 @@ It looks much, much better if you use a dark theme.
 
 Note that Material-Dark is a nice theme:
 
-https://github.com/naderi/material-theme-for-npp
+[Material Theme](https://github.com/naderi/material-theme-for-npp)
 
 -   In Windows Explorer, go to `%AppData%\Notepad++\themes`
 -   Copy the file `WebInject/tools/Material-Dark.xml` to that location
@@ -492,3 +492,10 @@ Example usage (assuming you have `transmute.pl` in path):
 ```sh
 transmute.pl MyTest.xml > MyTest.test
 ```
+
+### Troubleshooting
+
+To get vscode plugin `perltidy-more` to work, CTRL-SHIFT-P then type `perltidy` and press enter.
+
+Note that `.perltidyrc` must be at the project root, it won't be found in `.github/linters`
+despite what you put in `.vscode/settings.json`.

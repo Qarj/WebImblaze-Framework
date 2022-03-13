@@ -50,7 +50,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 
     <table>
 
-    <tr class="header_row">
+    <tr class="header-row">
       <th>id</th>
       <th>Test Step</th>
       <th>Result</th>
@@ -83,7 +83,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
       </xsl:choose>
 
     <tr class="row">
-      <td><a class="link_number" href="{$step_number}.html"><xsl:value-of select="@id"/></a></td>
+      <td><a class="link-number" href="{$step_number}.html"><xsl:value-of select="@id"/></a></td>
       <td>
         
         <!-- Make any text that appears between square brackets brown bold -->
@@ -340,7 +340,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
   </xsl:choose>
 
 
-    <tr class="footer_row">
+    <tr class="footer-row">
       <th></th>
       <th></th>
       <th></th>
