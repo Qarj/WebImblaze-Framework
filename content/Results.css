@@ -114,7 +114,7 @@ div {
 
 table {
     border-collapse: collapse;
-    width: 90%;
+    width: 98%;
 }
 
 th {
@@ -203,11 +203,7 @@ td {
     color: darkslategray;
     font-weight: bold;
     text-decoration: none;
-    border-top-style: solid;
-    /* border-right-style: none;
-    border-bottom-style: none;
-    border-left-style: none; */
-    border-style: solid, none, none, none;
+    border-style: solid, none, none;
     border-color: darkslategray;
 }
 
@@ -238,10 +234,6 @@ td {
 .slow {
     background: blue;
     color: #d1e6e7;
-}
-
-table {
-    width: 98%;
 }
 
 .fail-info,

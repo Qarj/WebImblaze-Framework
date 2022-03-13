@@ -4,6 +4,7 @@ verbose  = %f:%l:%c [%s %p] %m near '%r'\n
 [-BuiltinFunctions::ProhibitStringyEval]
 [-CodeLayout::RequireTidyCode]
 [-CodeLayout::ProhibitParensWithBuiltins]
+[-ControlStructures::ProhibitCStyleForLoops]
 [-ControlStructures::ProhibitDeepNests]
 [-ControlStructures::ProhibitPostfixControls]
 [-ErrorHandling::RequireCarping]

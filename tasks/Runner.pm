@@ -111,7 +111,7 @@ sub _slack_alert_parallel_run {
     my $_pending_not_found_count = 0;
     my $_pending_not_found_min   = 3;
     my $_try                     = 0;
-    my $_content                 = '';
+    my $_content                 = q{};
     my $_pending_found           = 0;
     my $_request                 = HTTP::Request->new( GET => $batch_url );
     my $_user_agent              = LWP::UserAgent->new;

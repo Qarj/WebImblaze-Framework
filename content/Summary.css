@@ -17,13 +17,13 @@ a {
     font-weight: bolder;
 }
 
+li a {
+    font-weight: bold;
+}
+
 a:hover {
     color: #5bab03;
     text-decoration: underline;
-}
-
-li a {
-    font-weight: bold;
 }
 
 /* unvisited link */

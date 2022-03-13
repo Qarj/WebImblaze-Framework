@@ -23,7 +23,6 @@ use Data::Dumper;
 local $| = 1;    #don't buffer output to STDOUT
 
 my %case;
-my ( %parsedresult, %varvar, %late_sub );
 
 my $SPACES = 24;
 
@@ -98,7 +97,7 @@ sub transmute_to_lean_format {
     my $_step_index;
     ## Loop over each of the test cases (test steps) with C Style for loop (due to need to update $step_index in a non standard fashion)
   TESTCASE:
-    for ( $_step_index = 0 ; $_step_index < $_numsteps ; $_step_index++ ) {    ## no critic(ProhibitCStyleForLoops)
+    for ( $_step_index = 0 ; $_step_index < $_numsteps ; $_step_index++ ) {
         $testnum = $_test_steps[$_step_index];
 
         #$stdout .= $testnum."\n";
@@ -129,9 +128,9 @@ sub transmute_to_lean_format {
         $stdout .= output_parameter('verifyresponsetime');
         $stdout .= output_multi('parseresponse');
 
-        my $_last .= output_parameter('runon');
-        $_last    .= output_parameter('runif');
-        $_last    .= output_parameter('abort');
+        my $_last = output_parameter('runon');
+        $_last   .= output_parameter('runif');
+        $_last   .= output_parameter('abort');
 
         $stdout .= output_remaining_parms();
 
@@ -141,13 +140,14 @@ sub transmute_to_lean_format {
 
     $stdout .= output_includes_more_than_testnum();
 
+    return;
 }
 
 sub output_includes_less_than_testnum {
     my @_include_steps = sort { $a <=> $b } keys %{ $xml_test_cases->{include} };
     my $_numincludes   = scalar @_include_steps;
 
-    my $_out = '';
+    my $_out = q{};
 
     my $_include_index;
     for ( $_include_index = 0 ; $_include_index < $_numincludes ; $_include_index++ )
@@ -162,7 +162,7 @@ sub output_includes_less_than_testnum {
             next;
         }
 
-        $_out .= sprintf( "%-" . $SPACES . "s", 'include: ' );
+        $_out .= sprintf( '%-' . $SPACES . 's', 'include: ' );
         $_out .= $xml_test_cases->{include}->{$_includenum}->{file} . "\n\n";
 
     }
@@ -176,7 +176,7 @@ sub output_includes_more_than_testnum {
     my @_include_steps = sort { $a <=> $b } keys %{ $xml_test_cases->{include} };
     my $_numincludes   = scalar @_include_steps;
 
-    my $_out = '';
+    my $_out = q{};
 
     my $_include_index;
     for ( $_include_index = 0 ; $_include_index < $_numincludes ; $_include_index++ )
@@ -187,7 +187,7 @@ sub output_includes_more_than_testnum {
             next;
         }
 
-        $_out .= sprintf( "%-" . $SPACES . "s", 'include: ' );
+        $_out .= sprintf( '%-' . $SPACES . 's', 'include: ' );
         $_out .= $xml_test_cases->{include}->{$_includenum}->{file} . "\n\n";
 
     }
@@ -211,6 +211,7 @@ sub get_case {
     return;
 }
 
+## no critic (RequireArgUnpacking)
 sub convert_back_xml {
 
     $_[0] =~ s/{AMPERSAND}/&/g;
@@ -222,7 +223,7 @@ sub convert_back_xml {
 sub rename_selenium_shell {
 
     my $_old_name = 'command';
-    my $_new_name = '';
+    my $_new_name = q{};
 
     if ( $case{method} eq 'selenium' ) {
         $_new_name = 'selenium';
@@ -249,6 +250,7 @@ sub rename_selenium_shell {
 
     }
 
+    return;
 }
 
 sub rename_parameter {
@@ -261,6 +263,7 @@ sub rename_parameter {
         }
     }
 
+    return;
 }
 
 sub rename_value {
@@ -272,12 +275,13 @@ sub rename_value {
         $case{$_case_parameter} =~ s/$_value/$_new_value/g;
     }
 
+    return;
 }
 
 sub output_multi {
     my ($_parameter) = @_;
 
-    my $_out = '';
+    my $_out = q{};
 
     $_out .= output_parameter($_parameter);
 
@@ -298,10 +302,10 @@ sub output_parameter {
     my ($_parameter) = @_;
 
     if ( not defined $case{$_parameter} ) {
-        return '';
+        return q{};
     }
 
-    my $_out .= sprintf( "%-" . $SPACES . "s", $_parameter . ': ' );
+    my $_out = sprintf( '%-' . $SPACES . 's', $_parameter . ': ' );
     $_out .= $case{$_parameter} . "\n";
     delete $case{$_parameter};
 
@@ -314,6 +318,7 @@ sub output_remaining_parms {
         $stdout .= output_parameter($_case_parameter);
     }
 
+    return;
 }
 
 ## References
