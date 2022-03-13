@@ -110,7 +110,7 @@ jobs:
               run: perl ./WebImblaze-Framework/tasks/Canary.pl
 
             - name: Sleep to allow threads to finish
-              run: sleep 10
+              run: sleep 5
 
             - name: Check that there are no errors in Summary.xml
               run: perl ./WebImblaze-Framework/wif.pl canary/check_summary.test
