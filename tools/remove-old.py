@@ -2,7 +2,10 @@
 
 version = "0.3.0"
 
-import os, time, argparse, stat
+import argparse
+import os
+import stat
+import time
 from os.path import splitext
 
 

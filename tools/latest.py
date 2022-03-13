@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 version = "0.1.0"
 
-import sys, argparse, math, os
+import argparse
+import os
 
 
 def latest(folders):

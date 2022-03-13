@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-import sys, os, configparser, platform, ctypes, time, subprocess
+
+import configparser
+import ctypes
+import os
+import platform
+import subprocess
+import sys
+import time
 
 
 def localtime():
@@ -87,8 +94,6 @@ except KeyError:
 # print ('inetpub location:', inetpub)
 
 log_file_full = inetpub + "/logs/ResultsCleanup.txt"
-
-log = open(log_file_full, "a+")
 
 log("\n--------------------------------------------------------------------\n")
 log("Started tasks/ResultsCleanup.py at " + localtime() + "\n")

@@ -1381,8 +1381,9 @@ sub linux_me {
 sub _locate_file {
     my ($_file) = @_;
 
-    if ( -e $start_folder_full . q{/} . $testfile_full ) {
-        return $start_folder_full . q{/} . $testfile_full;
+    my $_full_path = $start_folder_full . q{/} . $testfile_full;
+    if ( -e $_full_path ) {
+        return $_full_path;
     }
 
     require File::Find::Rule;
