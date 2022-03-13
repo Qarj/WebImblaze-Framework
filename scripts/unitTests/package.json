@@ -1,0 +1,17 @@
+{
+  "name": "filter-unittests",
+  "version": "0.0.1",
+  "description": "Karma unit tests for filter JavaScript",
+  "main": "karma.conf.js",
+  "scripts": {
+    "test": "karma start --single-run"
+  },
+  "author": "Qarj",
+  "license": "ISC",
+  "dependencies": {
+    "karma": "^6.3.17",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-qunit": "^4.1.2",
+    "qunitjs": "^2.4.1"
+  }
+}

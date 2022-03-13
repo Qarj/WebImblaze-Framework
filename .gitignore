@@ -7,6 +7,7 @@ Material-Dark.xml
 Zenburn-Markdown.xml
 monaco.ttf
 session.config
+node_modules/
 
 *.nupkg
 
