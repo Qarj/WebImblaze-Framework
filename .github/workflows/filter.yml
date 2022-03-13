@@ -12,10 +12,10 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: "14"
+            - run: npm install -g qunitjs
             - run: npm install -g karma
             - run: npm install -g karma-chrome-launcher
             - run: npm install -g karma-qunit
-            - run: npm install -g qunitjs
             - run: pwd
             - run: ls -asl
             - run: cd ./scripts/unitTests && karma start --single-run
