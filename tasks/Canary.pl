@@ -9,7 +9,7 @@ use vars qw/ $VERSION /;
 
 use File::Basename;
 chdir dirname(__FILE__);
-use lib '.';
+use lib q{.};
 require Runner;
 
 $VERSION = '1.0.0';

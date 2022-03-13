@@ -1,0 +1,45 @@
+---
+name: Self test
+
+on: push
+
+jobs:
+    test:
+        name: Self test
+        runs-on: ubuntu-latest
+        steps:
+            - name: What is the current folder
+              run: pwd
+
+            - name: What is the current folder
+              run: pwd
+
+            - name: Where is "$HOME"
+              run: echo "$HOME"
+
+            - name: Where is "GITHUB_WORKSPACE"
+              run: echo "$GITHUB_WORKSPACE"
+
+            - name: All files in "$HOME"
+              run: ls -asl "$HOME"
+
+            - name: All files in "$HOME/work"
+              run: ls -asl "$HOME/work"
+
+            - name: Chromedriver?
+              run: which chromedriver
+
+            - name: Google Chrome?
+              run: which google-chrome
+
+            - name: What is in /usr/local/bin
+              run: ls -asl /usr/local/bin
+
+            - name: What is in /usr/bin
+              run: ls -asl /usr/bin
+
+            - name: See Google Chrome version
+              run: google-chrome --version
+
+            - name: See chromedriver version
+              run: chromedriver --version

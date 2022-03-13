@@ -1,20 +1,20 @@
-# WebImblaze Framework 1.13.1 Manual
+# WebImblaze Framework 1.13.2 Manual
 
-# wif.config
+## wif.config
 
 This configuration file tells wif.pl where to find various components that it needs.
 
 You can create a config file with default values to get you started as follows:
 
-```
+```sh
 wif.pl --create-config
 ```
 
-The `wif.config` file is also used by wif.pl to store some of the command line options you chose the last time you invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
+The `wif.config` file is also used by wif.pl to store some of the command-line options you chose the last time you invoked wif.pl. The next time you run wif.pl, it will use those options as a default.
 
 An example `wif.config` looks like this:
 
-```
+```ini
 [main]
 batch=example_batch
 environment=DEV
@@ -63,7 +63,7 @@ For example, the mini environment might be the name of a team within your develo
 
 Where to find the chromedriver binary. If you do not have Selenium tests, this value does not matter.
 
-```
+```ini
 chromedriver_location_full=C:\selenium\chromedriver.exe
 ```
 
@@ -71,7 +71,7 @@ chromedriver_location_full=C:\selenium\chromedriver.exe
 
 Browser driver to use, current choices are `chrome` (i.e. Selenium Server) or `chromedriver` (Selenium Server or Java not needed).
 
-```
+```ini
 driver=chromedriver
 ```
 
@@ -79,7 +79,7 @@ driver=chromedriver
 
 Where `wi.pl` should output to.
 
-```
+```ini
 output_location=./temp/
 ```
 
@@ -87,7 +87,7 @@ output_location=./temp/
 
 Where to find the Selenium Standalone Server JAR file. If you are not using Selenium WebDriver it is safe to leave this option at the default, even if is not installed.
 
-```
+```ini
 selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 ```
 
@@ -95,7 +95,7 @@ selenium_location_full=C:\selenium\selenium-server-standalone-2.53.1.jar
 
 The last test case file that was run. Updated by wif.pl.
 
-```
+```ini
 testfile_full=tests/totaljobs/mytotaljobs.xml
 ```
 
@@ -107,7 +107,7 @@ For testing wif.pl on your own machine, you can simply put in `localhost`.
 
 If you are running the web server on a port other than 80, it can be specified like this `localhost:8080`.
 
-```
+```ini
 web_server_address=my-server.example.com
 ```
 
@@ -115,7 +115,7 @@ web_server_address=my-server.example.com
 
 Since wif.pl publishes the test run results to a web server for viewing, you need to specify the root folder location.
 
-```
+```ini
 web_server_location_full=C:\Apache24\htdocs
 ```
 
@@ -123,13 +123,13 @@ web_server_location_full=C:\Apache24\htdocs
 
 Where to find `wi.pl`, relative to where `wif.pl` is located. If you have placed them in the same folder, you can simply specify `.`.
 
-```
+```ini
 webimblaze_location=.
 ```
 
-# environment_config folder
+## environment_config folder
 
-In this folder you can give wif.pl information about your "website under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
+In this folder you can give wif.pl information about your "site under test" web servers, account names, passwords, and any other details that your WebImblaze tests need.
 
 The information is specified in a hierarchical way. This means it is possible to have many 'mini-environments' without having to repeat information that is common to each of the mini-environments.
 
@@ -145,7 +145,7 @@ Only `_global.config` cannot be renamed.
 
 \_global.config example:
 
-```
+```ini
 [autoassertions]
 autoassertion1=HTTP Error 404.0 . Not Found|||Page not found error
 autoassertion2=HTTP Error 500.0 . Not Found|||Server error
@@ -183,7 +183,7 @@ For wif.pl quick start purposes, you can leave this as it is.
 
 DEV.config example:
 
-```
+```ini
 [main]
 testonly=true
 ntlm=.dev.com:8020::DEV\JXS-SCT001:password
@@ -198,7 +198,7 @@ client_id=AABBCCEA-AECD-432F-84B2-07214F3C12E2
 testonly=true
 ```
 
-## Level 3: environment_config/DEV/team1.config etc.
+## Level 3: environment_config/DEV/team1.config et al
 
 You create sub folders for each high level environment. In there you can create .config files for each 'mini-environment' as needed. You need to create at least one mini-environment.
 
@@ -208,7 +208,7 @@ Note that for any configuration item provided at a lower level, it will take pre
 
 Level 3 config example (e.g. DEV/skynet.config):
 
-```
+```ini
 [main]
 ntlm=.skynet.com:8020::SKYNET\JXS-SCT001:password
 deny_access=true
@@ -261,25 +261,25 @@ There examples in the example config - you can just delete them if you do not wa
 
 ### [baseurl_subs]
 
-WebImblaze creates an html file for every step result. WebImblaze will remap the http references in the html source back to the web server under test using the page baseurl. Sometimes you may want to tweak the urls - for example, change https references to http to get around test environment ssl certificate issues.
+WebImblaze creates an HTML file for every step result. WebImblaze will remap the HTTP references in the HTML source back to the web server under test using the page baseurl. Sometimes you may want to tweak the URLs - for example, change HTTPS references to HTTP to get around test environment SSL certificate issues.
 
 Here is an example substitution:
 
-```
+```ini
 https_to_http_remap=https:(.+):8080|||"http:".$1.":4040"
 ```
 
-On the left hand side, LHS, of the three bars, we have the LHS of the regex. On the right hand side, RHS, we have the RHS of the regex substitution in the form of a Perl expression.
+On the left hand side, LHS, of the three bars, we have the LHS of the regular expression. On the right hand side, RHS, we have the RHS of the regular expression substitution in the form of a Perl expression.
 
 ### [content_subs]
 
-To change the step html response content, you can specify regular expressions in this section. They work in the same way as described in [baseurl_subs].
+To change the step HTML response content, you can specify regular expressions in this section. They work in the same way as described in [baseurl_subs].
 
 Why would you want to do this? Some pages will try to redirect to somewhere else. Obviously this is not desirable since we want to see the actual result. So we do a substitution to break the redirect.
 
 Here is a very common example:
 
-```
+```ini
 stop_refresh=HTTP-EQUIV="REFRESH"|||"HTTP-EQUIV=___REDIRECT_BLOCKED_BY_WEBIMBLAZE___"
 ```
 
@@ -289,24 +289,24 @@ In each of the example environment config folders, there is an example `_alias.c
 
 It is possible to set up as many you want, so long as the value on the right hand side matches a `.config` file in the same folder.
 
-# wif.pl command line options
+## wif.pl command-line options
 
 Typical example
 
-```
+```sh
 wif.pl example_test --env DEV --target team1 --batch My_Tests
 ```
 
 The WebImblaze-Framework will search all sub folders of tests/ for a file called `example_test.xml`. If it doesn't find it, it will also search (plus subfolders)
 
-```
+```sh
 ../WebImblaze
 ../WebImblaze-Selenium
 ```
 
-To run the same test again, just issue
+To run the same test again no parameters are needed
 
-```
+```sh
 wif.pl
 ```
 
@@ -376,7 +376,7 @@ This is useful for debugging very long workflows where there is a problem deep i
 
 Creates (or overwrites) the wif.config with default values to get you started.
 
-# tasks/ folder
+## tasks/ folder
 
 The tasks folder contains a script called `Examples.pl` that runs all of the WebImblaze examples at the same time.
 
@@ -386,33 +386,33 @@ If you "call" a test, that test will be run 'in-process' meaning that the test m
 
 ## Minimal Example
 
-```
-tasks\Examples.pl --env DEV --target team1 --batch Examples
+```sh
+tasks/Examples.pl --env DEV --target team1 --batch Examples
 ```
 
 All the tests referred to in Examples.pl will be run. The environment is `environment_config/DEV.config`, the target is `environment_config/DEV/team1.config`, the batch name is `Examples`.
 
 ## Example to only run the task if a certain URL is reachable
 
-```
-tasks\Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
+```sh
+tasks/Examples.pl --check-alive http://www.example.com --env DEV --target team1 --batch Examples
 ```
 
-Before the tests are run, the url `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
+Before the tests are run, the URL `http://www.example.com` will be checked to ensure that a response is returned. If there is no response, no tests will be run.
 
 ## Example with alert to Slack on failure
 
 Note: If the batch still has not finished after 15 minutes, it will give up waiting and alert the current status.
 
-```
-tasks\Examples.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
+```sh
+tasks/Examples.pl --env PROD --target server_9101 --batch Monitor --slack-alert https://hooks.slack.com/services/ABCDE/FGHIJ/A6qrs3Jnq225p
 ```
 
 ## Example which only runs a test file if the group matches
 
 Say you had a tasks file called `tasks\myRegression.pl` with the following content:
 
-```
+```pl
 Runner::start('../tests/regression/register.xml', ['Bear', 'Frog']  );
 Runner::start('../tests/regression/purchase.xml', ['Bear'] );
 Runner::start('../tests/regression/profile.xml');
@@ -420,8 +420,8 @@ Runner::start('../tests/regression/profile.xml');
 
 Then if you ran it with the `--group` parameter:
 
-```
-tasks\myRegression.pl --group Bear
+```sh
+tasks/myRegression.pl --group Bear
 ```
 
 It would run:
@@ -432,23 +432,23 @@ It would run:
 
 Another example:
 
-```
-tasks\myRegression.pl --group Frog
+```sh
+tasks/myRegression.pl --group Frog
 ```
 
 Would run `register.xml` and `profile.xml` but not `purchase.xml`.
 
 And if you do not specify the --group option at all, then all test files would be run.
 
-# Syntax Highlighting WebImblaze test case files
+## Syntax Highlighting WebImblaze test case files
 
-## Visual Studio Code
+### Visual Studio Code
 
 By far the easiest to install - just search for `WebImblaze` in extensions, install, and you are done.
 
 The VSCode syntax highlighting is the most complete, accurate, and best looking out of these options.
 
-## Notepad++
+### Notepad++
 
 _If you've done this previously and are updating - delete the existing WebImblaze language first._
 
@@ -472,23 +472,30 @@ It looks much, much better if you use a dark theme.
 
 Note that Material-Dark is a nice theme:
 
-https://github.com/naderi/material-theme-for-npp
+[Material Theme](https://github.com/naderi/material-theme-for-npp)
 
 -   In Windows Explorer, go to `%AppData%\Notepad++\themes`
 -   Copy the file `WebInject/tools/Material-Dark.xml` to that location
 -   Restart Notepad++ then select that them from `Settings -> Style Configurator...`
 -   Increase the font size slightly improves the appearance a lot
 
-## UltraEdit
+### UltraEdit
 
 In the tools folder, the `webimblaze.uew` file is an UltraEdit word file which you can use with UltraEdit to highlight WebImblaze test case files - it makes it much easier to be certain that you are using the right keyword / parameter.
 
-# Convert WebInject .xml test case files to WebImblaze .test format
+## Convert WebInject .xml test case files to WebImblaze .test format
 
 The script `tools/transmute.pl` will output a WebInject style xml test file in the WebImblaze format.
 
 Example usage (assuming you have `transmute.pl` in path):
 
-```
+```sh
 transmute.pl MyTest.xml > MyTest.test
 ```
+
+### Troubleshooting
+
+To get vscode plugin `perltidy-more` to work, CTRL-SHIFT-P then type `perltidy` and press enter.
+
+Note that `.perltidyrc` must be at the project root, it won't be found in `.github/linters`
+despite what you put in `.vscode/settings.json`.

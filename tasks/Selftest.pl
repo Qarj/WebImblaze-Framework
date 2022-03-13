@@ -9,7 +9,7 @@ use vars qw/ $VERSION /;
 
 use File::Basename;
 chdir dirname(__FILE__);
-use lib '.';
+use lib q{.};
 require Runner;
 
 $VERSION = '1.6.3';
@@ -21,7 +21,7 @@ $VERSION = '1.6.3';
 Runner::start_runner();
 
 #SELFTEST ONLY:
-my $update = system(Runner::slash_me('..\..\WebImblaze-Selenium\plugins\update.pl'));
+my $update = system( Runner::slash_me('..\..\WebImblaze-Selenium\plugins\update.pl') );
 
 # start the Selenium based tests first since they are slower
 Runner::start('../../WebImblaze-Selenium/selftest/useragent.test');

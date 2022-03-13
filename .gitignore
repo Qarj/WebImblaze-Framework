@@ -1,13 +1,13 @@
 
-temp/
 dynamic/
 storedvalues/
+temp/
 wif.config
 Material-Dark.xml
 Zenburn-Markdown.xml
 monaco.ttf
-temp/
 session.config
+node_modules/
 
 *.nupkg
 

@@ -1,0 +1,14 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "perltidy-more.profile": "../.perltidyrc",
+    "[python]": {
+        "editor.defaultFormatter": null
+    },
+    "python.formatting.provider": "black",
+    "python.formatting.autopep8Args": ["--max-line-length=120"],
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "[perl]": {
+        "editor.defaultFormatter": "sfodje.perltidy"
+    }
+}

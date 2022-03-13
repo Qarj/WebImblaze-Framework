@@ -2,26 +2,36 @@
 
 ## One time setup
 
-Install nodejs, karma, karma-qunit and qunitjs
-
-* Install nodejs: https://nodejs.org/en/
-
-Now open a new command prompt with the updated environment variables.
+```sh
+npm install
+```
 
 In an organisation with SSL interception, you may need to:
-* `npm config set strict-ssl false`
-* `npm cache verify`
 
-* Install karma `npm install -g karma`
-* Install qunit-qunit `npm install -g karma-qunit`
-* Install qunit `npm install -g qunitjs`
+-   `npm config set strict-ssl false`
+-   `npm cache verify`
 
-Now change to the folder where karma.conf.js resides, then:
-* `start karma start` (on Windows)
-* `karma run`
+## Run the tests
+
+```sh
+npm test
+```
+
+## Run via Karma
+
+Change to the folder where karma.conf.js resides, then:
+
+-   `start karma start` (on Windows)
+-   `karma run`
+
+For CI:
+
+-   `karma start --single-run`
+
+## Setting up a Karma project
 
 You can create your own JavaScript unit test config by changing directory to your project, then:
-* `karma init`
+
+-   `karma init`
 
 Which will create `karma.conf.js` (after you answer questions about your desired setup).
-
