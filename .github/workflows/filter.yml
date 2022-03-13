@@ -17,4 +17,5 @@ jobs:
             - run: npm install -g karma-qunit
             - run: npm install -g qunitjs
             - run: pwd
-            - run: cd ./WebImblaze-Framework/scripts/unitTests && karma start --single-run
+            - run: ls -asl
+            - run: cd ./scripts/unitTests && karma start --single-run
