@@ -2,6 +2,7 @@
 
 [![GitHub Super-Linter](https://github.com/Qarj/WebImblaze-Framework/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 ![Canary test](https://github.com/Qarj/WebImblaze-Framework/workflows/Self%20test/badge.svg)
+![Filter](https://github.com/Qarj/WebImblaze-Framework/workflows/Filter/badge.svg)
 
 Automated regression testing framework for
 
