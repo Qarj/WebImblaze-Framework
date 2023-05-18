@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # $Id$
 # $Revision$
 # $Date$

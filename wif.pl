@@ -64,7 +64,7 @@ my $DEFAULT_DRIVER              = 'chromedriver';
 my (
     $opt_version,       $opt_target,         $opt_batch,          $opt_environment,      $opt_selenium_host,
     $opt_selenium_port, $opt_headless,       $opt_no_retry,       $opt_help,             $opt_keep,
-    $opt_keep_session,  $opt_resume_session, $opt_capture_stdout, $opt_no_update_config, $opt_show_batch_url
+    $opt_keep_session,  $opt_resume_session, $opt_capture_stdout, $opt_no_update_config, $opt_show_batch_url,
 );
 my ( $testfile_full, $testfile_name, $testfile_path, $testfile_parent_folder_name );
 my ($config_is_automation_controller);
@@ -486,7 +486,7 @@ sub write_final_result {
         "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name" . '_'
           . "$testfile_name" . '_'
           . "$_run_number" . '.txt',
-        $_run_number
+        $_run_number,
     );
 
     _build_batch_summary();
@@ -723,7 +723,7 @@ sub write_pending_result {
         "$today_home/All_Batches/$opt_batch/$testfile_parent_folder_name" . '_'
           . "$testfile_name" . '_'
           . "$_run_number" . '.txt',
-        $_run_number
+        $_run_number,
     );
 
     _build_batch_summary();
@@ -1421,9 +1421,9 @@ sub get_options_and_config {
 
     # config file definition wins over hard coded defaults
     if ( not defined $opt_environment ) { $opt_environment = 'DEV'; }
-    ;    # default the environment name
+    # default the environment name
     if ( not defined $opt_batch ) { $opt_batch = 'Default_Batch'; }
-    ;    # default the batch
+    # default the batch
 
     # options specified at the command line win over those defined in wif.config
     Getopt::Long::Configure('bundling');

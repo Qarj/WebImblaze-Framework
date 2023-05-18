@@ -3,7 +3,10 @@
 # $Id$
 # $Revision$
 # $Date$
+# -*- coding: utf-8 -*-
+# perl
 
+use v5.16;
 use strict;
 use warnings;
 use vars qw/ $VERSION /;
