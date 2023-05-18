@@ -5,6 +5,7 @@
 package Runner;
 
 use strict;
+use warnings;
 use vars qw/ $VERSION /;
 
 $VERSION = '1.8.0';
@@ -86,7 +87,7 @@ sub start_runner {
         chdir $_orig_cwd;
     }
 
-    return;
+    return ();
 }
 
 sub stop_runner {
@@ -95,7 +96,7 @@ sub stop_runner {
 
 sub _slack_alert_parallel_run {
     if ( not( $batch_url && $opt_slack_alert ) ) {
-        return;
+        return ();
     }
 
     #
@@ -150,7 +151,7 @@ sub _slack_alert_parallel_run {
     $_slack_message = "<$batch_url|$_slack_message>";
 
     if ( $_slack_message =~ /PASS/ ) {
-        return;
+        return ();
     }
 
     Alerter::slack_alert( $_slack_message, $opt_slack_alert );
@@ -160,17 +161,17 @@ sub _slack_alert_parallel_run {
 sub start {
     my ( $_test, $_groups, $_no_headless ) = @_;
 
-    if ( not _group_match($_groups) ) { return; }
+    if ( not _group_match($_groups) ) { return (); }
 
     start_test( $_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless );
 
-    return;
+    return ();
 }
 
 sub call {
     my ( $_test, $_groups, $_no_headless ) = @_;
 
-    if ( not _group_match($_groups) ) { return; }
+    if ( not _group_match($_groups) ) { return (); }
 
     my $_status =
       Runner::call_test( $_test, $opt_target, $opt_batch, $opt_environment, $config_wif_location, $_no_headless );
@@ -185,7 +186,7 @@ sub call {
         $passed_test_files_count++;
     }
 
-    return;
+    return ();
 }
 
 sub _group_match {
@@ -203,7 +204,7 @@ sub _group_match {
             }
         }
         if ( not $_group_match ) {
-            return;    # this test case file is not part of the specified group
+            return ();    # this test case file is not part of the specified group
         }
     }
 
@@ -217,7 +218,7 @@ sub repeat {
         call($_test);
     }
 
-    return;
+    return ();
 }
 
 sub start_test {
@@ -236,7 +237,7 @@ sub start_test {
 
     chdir $_orig_cwd;
 
-    return;
+    return ();
 }
 
 #------------------------------------------------------------------
@@ -321,7 +322,7 @@ sub _start_process {
         _start_linux_process($_command);
     }
 
-    return;
+    return ();
 }
 
 sub _start_windows_process {
@@ -352,7 +353,7 @@ sub _start_linux_process {
     my $_nohup_bash = qq{(nohup bash -c "$_command" > /dev/null 2>&1 &)};    #
     my $_result     = `$_nohup_bash`;
 
-    return;
+    return ();
 }
 
 #------------------------------------------------------------------
@@ -429,7 +430,7 @@ sub is_available {
         }
         else {
             print "\nERROR - NO RESPONSE, URL IS NOT REACHABLE\n";
-            return;    # return falsey
+            return ();    # return falsey
         }
     }
 
@@ -490,7 +491,7 @@ sub get_options {
 
 sub print_version {
     print {*STDOUT} "\nRunner.pm version $VERSION\nFor more info: https://github.com/Qarj/WebImblaze-Framework\n";
-    return;
+    return ();
 }
 
 sub print_usage {
@@ -505,7 +506,7 @@ Smoke.pl -v|--version
 Smoke.pl -h|--help
 EOB
       ;
-    return;
+    return ();
 }
 
 #------------------------------------------------------------------

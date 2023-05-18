@@ -10,7 +10,7 @@ use v5.16;
 use strict;
 use warnings;
 use vars qw/ $VERSION /;
-use File::Slurp;
+use File::Slurp; ## no critic(Community::DiscouragedModules)
 
 $VERSION = '0.0.2';
 

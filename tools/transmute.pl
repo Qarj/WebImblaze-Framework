@@ -16,8 +16,8 @@ $VERSION = '0.0.2';
 use Storable 'dclone';
 use File::Basename;
 use File::Spec;
-use File::Slurp;
-use XML::Simple;
+use File::Slurp; ## no critic(Community::DiscouragedModules)
+use XML::Simple; ## no critic(Community::DiscouragedModules)
 use File::Copy qw(copy), qw(move);
 use File::Path qw(make_path remove_tree);
 use Data::Dumper;

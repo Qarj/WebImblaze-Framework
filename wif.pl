@@ -35,13 +35,13 @@ $VERSION = '1.13.2';
 use Getopt::Long;
 use File::Basename;
 use File::Spec;
-use File::Slurp;
+use File::Slurp; ## no critic(Community::DiscouragedModules)
 use File::Copy qw(copy), qw(move);
 use File::Path qw(make_path remove_tree);
 use Cwd;
 use Time::HiRes 'time', 'sleep';
 use Config::Tiny;
-use XML::Simple;
+use XML::Simple; ## no critic(Community::DiscouragedModules)
 use XML::Twig;
 require Data::Dumper;
 

@@ -46,3 +46,5 @@ sub slack_alert {
 
     return;
 }
+
+1;
