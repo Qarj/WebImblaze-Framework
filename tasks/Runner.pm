@@ -294,7 +294,7 @@ sub _build_wif_args {
 
     push @_args, '--capture-stdout';
 
-    if ( $_no_headless eq 'no-headless' ) {
+    if ( defined $_no_headless && $_no_headless eq 'no-headless' ) {
 
         # do not add headless argument
     }
@@ -302,7 +302,7 @@ sub _build_wif_args {
         # push @_args, '--headless';
     }
 
-    if ( $_show_batch_url eq '--show-batch-url' ) {
+    if ( defined $_show_batch_url && $_show_batch_url eq '--show-batch-url' ) {
         push @_args, $_show_batch_url;
     }
 
