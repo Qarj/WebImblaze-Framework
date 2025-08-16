@@ -4,146 +4,147 @@ name: Self test
 on: push
 
 jobs:
-    test:
-        name: Self test
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code of this repo
-              uses: actions/checkout@v2
-              with:
-                  path: WebImblaze-Framework
+  test:
+    name: Self test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code of this repo
+        uses: actions/checkout@v4
+        with:
+          path: WebImblaze-Framework
 
-            - name: What is the current folder
-              run: pwd
+      - name: What is the current folder
+        run: pwd
 
-            - name: Checkout WebImblaze
-              uses: actions/checkout@master
-              with:
-                  repository: Qarj/WebImblaze
-                  path: WebImblaze
+      - name: Checkout WebImblaze
+        uses: actions/checkout@master
+        with:
+          repository: Qarj/WebImblaze
+          path: WebImblaze
 
-            - name: What is the current folder
-              run: pwd
+      - name: What is the current folder
+        run: pwd
 
-            - name: Where is "$HOME"
-              run: echo "$HOME"
+      - name: Where is "$HOME"
+        run: echo "$HOME"
 
-            - name: Where is "GITHUB_WORKSPACE"
-              run: echo "$GITHUB_WORKSPACE"
+      - name: Where is "GITHUB_WORKSPACE"
+        run: echo "$GITHUB_WORKSPACE"
 
-            - name: All files in "$HOME"
-              run: ls -asl "$HOME"
+      - name: All files in "$HOME"
+        run: ls -asl "$HOME"
 
-            - name: All files in "$HOME/work"
-              run: ls -asl "$HOME/work"
+      - name: All files in "$HOME/work"
+        run: ls -asl "$HOME/work"
 
-            - name: All files in "$GITHUB_WORKSPACE"
-              run: ls -asl "$GITHUB_WORKSPACE"
+      - name: All files in "$GITHUB_WORKSPACE"
+        run: ls -asl "$GITHUB_WORKSPACE"
 
-            - name: All files in "$GITHUB_WORKSPACE/WebImblaze"
-              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze"
+      - name: All files in "$GITHUB_WORKSPACE/WebImblaze"
+        run: ls -asl "$GITHUB_WORKSPACE/WebImblaze"
 
-            - name: All files in "$GITHUB_WORKSPACE/WebImblaze-Framework"
-              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Framework"
+      - name: All files in "$GITHUB_WORKSPACE/WebImblaze-Framework"
+        run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Framework"
 
-            - name: Setup Perl
-              uses: shogo82148/actions-setup-perl@v1
-              with:
-                  install-modules-with: cpanm
-                  install-modules-args: --with-develop --with-configure
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+          install-modules-with: cpanm
+          install-modules-args: --with-develop --with-configure
 
-            - name: Install LWP::Protocol::https
-              run: cpanm LWP::Protocol::https
+      - name: Install LWP::Protocol::https
+        run: cpanm LWP::Protocol::https
 
-            - name: Install XML::Simple
-              run: cpanm XML::Simple
+      - name: Install XML::Simple
+        run: cpanm XML::Simple
 
-            - name: Install XML::Twig
-              run: cpanm XML::Twig
+      - name: Install XML::Twig
+        run: cpanm XML::Twig
 
-            - name: Install Config::Tiny
-              run: cpanm Config::Tiny
+      - name: Install Config::Tiny
+        run: cpanm Config::Tiny
 
-            - name: Install File::Find::Rule
-              run: cpan File::Find::Rule
+      - name: Install File::Find::Rule
+        run: cpan File::Find::Rule
 
-            - name: Install File::Slurp
-              run: cpan File::Slurp
+      - name: Install File::Slurp
+        run: cpan File::Slurp
 
-            - name: Check Perl version
-              run: perl --version
+      - name: Check Perl version
+        run: perl --version
 
-            - name: Install Apache
-              run: sudo apt-get install -y apache2
+      - name: Install Apache
+        run: sudo apt-get install -y apache2
 
-            - name: Install Apache Dev
-              run: sudo apt-get install -y apache2-dev
+      - name: Install Apache Dev
+        run: sudo apt-get install -y apache2-dev
 
-            - name: Restart Apache
-              run: sudo systemctl restart apache2
+      - name: Restart Apache
+        run: sudo systemctl restart apache2
 
-            - name: Fix permissions Apache - part 1
-              run: sudo chgrp -R www-data /var/www/html
+      - name: Fix permissions Apache - part 1
+        run: sudo chgrp -R www-data /var/www/html
 
-            - name: Fix permissions Apache - part 2
-              run: sudo find /var/www/html -type d -exec chmod g+rwx {} +
+      - name: Fix permissions Apache - part 2
+        run: sudo find /var/www/html -type d -exec chmod g+rwx {} +
 
-            - name: Fix permissions Apache - part 3
-              run: sudo find /var/www/html -type d -exec chmod a+rwx {} +
+      - name: Fix permissions Apache - part 3
+        run: sudo find /var/www/html -type d -exec chmod a+rwx {} +
 
-            - name: Fix permissions Apache - part 4
-              run: sudo find /var/www/html -type f -exec chmod g+rw {} +
+      - name: Fix permissions Apache - part 4
+        run: sudo find /var/www/html -type f -exec chmod g+rw {} +
 
-            - name: Check WebImblaze version
-              run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" --version
+      - name: Check WebImblaze version
+        run: perl "$GITHUB_WORKSPACE/WebImblaze/wi.pl" --version
 
-            - name: Create wif.config
-              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --create-config
+      - name: Create wif.config
+        run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --create-config
 
-            - name: Check WebImblaze-FrameWork version
-              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --version
+      - name: Check WebImblaze-FrameWork version
+        run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" --version
 
-            - name: Canary test
-              run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" canary/canary.test
+      - name: Canary test
+        run: perl "$GITHUB_WORKSPACE/WebImblaze-Framework/wif.pl" canary/canary.test
 
-            - name: Task test
-              run: perl ./WebImblaze-Framework/tasks/Canary.pl
+      - name: Task test
+        run: perl ./WebImblaze-Framework/tasks/Canary.pl
 
-            - name: Sleep to allow threads to finish
-              run: sleep 5
+      - name: Sleep to allow threads to finish
+        run: sleep 5
 
-            - name: Check that there are no errors in Summary.xml
-              run: perl ./WebImblaze-Framework/wif.pl canary/check_summary.test
+      - name: Check that there are no errors in Summary.xml
+        run: perl ./WebImblaze-Framework/wif.pl canary/check_summary.test
 
-            - name: Archive test report
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: html-results-report
-                  path: WebImblaze/output/Results.html
+      - name: Archive test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-results-report
+          path: WebImblaze/output/Results.html
 
-            - name: Check files in temp output - probably none
-              if: always()
-              run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
+      - name: Check files in temp output - probably none
+        if: always()
+        run: ls -asl "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
 
-            - name: Zip temp output
-              if: always()
-              run: zip -r output-temp.zip "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
+      - name: Zip temp output
+        if: always()
+        run: zip -r output-temp.zip "$GITHUB_WORKSPACE/WebImblaze-Framework/temp"
 
-            - name: Archive temp output
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: main-test-output
-                  path: output-temp.zip
+      - name: Archive temp output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-test-output
+          path: output-temp.zip
 
-            - name: Zip Apache output
-              if: always()
-              run: zip -r output-apache.zip /var/www/html
+      - name: Zip Apache output
+        if: always()
+        run: zip -r output-apache.zip /var/www/html
 
-            - name: Archive Apache output
-              if: always()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: apache-output
-                  path: output-apache.zip
+      - name: Archive Apache output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apache-output
+          path: output-apache.zip

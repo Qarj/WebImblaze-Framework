@@ -4,15 +4,15 @@ name: Filter
 on: push
 
 jobs:
-    test:
-        name: Filter
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: "14"
-            - run: cd ./scripts/unitTests && npm ci
-            - run: pwd
-            - run: ls -asl
-            - run: cd ./scripts/unitTests && npm test
+  test:
+    name: Filter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: cd ./scripts/unitTests && npm ci
+      - run: pwd
+      - run: ls -asl
+      - run: cd ./scripts/unitTests && npm test
